@@ -1,0 +1,68 @@
+{% extends 'donor/donor.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<br>
+<section class="h-100">
+    {% for msg in messages%}
+			<div class="alert alert-warning alert-dismissible fade show" role="alert">
+				<strong>{{msg}}</strong>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+	{% endfor %}
+
+    <form  method="POST">
+        {% csrf_token %}
+        {% if form.errors %}
+        {% for field in form %}
+            {% for error in field.errors %} 
+               <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>{{ error|escape }}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" ></button>
+            </div>
+            {% endfor %}
+        {% endfor %}
+        {% endif %}
+    </form>
+<div class="container h-100">
+        <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
+<div class="card shadow-lg">
+    <div class="card-body p-5">
+        <h1 class="fs-4 card-title fw-bold mb-4">Make Request </h1>
+        <form  method="POST" >
+            {% csrf_token %}
+            {% if questions %}
+            {{questions.HeartDisease}}                 {% render_field form.HeartDisease  id="formInput#text"  class="form-control"  %} <br>
+            {{questions.Kidney_Lung_Bloodpressure_Diabetes_Epilepsy}}                 {% render_field form.Kidney_Lung_Bloodpressure_Diabetes_Epilepsy  id="formInput#text"  class="form-control"  %}<br>
+            {{questions.Liverproblems}}                 {% render_field form.Liverproblems  id="formInput#text"  class="form-control"  %}<br>
+            {{questions.STD}}                 {% render_field form.STD  id="formInput#text"  class="form-control"  %} 	<br>
+            {{questions.Tattoo_Ear_skin_pierced_lastmonth}}                 {% render_field form.Tattoo_Ear_skin_pierced_lastmonth  id="formInput#text"  class="form-control"  %} <br>
+            {{questions.Slpet_Unsafely_OtherThanPartner}}                 {% render_field form.Slpet_Unsafely_OtherThanPartner  id="formInput#text"  class="form-control"  %} <br>
+            {{questions.SeriousSkinRepair}}                 {% render_field form.SeriousSkinRepair  id="formInput#text"  class="form-control"  %} <br>
+            {{questions.Preagnant}}                 {% render_field form.Preagnant  id="formInput#text"  class="form-control"  %} <br>
+            {{questions.Abortion}}                 {% render_field form.Abortion  id="formInput#text"  class="form-control"  %} <br>
+            {{questions.BreastFeeding}}                 {% render_field form.BreastFeeding  id="formInput#text"  class="form-control"  %} <br>
+            {{questions.BloodHealthfulnessInfo}}                 {% render_field form.BloodHealthfulnessInfo  id="formInput#text"  class="form-control"  %}  <br>	
+ 	 	
+            <br>
+                <div style="align-self:auto; margin-left: 130px;">
+                    <button type="submit" class="btn btn-primary ms-auto">
+                        Submit
+                    </button>
+                </div>
+            {% else %}
+            <div class="mb-3">
+                <h>No quesitons to fill for now</h>	
+            </div>
+            {% endif %}
+
+          
+
+        </form>
+    </div>
+</div>
+</div>
+</div>
+</section>
+<br>
+{% endblock %}

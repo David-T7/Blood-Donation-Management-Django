@@ -1,0 +1,67 @@
+{% extends 'bbmanager/bbmanager.html' %}
+{% block content %}
+<!-- Main Wrapper -->
+
+
+<br>
+  {% for msg in messages%}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <strong>{{msg}}</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endfor %}
+
+
+<br>
+<table class="styled-table">
+    <thead>
+         <tr>
+             <th></th>
+             <th></th>
+             <th></th>
+             <th></th>
+             <th></th>
+           <th><a href="{% url 'events' 'all' %}"> <button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">SeeAll</button></a>
+            </th>
+            <th><a href="{% url 'addevent' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">AddEvent</button></a>
+            </th> 
+          </tr>
+        <tr>
+            <th>Event</th>
+            <th>Address</th>
+            <th>Place</th>
+            <th>Time</th>
+            <th>Type</th>
+            <th></th>
+             <th></th>
+        </tr>
+    </thead>
+    <tbody>
+      {% if events %}
+      {% for ev in events %}
+        <tr>
+          <td>{{ ev.EventName }}</td>
+          <td>{{ ev.EventPlace }}</td>
+          <td>{{ ev.EventPlace }}</td>
+          <td>{{ ev.EventTime }}</td>
+          <td>{{ ev.EventType }}</td>
+          <td><a href="{% url 'updateevent' ev.Event_id %}"><button type="button" class="btn btn-info">Update</button></a></td>&nbsp;
+          <td><a href="{% url 'deleteevent' ev.Event_id %}"><button type="button" class="btn btn-danger">Delete</button></a></td>
+        </tr> 
+      {% endfor %}
+      {% else %}
+      <tr>
+        <td>No Events For Now</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      {% endif %}  
+    </tbody>
+  </table>
+  <br>
+   
+{% endblock %}

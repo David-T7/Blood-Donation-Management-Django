@@ -1,0 +1,162 @@
+{% extends 'labtechnician/labtechnician.html' %}
+{% load static %}
+{% block content %}
+
+
+
+<br>
+  {% for msg in messages%}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <strong>{{msg}}</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endfor %}
+
+<table class="styled-table">
+    <thead>
+         <tr>
+           <th>Donation Request</th>
+           <th><a href="{% url 'labdonationrequest' 'all' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">See All</button></a>
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>          
+          </tr>
+
+          <tr >
+            <th>Time</th>
+            <th>Status</th>
+            <th>Appointment</th>
+            <th>Donor</th>
+            <th>Add</th>
+            <th>Block</th>
+        </tr>
+    </thead>
+    <tbody>
+      {% if donation %}
+      {% for don,app in list %}
+      <tr> 
+       <td>{{ don.Request_time }}</td>
+       {% if don.Status == 'in progress' %}
+       <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color: yellow;" class="bi bi-circle"  viewBox="0 0 16 16">
+         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+       </svg>
+       {% elif  don.Status == 'accepted' %}
+       <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color: green;" class="bi bi-circle"  viewBox="0 0 16 16">
+         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+       </svg>
+       {% elif  don.Status == 'rejected' %}
+       <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color:red;" class="bi bi-circle"  viewBox="0 0 16 16">
+         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+       </svg>
+       {% endif %}
+       &nbsp;{{ don.Status}} </td>
+       {% if don.Status == 'accepted' %}
+       {% if app.status == 'accepted'  and  app.App_id|slugify not in finished %}
+       <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color:green;" class="bi bi-circle"  viewBox="0 0 16 16">
+         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+       </svg>
+       &nbsp;{{ app.status}}</td>
+       <td><a href="{% url 'labdonorinfo' don.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Check Donor</button></a>
+       </td>
+       <td><a href="{% url 'addblood' don.Donor_id app.App_id  %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">AddBlood</button></a></td>  
+       {% if don.Donor_id|slugify not in deferringlist %}
+       <td><a href="{% url 'blockdonor' don.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Block Donor</button></a>
+       </td>
+       {% else %}
+       <td><a href="{% url 'unblockdonor' don.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Unblock Donor</button></a>
+       </td>
+       {% endif %}
+       {% elif app.status == 'accepted'  and  app.App_id|slugify in finished  %}
+       <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color:green;" class="bi bi-circle"  viewBox="0 0 16 16">
+        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+      </svg>&nbsp;Finished</td>
+      <td><a href="{% url 'labdonorinfo' don.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Check Donor</button></a>
+         
+        <td><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;" disabled>AddBlood</button></td> 
+        {% if don.Donor_id|slugify not in deferringlist %}
+        <td><a href="{% url 'blockdonor' don.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Block Donor</button></a>
+        </td>
+        {% else %}
+        <td><a href="{% url 'unblockdonor' don.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Unblock Donor</button></a>
+        </td>
+        {% endif %}
+        {% elif app.status == 'rejected' %}
+       <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color:red;" class="bi bi-circle"  viewBox="0 0 16 16">
+         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+       </svg>
+       &nbsp;{{ app.status}}</td>
+       <td><a href="{% url 'labdonorinfo' don.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Check Donor</button></a>
+       </td>
+       <td><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;" disabled>AddBlood</button></a></td> 
+       {% if don.Donor_id|slugify not in deferringlist %}
+       <td><a href="{% url 'blockdonor' don.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Block Donor</button></a>
+       </td>
+       {% else %}
+       <td><a href="{% url 'unblockdonor' don.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Unblock Donor</button></a>
+       </td>
+       {% endif %}
+       {% elif app.status == 'in progress' %}
+       <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color:yellow;" class="bi bi-circle"  viewBox="0 0 16 16">
+         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+       </svg>
+       &nbsp;{{ app.status}}</td> 
+       <td><a href="{% url 'labdonorinfo' don.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Check Donor</button></a>
+       </td>
+       <td><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;" disabled>AddBlood</button></a></td> 
+       {% if don.Donor_id|slugify not in deferringlist %}
+       <td><a href="{% url 'blockdonor' don.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Block Donor</button></a>
+       </td>
+       {% else %}
+       <td><a href="{% url 'unblockdonor' don.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Unblock Donor</button></a>
+       </td>
+       {% endif %}
+       {% else %}
+       <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color:white;" class="bi bi-circle"  viewBox="0 0 16 16">
+        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+      </svg>&nbsp;NotMade</td>
+      <td><a href="{% url 'labdonorinfo' don.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Check Donor</button></a>
+      </td>
+         <td><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;" disabled>AddBlood</button></td> 
+         {% if don.Donor_id|slugify not in deferringlist %}
+         <td><a href="{% url 'blockdonor' don.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Block Donor</button></a>
+         </td>
+         {% else %}
+         <td><a href="{% url 'unblockdonor' don.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Unblock Donor</button></a>
+         </td>
+         {% endif %}
+         {% endif %}
+    
+       {% else %}
+       <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color:white;" class="bi bi-circle"  viewBox="0 0 16 16">
+        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+      </svg>&nbsp;NotMade</td>
+      <td><a href="{% url 'labdonorinfo' don.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Check Donor</button></a>
+      </td>
+         <td><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;" disabled>AddBlood</button></td> 
+         {% if don.Donor_id|slugify not in deferringlist %}
+         <td><a href="{% url 'blockdonor' don.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Block Donor</button></a>
+         </td>
+         {% else %}
+         <td><a href="{% url 'unblockdonor' don.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Unblock Donor</button></a>
+         </td>
+         {% endif %}
+         {% endif %}   
+     </tr>
+      {% endfor %}
+      {% else %}
+      <tr> 
+       <td>No Donation Request For Now </td>
+       <td></td>
+       <td></td>
+       <td></td>
+       <td></td>
+     </tr>
+     {% endif %}
+ 
+        
+      </tbody>
+  </table>
+  <br>
+{% endblock %}

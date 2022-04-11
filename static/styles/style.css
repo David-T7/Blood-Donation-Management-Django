@@ -1,0 +1,12 @@
+#bg{
+    background-image: url('/static/images/background/bg2.jpg');
+    background-repeat: no-repeat;
+    background-size: 450px 450px;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.nav-item:hover{
+    background-color: #ffffff26;
+    border: 20px;
+}

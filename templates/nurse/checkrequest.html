@@ -1,0 +1,117 @@
+{% extends 'nurse/nurse.html' %}
+{% block content %}
+
+<br>
+<section class="h-100">
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-9">
+          <div class="card card-registration card-registration-2" style="border-radius: 15px;">
+            <div class="card-body p-0">
+              <div class="row g-0">
+                <div class="col-lg-30">
+                  <div class="p-5">
+                    <h3 class="fw-normal mb-5" style="color: #4835d4;">Request Result</h3>
+
+
+                    {% for msg in messages%}
+			<div class="alert alert-warning alert-dismissible fade show" role="alert">
+				<strong>{{msg}}</strong>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+			{% endfor %}
+            {% if answers and questions %}
+                <div class="mb-3">
+                    {{questions.HeartDisease}} 
+                    <br>
+                <label for="formInput#text"><b>Answer</b></label>
+                {{answers.HeartDisease}}
+                    <br><br>
+                    {{questions.Kidney_Lung_Bloodpressure_Diabetes_Epilepsy}} 
+                    <br>
+                    <label for="formInput#text"><b>Answer</b></label>
+                    {{answers.Kidney_Lung_Bloodpressure_Diabetes_Epilepsy}}
+
+                    <br><br>
+                    {{questions.Liverproblems}} 
+                    <br>
+                    <label for="formInput#text"><b>Answer</b></label>
+                    {{answers.Liverproblems}}
+
+                    <br> <br>
+                    {{questions.STD}} 
+                    <br>
+                    <label for="formInput#text"><b>Answer</b></label>
+                    {{answers.STD}}
+
+                    <br> <br>
+                    {{questions.Tattoo_Ear_skin_pierced_lastmonth}} 
+                    <br>
+                    <label for="formInput#text"><b>Answer</b></label>
+                    {{answers.Tattoo_Ear_skin_pierced_lastmonth}}
+
+                    <br> <br>
+                    {{questions.Slpet_Unsafely_OtherThanPartner}} 
+                    <br>
+                    <label for="formInput#text"><b>Answer</b></label>
+                    {{answers.Slpet_Unsafely_OtherThanPartner}}
+
+                    <br> <br>
+                    {{questions.SeriousSkinRepair}} 
+                    <br>
+                    <label for="formInput#text"><b>Answer</b></label>
+                    {{answers.SeriousSkinRepair}}
+
+                    <br> <br>
+                    {{questions.Preagnant}} 
+                    <br>
+                    <label for="formInput#text"><b>Answer</b></label>
+                    {{answers.Preagnant}}
+
+                    <br> <br>
+                    {{questions.Abortion}} 
+                    <br>
+                    <label for="formInput#text"><b>Answer</b></label>
+                    {{answers.Abortion}}
+
+                    <br> <br>
+                    {{questions.BreastFeeding}} 
+                    <br>
+                    <label for="formInput#text"><b>Answer</b></label>
+                    {{answers.BreastFeeding}}
+                    
+                    <br> <br>
+                    {{questions.BloodHealthfulnessInfo}} 
+                    <br>
+                    <label for="formInput#text"><b>Answer</b></label>
+                    {{answers.BloodHealthfulnessInfo}}
+
+
+                    
+
+
+
+                </div>
+
+
+                <br>
+                <div style="align-self:auto; margin-left: 130px;">
+                    <a href="{% url 'confirmrequest' answers.Result_id 'accept' %}"><button type="button" class="btn btn-info" style="background-color: green;color: white;">Accept</button></a>&nbsp;
+                    <a href="{% url 'confirmrequest' answers.Result_id 'reject' %}"><button type="button" class="btn btn-info" style="background-color: red; color: white;">Reject</button></a>&nbsp;
+ 
+                </div>
+
+            {% else %}
+            <h>Can't load results</h>
+            {% endif %}
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </section>
+{% endblock %}

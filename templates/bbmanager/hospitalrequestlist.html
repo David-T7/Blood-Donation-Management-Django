@@ -1,0 +1,72 @@
+   <tbody>
+
+    <br>
+  {% for msg in messages%}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <strong>{{msg}}</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endfor %}
+
+
+     {% if bloodrequest %}
+     {% for br in bloodrequest %}
+      <tr>
+        {% if hospitals %}
+        {% for hospital in hospitals %}
+        {% if hospital.Hospital_id|slugify == br.Hospital_id|slugify  %}
+        <td>{{hospital.HospitalName}}</td>
+        {% endif %}
+        {% endfor %}
+        {% else %}
+        <td>NOhospital</td>
+        {% endif%}
+        <td>{{ br.Request_Date }}</td>
+        <td>{{  br.Blood_Group}}</td>
+          {% if br.Status == 'in progress' %}
+          <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color: yellow;" class="bi bi-circle"  viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+          </svg>
+          {% elif br.Status == 'accepted' %}
+          <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color: green;" class="bi bi-circle"  viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+          </svg>
+          {% elif br.Status == 'rejected' %}
+          <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color: red;" class="bi bi-circle"  viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+          </svg>
+          {% endif %}
+          &nbsp;{{ br.Status }}</td>
+       {% if sender != 'dashbord' %}
+        <td><a href="{% url 'hospitaladdress' br.Hospital_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Check Hospital</button></a>
+        </td>
+        {% endif %}
+        {% if sender != 'dashbord' %}
+        {% if br.Status == 'in progress'  %}
+        <td><a href="{% url 'acceptbloodrequest' br.Blood_Req_Id 'accept'  %}"><button type="button" class="btn btn-success">Accept</button></a>&nbsp; <a href="{% url 'acceptbloodrequest' br.Blood_Req_Id 'reject'  %}"><button type="button" class="btn btn-danger">Reject</button></a> 
+        {% elif br.Status == 'accepted' %}
+        <td><a style="text-decoration: none;" href="{% url 'acceptbloodrequest' br.Blood_Req_Id  'reject'  %}"><button type="button" class="btn btn-success"     onmouseover="this.innerHTML='Reject';this.style.backgroundColor='red';"
+          onmouseout="this.innerHTML='Accepted';this.style.backgroundColor='green';">Accepted</button></a></td>
+        {% elif br.Status == 'rejected' %}
+        <td><a style="text-decoration: none;" href="{% url 'acceptbloodrequest' br.Blood_Req_Id  'accept'  %}"><button type="button" class="btn btn-danger"     onmouseover="this.innerHTML='Accept';this.style.backgroundColor='green';"
+          onmouseout="this.innerHTML='Rejected';this.style.backgroundColor='red';">Rejected</button></a></td>
+        </tr>
+        {% endif %}
+        {% endif %}
+     {% endfor %}
+     {% else %}
+     <tr> 
+      <td>No Blood Request For Now </td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+
+    </tr>
+    {% endif %}
+
+       
+     </tbody>
+ </table>
+ <br>

@@ -1,0 +1,65 @@
+{% extends 'sidebarbase.html' %}
+{% block content1 %}
+
+<div
+      class="side-navbar active-nav d-flex justify-content-between flex-wrap flex-column"
+      id="sidebar"
+    >
+    
+      <ul class="nav flex-column text-white w-100">
+        <a href="{% url 'donorrequest' 'notall' %}" class="nav-link h3 text-white my-2">
+          Nurse
+        </a>
+        <li class="nav-link">
+          <i class="bx bxs-dashboard"></i>
+          <span class="mx-2" ><a class="inner-anchor"  href="{% url 'donorrequest' 'notall' %}"> Request</a></span>
+        </li>
+        <li class="nav-link">
+          <i class="bx bxs-home"></i>
+          <span class="mx-2" ><a class="inner-anchor" href="{% url 'checkappointment' 'notall' %}"> Appointment</a></span>
+        </li>
+        <li class="nav-link">
+          <i class="bx bxs-store"></i>
+          <span class="mx-2" ><a class="inner-anchor" href="{% url 'donorquestions' 'notall' %}"> Questions </a></span>
+        </li>
+        <li class="nav-link">
+          <i class="bx bx-edit"></i>
+          <span class="mx-2" ><a class="inner-anchor" href="{% url 'editaccount' %}"> Edit Account</a></span>
+        </li>
+        
+        <li class="nav-link">
+          <i class="bx bx-log-out"></i>
+          <span class="mx-2" ><a class="inner-anchor" href="{% url 'logout' %}" > Log Out </a></span>
+        </li>
+        <li id='logout-nav' class="nav-link" style="visibility: hidden;">
+          <div>
+         Are you sure you want to log out ?
+         <br><br>
+         <button type="button" class="btn btn-secondary">Yes</button>
+         <button type="button" class="btn btn-success">No</button>
+
+          </div>
+        </li>
+        
+      </ul>
+    </div>
+    
+
+
+    <!-- Main Wrapper -->
+    <div class="p-1 my-container active-cont" style="background-color:lightblue">
+      <!-- Top Nav -->
+
+      
+      <nav class="navbar top-navbar navbar-light bg-light px-5">
+        <a class="btn border-0" id="menu-btn"><i class="bx bx-menu"></i></a>
+        <img src="/static/images/{{ account.ProfilePic }}" id="profile-pic"> 
+      </nav>
+
+      {% block content %}
+
+
+      {% endblock %}
+
+
+{% endblock %}

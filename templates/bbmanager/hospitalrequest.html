@@ -1,0 +1,27 @@
+{% extends 'bbmanager/bbmanager.html' %}
+{% block content %}
+<br>
+<table class="styled-table">
+  <thead>
+       <tr>
+         <th>Hospital  Blood  Request</th>
+         <th></th>
+         <th><a href="{% url 'hospitalrequest' 'all' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Seeall</button></a>
+          </th> 
+          <th></th>
+          <th></th>
+          <th></th>
+        </tr>
+
+        <tr >
+          <th>Name</th>
+           <th>Time</th>
+           <th>Blood Type</th>
+           <th>Status</th>
+           <th>Hospital</th>
+           <th></th>
+       </tr>
+   </thead>
+{% include 'bbmanager/hospitalrequestlist.html' %}
+
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+<head><title>Login Page </title></head>
+{% block content %}
+
+	<section class="h-100">
+			{% for msg in messages%}
+			<div class="alert alert-warning alert-dismissible fade show" role="alert">
+				<strong>{{msg}}</strong>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+			{% endfor %}
+		<div class="container h-100">
+			<div class="row justify-content-sm-center h-100">
+				<div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
+					<div class="text-center my-5">
+						<img src="{% static 'images/logo/bloodbank.jpg' %}" alt="logo" width="100">
+					</div>
+					<div class="card shadow-lg">
+						<div class="card-body p-5">
+							<h1 class="fs-4 card-title fw-bold mb-4">Login</h1>
+							<form  method="POST" >
+								{% csrf_token %}
+								<div class="mb-3">
+									<label class="mb-2 " for="name">Username</label>
+								{% render_field form.username  id="name" type="text" class="form-control" name="username"  %} 	
+								</div>
+
+								<div class="mb-3">
+									<label class="mb-2 " for="password">Password</label>
+								{% render_field form.password1  id="password" type="password" class="form-control" name="password1"  %}
+								</div>
+								<br>
+								<div style="align-self:auto; margin-left: 130px;">
+									<button type="submit" class="btn btn-primary ms-auto">
+										Login
+									</button>
+								</div>
+                                <br>
+								<div style="align-self:auto; margin-left: 100px;">
+									<a href="{% url 'forgot' Role %}">
+										Forgot Password?
+									</a>
+								</div>
+			
+							</form>
+						</div>
+						{% if Role == 'Donor' %}
+						<div class="card-footer py-3 border-0">
+							<div class="text-center">
+								Don't have an account? <a href="{% url 'register' %}" class="text-dark">Create One</a>
+							</div>
+						</div>
+						{% endif %}
+					</div>
+					<div class="text-center mt-5 text-muted">
+                        <br>
+                        <br>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}

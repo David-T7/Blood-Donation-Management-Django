@@ -1,0 +1,63 @@
+{% extends 'nurse/nurse.html' %}
+{% block content %}
+
+<br>
+
+{% for msg in messages%}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>{{msg}}</strong>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+<table class="styled-table">
+    <thead>
+         <tr>
+           <th>Appointment Request</th>
+           <th><a href="{% url 'checkappointment' 'all' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">See All</button></a>
+            </th>
+            <th></th>
+            <th></th>
+          </tr>
+
+          <tr >
+            <th>Donor_info</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+      {% if appointments %}
+      {% for appointment in appointments %}
+       <tr> 
+        <td><a href="{% url 'donoraddress' appointment.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Check Donor</button></a></td>
+          <td>{{ appointment.Date }}</td>
+         <td>{{ appointment.Time }}</td>
+         {% if appointment.status == 'in progress'  %}
+         <td><a href="{% url 'confirmappointment' appointment.App_id 'accept'  %}"><button type="button" class="btn btn-success">Accept</button></a>&nbsp;<a href="{% url 'confirmappointment' appointment.App_id 'reject'  %}"></a><button type="button" class="btn btn-danger">Reject</button></a></td>      
+         {% elif appointment.status == 'accepted' %}
+         <td><a href="{% url 'confirmappointment' appointment.App_id 'reject'  %}"><button type="button" class="btn btn-success"    onmouseover="this.innerHTML='Reject';this.style.backgroundColor='red';"
+          onmouseout="this.innerHTML='Accepted';this.style.backgroundColor='green';">Accepted</button></a></td>      
+         {% elif appointment.status == 'rejected' %}
+         <td><a href="{% url 'confirmappointment' appointment.App_id 'accept'  %}"><button type="button" class="btn btn-danger"     onmouseover="this.innerHTML='Accept';this.style.backgroundColor='green';"
+          onmouseout="this.innerHTML='Rejected';this.style.backgroundColor='red';">Rejected</button></a></td>
+         {% endif %}
+        </tr>
+      
+      {% endfor %}
+      {% else %}
+      <tr> 
+       <td>No Appointment Request Now </td>
+       <td></td>
+       <td></td>
+       <td></td>
+
+
+     </tr>
+     {% endif %}
+ 
+        
+      </tbody>
+  </table>
+  <br>
+{% endblock %}

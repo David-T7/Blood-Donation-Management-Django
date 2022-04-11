@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<section class="h-100">
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12">
+          <div class="card card-registration card-registration-2" style="border-radius: 15px;">
+            <div class="card-body p-0">
+              <div class="row g-0">
+                <div class="col-lg-6">
+                  <div class="p-5">
+                    <h3 class="fw-normal mb-5" style="color: #4835d4;">General Infomation</h3> 
+                   
+                        <form  method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                        {% for field in form1 %}
+                       <div class="col-md-6 mb-4 pb-2">
+                        <div class="form-outline">
+                        <label class="form-label" for="formInput#text">{{field.label}}</label>
+                        {% render_field field  id="name"  class="form-control form-control-lg" %} 
+                        </div>
+                       </div>
+                        {% endfor %}
+                        {% if type != 'update' %}
+                        {% for field in form3 %}
+                       <div class="col-md-6 mb-4 pb-2">
+                        <div class="form-outline">
+                        <label class="form-label" for="formInput#text">{{field.label}}</label>
+                        {% render_field field  id="form-label"  class="form-control form-control-lg" %} 
+                        </div>
+                       </div>
+                        {% endfor %}
+                        {% endif %}
+                      </div>
+
+
+                  </div>
+                </div>
+
+                <div class="col-lg-6 bg-indigo text-white">
+                  <div class="p-5">
+                    <h3 class="fw-normal mb-5">Contact Details</h3>
+                    <div class="row">
+
+                      {% for field in form2 %}
+                      <div class="col-md-6 mb-4 pb-2">
+                       <div class="form-outline">
+                       <label class="form-label" for="formInput#text">{{field.label}}</label>
+                       {% render_field field  id="form-label"  class="form-control form-control-lg" %} 
+                       </div>
+                      </div>
+                       {% endfor %}
+                     </div>
+                     
+                     <button type="submit" class="btn btn-light btn-lg" data-mdb-ripple-color="dark" style="float: le;margin-left: 50px;" onmouseenter="this.style.backgroundColor='red';this.style.color = 'white';" onmouseleave="this.style.backgroundColor='white';this.style.color = 'black';"> 
+                       {% if type == 'update' %}  Update {% else %} Register {% endif %} </button>
+      
+                  <br><br> 
+                    {% for msg in messages%}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>{{msg}}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    <form  method="POST">
+        {% csrf_token %}
+        {% if form1.errors or form2.errors or form3.errors %}
+        {% for field in form1 %}
+            {% for error in field.errors %} 
+               <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>{{ error|escape }}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" ></button>
+            </div>
+            {% endfor %}
+        {% endfor %}
+        {% for field in form2 %}
+        {% for error in field.errors %} 
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>{{ error|escape }}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    {% endfor %}
+    {% for field in form3 %}
+    {% for error in field.errors %} 
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>{{ error|escape }}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+{% endfor %}
+
+
+
+     {% endif %}  
+    </div> 
+
+                  </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

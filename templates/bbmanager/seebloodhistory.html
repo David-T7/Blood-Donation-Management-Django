@@ -1,0 +1,49 @@
+{% extends 'bbmanager/bbmanager.html' %}
+{% block content %}
+<br>
+<table class="styled-table">
+  <thead>
+       <tr>
+         <th>Hospital Blood History</th>
+         <th></th>
+         <th><a href="{% url 'bloodhistory' 'all' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Seeall</button></a>
+          </th>
+        <th></th> 
+        </tr>
+
+        <tr>
+            <th>BloodType</th>
+            <th>Volume</th>
+            <th>RegDate</th>
+            <th>ExpDate</th>
+        </tr>
+    </thead>
+    <tbody>
+      {% if bloods %}
+      {% for blood in bloods %}
+       <tr> 
+         <td>{{ blood.BloodGroup }}</td>
+         <td>{{ blood.QuantityOfBlood }}</td>
+         <td>{{ blood.RegDate }}</td>
+         <td>{{ blood.ExpDate }}</td>
+       </tr>
+       {% endfor %}
+      {% else %}
+      <tr> 
+       <td>No Blood History For Now </td>
+       <td></td>
+       <td></td>
+       <td></td>
+     </tr>
+     {% endif %}
+      </tbody>
+  </table>
+  <br>
+
+
+
+
+
+
+
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'sidebarbase.html' %}
+{% block content1 %}
+
+
+<div
+      class="side-navbar active-nav d-flex justify-content-between flex-wrap flex-column"
+      id="sidebar"
+    >
+    
+      <ul class="nav flex-column text-white w-100">
+        <a href="{% url 'hospitaldashbord' 'notall' %}"  class="nav-link h3 text-white my-2">
+          Hospital
+        </a>
+        <li class="nav-link">
+          <i class="bx bxs-dashboard"></i>
+          <span class="mx-2" ><a class="inner-anchor"  href="{% url 'hospitaldashbord' 'notall' %}"> Home</a></span>
+        </li>
+        <li class="nav-link">
+          <i class="bx bxs-home"></i>
+          <span class="mx-2" ><a class="inner-anchor" href="{% url 'bloodrequest' 'notall' %}"> Request</a></span>
+        </li>
+        <li class="nav-link">
+          <i class="bx bxs-store"></i>
+          <span class="mx-2" ><a class="inner-anchor" href="{% url 'edithospitalaccount'%}"> EditAccount </a></span>
+        </li>
+        <li class="nav-link">
+          <i class="bx bx-log-out"></i>
+          <span class="mx-2" ><a class="inner-anchor" href="{% url 'logout' %}" > Log Out </a></span>
+        </li>
+      </ul>
+    </div>
+    
+
+
+    <div class="p-1 my-container active-cont" style="background-color:lightblue">
+        <nav class="navbar top-navbar navbar-light bg-light px-5">
+            <a class="btn border-0" id="menu-btn"><i class="bx bx-menu"></i></a>
+          </nav>
+
+
+      {% block content %}
+
+
+      {% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

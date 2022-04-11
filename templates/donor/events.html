@@ -1,0 +1,50 @@
+{% extends 'donor/donor.html' %}
+
+{% block content %}
+
+<br>
+<table class="styled-table">
+    <thead>
+         <tr>
+             <th></th>
+             <th></th>
+             <th></th>
+             <th></th>
+           <th><a href="{% url 'getevent' 'all' %}"> <button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">SeeAll</button></a>
+            </th>
+          </tr>
+        <tr>
+            <th>Event</th>
+            <th>Place</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Type</th>
+        </tr>
+    </thead>
+    <tbody>
+      {% if events %}
+      {% for ev in events %}
+        <tr>
+          <td>{{ ev.EventName }}</td>
+          <td>{{ ev.EventPlace }}</td>
+          <td>{{ ev.EventDate }}</td>
+          <td>{{ ev.EventTime }}</td>
+          <td>{{ ev.EventType }}</td>
+        </tr> 
+      {% endfor %}
+      {% else %}
+      <tr>
+        <td>No Events For Now</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      {% endif %}  
+    </tbody>
+  </table>
+  <br>
+
+
+
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends 'nurse/nurse.html' %}
+{% block content %}
+
+<br>
+{% for msg in messages%}
+			<div class="alert alert-warning alert-dismissible fade show" role="alert">
+				<strong>{{msg}}</strong>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+			{% endfor %}
+<table class="styled-table">
+    <thead>
+         <tr>
+           <th>Donation Request</th>
+           <th><a href="{% url 'donorrequest' 'all' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">See All</button></a>
+            </th>
+            <th></th>
+            <th></th>
+          </tr>
+
+          <tr >
+            <th>Request_time</th>
+            <th>Donor Address</th>
+            <th>Check Request</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+      {% if donationrequest %}
+      {% for dr in donationrequest %}
+       <tr> 
+         <td>{{ dr.Request_time }}</td>
+          <td><a href="{% url 'donoraddress' dr.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Check Donor</button></a>
+            <td><a href="{% url 'checkrequest' dr.Result_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Check Request</button></a>
+         {% if dr.Status == 'in progress' %}
+         <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" s class="bi bi-circle" viewBox="0 0 16 16" style="background-color:yellow"> 
+          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+        </svg>
+         {% elif  dr.Status == 'accepted' %}
+         <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" s class="bi bi-circle" viewBox="0 0 16 16" style="background-color:green"> 
+          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+        </svg>
+        {% elif  dr.Status == 'rejected' %}
+        <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" s class="bi bi-circle" viewBox="0 0 16 16" style="background-color:red"> 
+          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+        </svg>{% endif %}
+        &nbsp;{{ dr.Status}}</td>
+       </tr>
+      
+      {% endfor %}
+      {% else %}
+      <tr> 
+       <td>No Donation Request For Now </td>
+       <td></td>
+       <td></td>
+     </tr>
+     {% endif %}
+ 
+        
+      </tbody>
+  </table>
+  <br>
+{% endblock %}

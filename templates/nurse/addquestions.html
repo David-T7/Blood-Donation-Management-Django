@@ -1,0 +1,62 @@
+{% extends 'nurse/nurse.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<br>
+{% for msg in messages %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>{{msg}}</strong>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+
+<section class="h-100">
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-11">
+          <div class="card card-registration card-registration-2" style="border-radius: 15px;">
+            <div class="card-body p-0">
+              <div class="row g-0">
+                <div class="col-lg-24">
+                  <div class="p-5">
+                    <h3 class="fw-normal mb-5" style="color: #4835d4;">General Infomation</h3>
+
+                
+        <form  method="POST" >
+            {% csrf_token %}
+            <div class="row">
+                {% for field in form %}
+               <div class="col-md-6 mb-4 pb-2">
+                <div class="mb-3">
+                    <label class="form-label" for="formInput#text">{{field.label}}</label>
+                {% render_field field  id="name"  class="form-control form-control-lg" %} 
+                </div>
+               </div>
+                {% endfor %}
+              </div>
+
+            <br>
+            <div style="align-self:auto; margin-left: 130px;">
+                {% if type == 'add' %}
+                <button type="submit" class="btn btn-primary ms-auto">
+                    Add
+                </button>
+                {% else %}
+                <button type="submit" class="btn btn-primary ms-auto">
+                    update
+                </button>
+                {% endif %}
+
+            </div>
+
+        </form>
+    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+{% endblock %}

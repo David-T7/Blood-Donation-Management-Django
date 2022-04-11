@@ -1,0 +1,100 @@
+{% extends 'bbmanager/bbmanager.html' %}
+
+{% block content %}
+
+<br>
+<div class="container">
+  <div class="row" style="column-gap: 70px;">
+    <div class="card" style="width: 10rem;">
+
+      <div class="card-body">
+        <p class="card-text"><b>{{ donors_count }}</b> <br>Donors</p>
+      </div>
+    </div>
+    <div class="card" style="width: 10rem;">
+
+      <div class="card-body">
+        <p class="card-text"><b>{{ hospitals_count }}</b> <br>Hospitals</p>
+      </div>
+    </div>
+    <div class="card" style="width: 10rem;">
+
+      <div class="card-body">
+        <p class="card-text"><b>{{ recent_blood_count }}</b> <br>{% if recent_blood %}
+                                                                  {{ recent_blood.BloodGroup }}
+                                                                {%  else %}
+                                                                   Bloods
+                                                                   {% endif %} 
+                                                                   </p>
+      </div>
+    </div>
+    <div class="card" style="width: 10rem; background-color: red;">
+
+      <div class="card-body">
+        <p class="card-text"><b>Stock</b> <br>100%</p>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="row" style="column-gap: 70px;">
+    
+    <div class="card" style="width: 10rem;">
+
+      <div class="card-body">
+        <p class="card-text"><b>{{ bloodrequest_no }}</b> <br>Requests</p>
+      </div>
+    </div>
+
+    
+    
+    <div class="card" style="width: 10rem;">
+
+      <div class="card-body">
+        <p class="card-text"><b>{{ acceptedrequest }}</b> <br>Accepted</p>
+      </div>
+    </div>
+    <div class="card" style="width: 10rem;">
+
+      <div class="card-body">
+        <p class="card-text"><b>{{  rejectedrequest }}</b> <br>Rejected</p>
+      </div>
+    </div>
+    <div class="card" style="width: 10rem;">
+
+      <div class="card-body">
+        <p class="card-text"><b>{{  pendingrequest }}</b> <br>Pending</p>
+      </div>
+    </div>
+
+
+
+   
+  </div>
+</div>
+
+<br>
+<br>
+<br>
+<table class="styled-table">
+   <thead>
+        <tr>
+          <th>Hospital  Blood  Request</th>
+          <th></th>
+          <th><a href="{% url 'bbdashbord' 'all' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Seeall</button></a>
+           </th> 
+           <th></th>
+
+         </tr>
+         <tr >
+          <th>Name</th>
+           <th>Time</th>
+           <th>Blood Type</th>
+           <th>Status</th>
+       </tr>
+   </thead>
+
+
+
+{% include 'bbmanager/hospitalrequestlist.html' %}
+<br>
+{% endblock %}

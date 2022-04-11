@@ -1,0 +1,69 @@
+{% extends 'bbmanager/bbmanager.html' %}
+{% block content %}
+<br>
+<a href="{% url 'bloodhistory' 'notall' %}" ><button type="button" class="btn btn-primary btn-sm" style= "background-color: red; height: 40px;width: 90px; float: right;margin-right: 165px;">SeeHistory</button></a>
+<div class="container">
+   <br>
+   <br>
+   <div class="row" style="column-gap: 90px;">
+     <div class="card" style="width: 10rem;">
+       <div class="card-body">
+         <p class="card-text"><b>O+</b> <br>{{ Op }}ML</p>
+       </div>
+     </div>
+     <div class="card" style="width: 10rem;">
+ 
+       <div class="card-body">
+         <p class="card-text"><b>B+</b> <br>{{ Bp }}ML</p>
+       </div>
+     </div>
+     <div class="card" style="width: 10rem;">
+ 
+       <div class="card-body">
+         <p class="card-text"><b>A+</b> <br>{{ Ap }}ML</p>
+       </div>
+     </div>
+     <div class="card" style="width: 10rem;">
+ 
+       <div class="card-body">
+         <p class="card-text"><b>AB+</b> <br>{{ ABp }}ML</p>
+       </div>
+     </div>
+    
+   </div>
+ </div>
+ <div class="container">
+   <br>
+   <br>
+   <div class="row" style="column-gap: 90px;">
+     <div class="card" style="width: 10rem;">
+ 
+       <div class="card-body">
+         <p class="card-text"><b>O-</b> <br>{{ Om }}ML</p>
+       </div>
+     </div>
+     <div class="card" style="width: 10rem;">
+ 
+       <div class="card-body">
+         <p class="card-text"><b>B-</b> <br>{{ Bm }}ML</p>
+       </div>
+     </div>
+     <div class="card" style="width: 10rem;">
+ 
+       <div class="card-body">
+         <p class="card-text"><b>A-</b> <br>{{  Am }}ML</p>
+       </div>
+     </div>
+     <div class="card" style="width: 10rem;">
+ 
+       <div class="card-body">
+         <p class="card-text"><b>AB-</b> <br>{{ ABm }}ML</p>
+       </div>
+     </div>
+    
+   </div>
+ </div>
+<br>
+
+
+{% endblock %}

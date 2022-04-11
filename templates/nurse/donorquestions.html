@@ -1,0 +1,48 @@
+{% extends 'nurse/nurse.html' %}
+{% block content %}
+
+<br>
+{% for msg in messages %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>{{msg}}</strong>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+<br>
+<table class="styled-table">
+    <thead>
+         <tr>
+           <th>Questions</th>
+           <th><a href="{% url 'donorquestions' 'all' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">See All</button></a>&nbsp;
+          
+            <a href="{% url 'addquestions' 'add' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Add Question</button></a></th>
+            </tr>
+          <tr>
+            <th>Type</th>
+            <th></th>
+
+        </tr>
+    </thead>
+    <tbody>
+      {% if questions %}
+      {% for question in questions %}
+       <tr> 
+         <td>{{ question.Type }}</td>
+         <td><a href="{% url 'updatequestion' question.Question_id %}"><button type="button" class="btn btn-info">Update</button></a>&nbsp;
+         <a href="{% url 'deletequestion' question.Question_id %}"><button type="button" class="btn btn-danger">Delete</button></a></td> 
+         </tr>
+      
+      {% endfor %}
+      {% else %}
+      <tr> 
+       <td>No Donation Request For Now </td>
+       <td></td>
+
+     </tr>
+     {% endif %}
+ 
+        
+      </tbody>
+  </table>
+  <br>
+{% endblock %}

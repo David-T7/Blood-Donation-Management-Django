@@ -1,0 +1,44 @@
+{% extends 'bbmanager/bbmanager.html' %}
+{% block content %}
+<br>
+
+  {% for msg in messages%}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <strong>{{msg}}</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endfor %}
+<table class="styled-table">
+    <thead>
+        <tr>
+            <th>Hospital</th>
+            <th>Representative</th>
+            <th><a href="{% url 'hospitals' 'all' %}" ><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Seeall</button></a> </th>
+            <th><a href="{% url 'addhospital'  %}" ><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">AddHospital</button></a></th>
+        </tr>
+    </thead>
+    <tbody>
+      {% if hospitals %}
+      {% for h in hospitals %}
+        <tr>
+          <td>{{ h.HospitalName }}</td>
+          <td>{{ h.HospitalRepresentative }}</td>
+          <td><a href="{% url 'updatehospital' h.Hospital_id %}"><button type="button" class="btn btn-info">Update</button></a></td>&nbsp;
+          <td><a href="{% url 'deletehospital' h.Hospital_id %}"><button type="button" class="btn btn-danger">Delete</button></a></td>
+        </tr>
+      {% endfor %}
+      {% else %}
+      <tr>
+        <td>NO Hospital For Now </td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      {% endif %}
+      
+       
+        <!-- and so on... -->
+    </tbody>
+  </table>
+  <br>
+{% endblock %}

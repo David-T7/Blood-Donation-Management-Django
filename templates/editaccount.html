@@ -1,0 +1,73 @@
+{% load widget_tweaks %}
+<br>
+<section class="h-100">
+    {% for msg in messages%}
+			<div class="alert alert-warning alert-dismissible fade show" role="alert">
+				<strong>{{msg}}</strong>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+	{% endfor %}
+
+    <form  method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% if form1.errors or form2.errors %}
+        {% for field in form1 %}
+            {% for error in field.errors %} 
+               <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>{{ error|escape }}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" ></button>
+            </div>
+            {% endfor %}
+            
+        {% endfor %}
+        {% for field in form2 %}
+        {% for error in field.errors %} 
+           <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>{{ error|escape }}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" ></button>
+        </div>
+        {% endfor %}
+    {% endfor %}
+        {% endif %}
+<div class="container h-100">
+        <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
+<div class="card shadow-lg">
+    <div class="card-body p-5">
+        <h1 class="fs-4 card-title fw-bold mb-4">Update Account </h1>
+        <form  method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            {% for field in form1 %}
+            {% if field.label != 'Role' and field.label != 'Password' %}
+            <div class="mb-3">
+                <label for="formInput#text">{{field.label}}</label>
+                {% render_field field  id="formInput#text" type="text" class="form-control"  %} 	
+            </div>
+            {% endif %}
+            {% endfor %}
+
+            {% for field in form3 %}
+            <div class="mb-3">
+                <label for="formInput#text">{{field.label}}</label>
+                {% render_field field  id="formInput#text"  class="form-control"  %} 	
+            </div>
+            {% endfor %}
+
+            {% for field in form2 %}
+            <div class="mb-3">
+                <label for="formInput#text">{{field.label}}</label>
+                {% render_field field  id="formInput#text"  class="form-control"  %} 	
+            </div>
+            {% endfor %}
+            <div style="align-self:auto; margin-left: 130px;">  
+                <button type="submit" class="btn btn-primary ms-auto">
+                    update
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>
+</div>
+</div>
+</section>

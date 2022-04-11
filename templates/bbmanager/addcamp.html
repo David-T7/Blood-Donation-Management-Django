@@ -1,0 +1,64 @@
+{% extends 'bbmanager/bbmanager.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<br>
+<section class="h-100">
+    {% for msg in messages%}
+			<div class="alert alert-warning alert-dismissible fade show" role="alert">
+				<strong>{{msg}}</strong> You should check in on some of those fields below.
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+	{% endfor %}
+
+    <form  method="POST">
+        {% csrf_token %}
+        {% if form.errors %}
+        {% for field in form %}
+            {% for error in field.errors %} 
+               <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>{{ error|escape }}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" ></button>
+            </div>
+            {% endfor %}
+        {% endfor %}
+        {% endif %}
+<div class="container h-100">
+        <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
+<div class="card shadow-lg">
+    <div class="card-body p-5">
+        <h1 class="fs-4 card-title fw-bold mb-4">Add Camp</h1>
+        <form  method="POST" >
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="campname" class="col-sm-2 col-form-label">Name</label>
+                {% render_field form.CampsName  id="campname" type="text" class="form-control" name="campname"  %} 	
+            </div>
+
+            <div class="mb-3">
+                <label for="campworeda" class="col-sm-2 col-form-label">Woreda</label>
+                {% render_field form.CampsWoreda  id="campworeda" type="text" class="form-control" name="campworeda"  %} 	
+            </div>
+
+            <div class="mb-3">
+                <label for="campkebele" class="col-sm-2 col-form-label">Kebele</label>
+                {% render_field form.CampsKebele  id="campkebele" type="text" class="form-control" name="campkebele"  %} 	
+            </div>
+            <div class="mb-3">
+                <label for="campplace" class="col-sm-2 col-form-label">Place</label>
+                {% render_field form.CampsPlace  id="campplace" type="text" class="form-control" name="campplace"  %} 	
+            </div>
+          
+            <br>
+            <div style="align-self:auto; margin-left: 130px;">
+                <button type="submit" class="btn btn-primary ms-auto">
+                    Add
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>
+        </div>
+    </div>
+    </section>
+{% endblock %}

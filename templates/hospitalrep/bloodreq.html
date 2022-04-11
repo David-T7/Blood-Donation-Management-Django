@@ -1,0 +1,27 @@
+{% extends 'hospitalrep/hospitalrep.html' %}
+{% load static %}
+{% block content %}
+
+
+
+<br>
+  {% for msg in messages%}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <strong>{{msg}}</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endfor %}
+
+<table class="styled-table">
+    <thead>
+         <tr>
+           <th>Blood Request</th>
+           <th><a href="{% url 'bloodrequest' 'all' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">See All</button></a>&nbsp;
+            <a href="{% url 'makebloodrequest'  %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Make Request</button></a>
+            </th>
+
+           
+          </tr>
+          {% include 'hospitalrep/bloodreqlist.html' %}
+
+{% endblock %}

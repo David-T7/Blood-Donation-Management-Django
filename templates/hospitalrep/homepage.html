@@ -1,0 +1,49 @@
+{% extends 'hospitalrep/hospitalrep.html' %}
+
+{% block content %}
+
+<br><br>
+<div class="container">
+  <div class="row" style="column-gap: 70px;">
+    <div class="card" style="width: 10rem;">
+
+      <div class="card-body">
+        <p class="card-text"><b>{{ bloodrequest_no }}</b> <br>Request</p>
+      </div>
+    </div>
+    <div class="card" style="width: 10rem;">
+
+      <div class="card-body">
+        <p class="card-text"><b>{{ accepted_no }}</b> <br>Accepted</p>
+      </div>
+    </div>
+
+    <div class="card" style="width: 10rem;">
+
+        <div class="card-body">
+          <p class="card-text"><b>{{ pending_no }}</b> <br>Pending</p>
+        </div>
+      </div>
+
+    <div class="card" style="width: 10rem;">
+
+        <div class="card-body">
+          <p class="card-text"><b>{{ rejected_no }}</b> <br>Rejected</p>
+        </div>
+      </div>
+   
+  </div>
+
+<br>
+</div>
+<table class="styled-table">
+
+    <thead>
+        <tr>
+          <th>Blood Request</th>
+          <th><a href="{% url 'hospitaldashbord' 'all' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">See All</button></a>&nbsp;
+           </th>
+
+          {% include 'hospitalrep/bloodreqlist.html' %}
+
+{% endblock %}
