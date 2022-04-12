@@ -2,10 +2,65 @@
 {% block content %}
 <!-- Main Wrapper -->
 
+
 <br>
-   <h>There are no camps for the moment </h> <br>
-<a href="{% url 'addcamp' %}"><button type="button" class="btn btn-success">AddCamp</button></a>
+  {% for msg in messages%}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <strong>{{msg}}</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endfor %}
+
+
 <br>
-<br>
+<table class="styled-table">
+    <thead>
+         <tr>
+             <th></th>
+             <th></th>
+             <th></th>
+             <th></th>
+             <th></th>
+           <th><a href="{% url 'camps' 'all' %}"> <button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">SeeAll</button></a>
+            </th>
+            <th><a href="{% url 'addcamp' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">AddCamp</button></a>
+            </th> 
+          </tr>
+        <tr>
+            <th>Name</th>
+            <th>Woreda</th>
+            <th>Kebele</th>
+            <th>City</th>
+            <th>Location</th>
+            <th></th>
+             <th></th>
+        </tr>
+    </thead>
+    <tbody>
+      {% if events %}
+      {% for camp in camps %}
+        <tr>
+          <td>{{ camp.CampsName }}</td>
+          <td>{{ camp.CampsWoreda }}</td>
+          <td>{{ camp.CampsKebele }}</td>
+          <td>{{ camp.city }}</td>
+          <td>{{ camp.location }}</td>
+          <td><a href="{% url 'updatecamp' ev.Event_id %}"><button type="button" class="btn btn-info">Update</button></a></td>&nbsp;
+          <td><a href="{% url 'deletecamp' ev.Event_id %}"><button type="button" class="btn btn-danger">Delete</button></a></td>
+        </tr> 
+      {% endfor %}
+      {% else %}
+      <tr>
+        <td>No Camps For Now</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      {% endif %}  
+    </tbody>
+  </table>
+  <br>
    
 {% endblock %}

@@ -10,6 +10,7 @@
              <th></th>
              <th></th>
              <th></th>
+             <th></th>
            <th><a href="{% url 'getevent' 'all' %}"> <button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">SeeAll</button></a>
             </th>
           </tr>
@@ -19,6 +20,7 @@
             <th>Date</th>
             <th>Time</th>
             <th>Type</th>
+            <th>Picture</th>
         </tr>
     </thead>
     <tbody>
@@ -30,11 +32,13 @@
           <td>{{ ev.EventDate }}</td>
           <td>{{ ev.EventTime }}</td>
           <td>{{ ev.EventType }}</td>
+          <td><img src="/static/images/{{ ev.EventPic }}" style="height: 150px;width: 150px;"></td> 
         </tr> 
       {% endfor %}
       {% else %}
       <tr>
         <td>No Events For Now</td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>

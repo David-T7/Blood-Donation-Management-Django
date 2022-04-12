@@ -10,8 +10,11 @@ blood_type = [
     ('O+', 'O+'),
     ('O-', 'O-'),
     ('A+' , 'A+'),
+    ('A-' , 'A-'),
     ('B+','B+'),
-    ('AB+' ,'AB-')
+     ('B-','B-'),
+    ('AB+' ,'AB+'),
+    ('AB-' ,'AB-'),
     ]
 
 class Hospital(models.Model):

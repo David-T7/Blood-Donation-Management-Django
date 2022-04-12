@@ -34,7 +34,7 @@
           <td>{{ appointment.Date }}</td>
          <td>{{ appointment.Time }}</td>
          {% if appointment.status == 'in progress'  %}
-         <td><a href="{% url 'confirmappointment' appointment.App_id 'accept'  %}"><button type="button" class="btn btn-success">Accept</button></a>&nbsp;<a href="{% url 'confirmappointment' appointment.App_id 'reject'  %}"></a><button type="button" class="btn btn-danger">Reject</button></a></td>      
+         <td><a href="{% url 'confirmappointment' appointment.App_id 'accept'  %}"><button type="button" class="btn btn-success">Accept</button></a>&nbsp;<a href="{% url 'confirmappointment' appointment.App_id 'reject'  %}"><button type="button" class="btn btn-danger">Reject</button></a></td>      
          {% elif appointment.status == 'accepted' %}
          <td><a href="{% url 'confirmappointment' appointment.App_id 'reject'  %}"><button type="button" class="btn btn-success"    onmouseover="this.innerHTML='Reject';this.style.backgroundColor='red';"
           onmouseout="this.innerHTML='Accepted';this.style.backgroundColor='green';">Accepted</button></a></td>      

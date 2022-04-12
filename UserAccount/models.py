@@ -30,7 +30,7 @@ class UserRegistration(models.Model):
     Address_id = models.OneToOneField(Address , on_delete=models.CASCADE)
     Age = models.IntegerField(null=True , blank=True)
     Account_id = models.OneToOneField(Account , on_delete=models.CASCADE)
-    ProfilePic= models.FileField(null=True, blank=True, upload_to='profilepic/', default="profilepic/userdefault.png")
+    ProfilePic= models.FileField(null=True, blank=True, upload_to='profilepic/', default="profilepic/defaultprofile.jpeg")
 
 
 

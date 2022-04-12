@@ -39,7 +39,7 @@ class Donor(models.Model):
 class Appointment(models.Model):
     App_id = models.UUIDField(default=uuid.uuid4, unique=True,
                           primary_key=True, editable=False)
-    Donor_id = models.ForeignKey(Donor , on_delete=models.DO_NOTHING, null=True , blank=True , unique=False)
+    Donor_id = models.ForeignKey(Donor , on_delete=models.SET_NULL, null=True , blank=True , unique=False)
     Date = models.DateField()
     Time = models.TimeField()
     status = models.CharField(null=True , max_length=11 , blank=True , default='in progress')
@@ -77,7 +77,7 @@ Answer_choices = [
 class DonationRequestFormResult(models.Model):
     Result_id = models.UUIDField(default=uuid.uuid4, unique=True,
                           primary_key=True, editable=False)
-    Donor_id = models.ForeignKey(Donor , null=True , on_delete=models.DO_NOTHING,blank=True , unique=False)
+    Donor_id = models.ForeignKey(Donor , null=True , on_delete=models.SET_NULL,blank=True , unique=False)
     HeartDisease = models.CharField(max_length=3, null=True , blank=True ,choices=Answer_choices)
     Kidney_Lung_Bloodpressure_Diabetes_Epilepsy = models.CharField(max_length=3, null=True , blank=True ,  choices=Answer_choices)
     Liverproblems = models.CharField(max_length=3, null=True , blank=True ,choices=Answer_choices)

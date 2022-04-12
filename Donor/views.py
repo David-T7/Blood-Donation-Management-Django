@@ -103,7 +103,10 @@ def DonorDashbord(request , type):
     except:
         done = None
     try:
-        appointment = Appointment.objects.filter(Donor_id = str(donor.Donor_id))
+        if(type=='all'):
+            appointment = Appointment.objects.filter(Donor_id = str(donor.Donor_id))
+        else:
+            appointment = Appointment.objects.filter(Donor_id = str(donor.Donor_id))[0:5]
     except:
         print('no appointment')
         appointment = None
@@ -146,7 +149,10 @@ def DonationRequest(request , type):
     except:
         donation = None
     try:
-        appointment = Appointment.objects.filter(Donor_id = str(donor.Donor_id))
+        if(type=='all'):
+            appointment = Appointment.objects.filter(Donor_id = str(donor.Donor_id))
+        else:
+            appointment = Appointment.objects.filter(Donor_id = str(donor.Donor_id))[0:5]
     except:
         print('no appointment')
         appointment = None
@@ -176,7 +182,7 @@ def MakeDonationRequest(request):
                 req.Donor_id = donor
                 if(deferringList):
                     req.Status = 'rejected'
-                    messages.error(request , 'request rejected')
+                    messages.error(request , 'Sorry you cant make a donation because of health issues')
                     req.save()
                 else:
                     req.save()

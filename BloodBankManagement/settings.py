@@ -1,4 +1,3 @@
-
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -16,7 +15,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -28,6 +26,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'UserAccount',
     'widget_tweaks',
+    'django_google_maps',
+    'location_field.apps.DefaultConfig',
     'Donor',
     'Blood',
     'Hospital',
@@ -36,6 +36,18 @@ INSTALLED_APPS = [
     'Nurse',
     'LabTechnician',
 ]
+
+LOCATION_FIELD = {
+    'map.provider': 'google',
+    'search.provider': 'google',
+    'provider.google.api': '//maps.google.com/maps/api/js?sensor=false',
+    'provider.google.api_key': 'AIzaSyDHWvCvLbnxDhrYnpp0UBLE4PZ0na8fRRQ',
+    'provider.google.api_libraries': '',
+    'provider.google.map.type': 'ROADMAP',
+}
+
+
+
 AUTH_USER_MODEL = 'UserAccount.Account'
 #LOGOUT_REDIRECT_URL = 'home'
 MIDDLEWARE = [

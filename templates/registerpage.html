@@ -66,37 +66,8 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     {% endfor %}
-    <form  method="POST">
-        {% csrf_token %}
-        {% if form1.errors or form2.errors or form3.errors %}
-        {% for field in form1 %}
-            {% for error in field.errors %} 
-               <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <strong>{{ error|escape }}</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" ></button>
-            </div>
-            {% endfor %}
-        {% endfor %}
-        {% for field in form2 %}
-        {% for error in field.errors %} 
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong>{{ error|escape }}</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        {% endfor %}
-    {% endfor %}
-    {% for field in form3 %}
-    {% for error in field.errors %} 
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <strong>{{ error|escape }}</strong>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    {% endfor %}
-{% endfor %}
+    {% include 'errorform.html' %}
 
-
-
-     {% endif %}  
     </div> 
 
                   </form>

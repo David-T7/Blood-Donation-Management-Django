@@ -21,17 +21,13 @@ def Login(request , role):          # function based view for handling user logi
             user = Account.objects.get(username=username)
             user = authenticate(request, username=username, password=password , Role  =role)   # full user authenticaton including role
             if user is not None:
-                # print('user found role' ,user.Role )
-                # print('sended role',role)
-                # if(role  == user.Role ):
-                #     print('why is it not working')
                 login(request, user) 
                 if(role.lower() =='bbmanager' ):    
-                    return redirect('/bbdashbord/all')  # redircting to other page after login
+                    return redirect('/bbdashbord/notall')  # redircting to other page after login
                 elif(role.lower() =='donor'):
-                    return redirect('/donordashbord/all')
+                    return redirect('/donordashbord/notall')
                 elif(role.lower()=='nurse'):
-                    return redirect('/donorrequest/all')
+                    return redirect('/donorrequest/notall')
                 elif(role.lower()=='labtechnician'):
                     return redirect('/labdonationrequest/notall')
                 elif(role =='HospitalRepresentative'):

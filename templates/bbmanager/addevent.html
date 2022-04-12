@@ -11,7 +11,7 @@
 			</div>
 	{% endfor %}
 
-    <form  method="POST">
+    <form  method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {% if form.errors %}
         {% for field in form %}
@@ -28,7 +28,7 @@
 <div class="card shadow-lg">
     <div class="card-body p-5">
         <h1 class="fs-4 card-title fw-bold mb-4">Add Event</h1>
-        <form  method="POST" >
+        <form  method="POST" enctype="multipart/form-data" >
             {% csrf_token %}
 
             {% for field in form %}
