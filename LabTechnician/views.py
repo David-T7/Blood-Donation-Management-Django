@@ -16,7 +16,8 @@ def UserState(request):
 
 def LabTechnician(request):
     account = UserState(request)['account']
-    return render(request , 'labtechnician/labtechnician.html' , {'account':account} )
+    context = {'user': request.user  , 'account':account}
+    return render(request , 'labtechnician/labtechnician.html' , context)
 
 def DonationRequest(request ,  type):
     account = UserState(request)['account']
@@ -33,11 +34,14 @@ def DonationRequest(request ,  type):
         if(type=='all'):
             donation = DonationRequestFormResult.objects.all()
         else:
-            donation = DonationRequestFormResult.objects.all()
+            donation = DonationRequestFormResult.objects.all()[0:5]
     except:
         donation = None
     try:
-        appointment = Appointment.objects.all()
+        if(type=='all'):
+            appointment = Appointment.objects.all()
+        else:
+            appointment = Appointment.objects.all()[0:5]
     except:
         appointment = None
     try:

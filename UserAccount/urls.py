@@ -7,5 +7,7 @@ path('login/<role>', views.Login , name='login'),
 path('logout' , views.Logout , name='logout') , 
 path('reset/<role>',views.ResetPassword , name='reset'),
 path('forgot/<role>',views.ForgotPassword , name='forgot'),
-path('editaccount',views.EditAccount , name='editaccount'),
+path('editusername' , views.EditUserName , name='editusername'  ),
+path('editpassword' , views.EditPassword , name='editpassword'),
+path('eidtprofilepicture' , views.EditProfilePicture , name='editprofielpicture'),
 ]

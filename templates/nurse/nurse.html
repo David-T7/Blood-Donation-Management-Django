@@ -24,7 +24,7 @@
         </li>
         <li class="nav-link">
           <i class="bx bx-edit"></i>
-          <span class="mx-2" ><a class="inner-anchor" href="{% url 'editaccount' %}"> Edit Account</a></span>
+          <span class="mx-2" ><a class="inner-anchor" href="{% url 'editpassword' %}"> Edit Account</a></span>
         </li>
         
         <li class="nav-link">
@@ -53,8 +53,13 @@
       
       <nav class="navbar top-navbar navbar-light bg-light px-5">
         <a class="btn border-0" id="menu-btn"><i class="bx bx-menu"></i></a>
-        <img src="/static/images/{{ account.ProfilePic }}" id="profile-pic"> 
-      </nav>
+        <figure id="image">
+          <img src="/static/images/{{ account.ProfilePic }}" style="height: 80px; 
+          width: 80px;
+          border-radius: 50%; " >
+          <figcaption><b>{{user.username}}</b></figcaption>
+        </figure>
+              </nav>
 
       {% block content %}
 

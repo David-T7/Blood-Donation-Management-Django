@@ -50,7 +50,7 @@ def DonorState(request):
     return context
 
 def Donors(request):
-    context = DonorState(request)
+    context = {'user':request.user , 'donor':DonorState(request)['donor']}
     return render(request , 'donor/donor.html' , context)
 
 def EditAccount(request):

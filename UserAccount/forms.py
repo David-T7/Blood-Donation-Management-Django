@@ -10,7 +10,7 @@ class CusotmUserRegisteration(ModelForm):
     class Meta:
         model = UserRegistration
         fields = '__all__'
-class CustomUserUpdate(ModelForm):
+class ProfilePictureUpdateForm(ModelForm):
     class Meta:
         model = UserRegistration
         fields = ['ProfilePic']

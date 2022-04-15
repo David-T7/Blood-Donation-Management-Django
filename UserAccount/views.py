@@ -3,7 +3,7 @@ from django.shortcuts import redirect, render
 from django.views.generic import ListView
 from django.contrib.auth import login, authenticate, logout
 from UserAccount.models import Account ,  UserRegistration
-from UserAccount.forms import  CustomUserChangeForm, CustomUserCreationForm, CustomUserUpdate
+from UserAccount.forms import  CustomUserChangeForm, CustomUserCreationForm, ProfilePictureUpdateForm
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm 
@@ -60,46 +60,74 @@ def Userstate(request):  # for getting the state of the user
     return context
     
 
-def EditAccount(request):
+def EditUserName(request):
     state = request.user # hodling the state of the user
-    useraccount = Account.objects.get(id=str(state.id))  # getting the user account from the state 
     account = Userstate(request)['account']
-    form1= CustomUserChangeForm(instance=state)  # using form created in forms.py
-    form2=CustomUserUpdate (instance=account)
-    form3 = PasswordChangeForm(request.user)
+    form= CustomUserChangeForm(instance=state)  # using form created in forms.py
 
     if request.method == 'POST':
-        form1 = CustomUserChangeForm(request.POST, instance=state)
-        form2 = CustomUserUpdate(request.POST, request.FILES, instance=account)  # recieving all files from the page including the new profile pic 
-        form3 = PasswordChangeForm(request.user, request.POST)
-
-        if (form1.is_valid() and form2.is_valid() and form3.is_valid()):
+        form = CustomUserChangeForm(request.POST, instance=state)
+        if (form.is_valid()):
             try:
-                user = form3.save()
-                update_session_auth_hash(request, user)  # Important!
-            except:
-                messages.error(request,'Error occured during updating password')
-            try:
-                form1.save()
+                form.save()
                 messages.success(request,'Account updated successfuly')
             except:
                 messages.error(request,'Error occured during updating account')
+        else:
+                messages.error(request,'please input correct information')
+        request.user.save() # saving the state of the user after it is updated 
+    context = {'form': form , 'account':account , 'sender':'username'}
+    if(request.user.Role.lower() == 'bbmanager'):
+        return render(request, 'bbmanager/editusername.html', context)
+    elif(request.user.Role.lower() == 'nurse'):
+        return render(request, 'nurse/editusername.html', context)
+    elif(request.user.Role.lower() == 'labtechnician'):
+        return render(request, 'labtechnician/editusername.html', context)
+
+def EditProfilePicture(request):
+    account = Userstate(request)['account']
+    form  = ProfilePictureUpdateForm (instance=account)
+    if request.method == 'POST':
+        form = ProfilePictureUpdateForm(request.POST, request.FILES, instance=account)  # recieving all files from the page including the new profile pic 
+        if (form.is_valid()):
             try:
-                form2.save()
+                form.save()
             except:
                 messages.error(request,'Error occured during updating profile pic')
         else:
                 messages.error(request,'please input correct information')
-        request.user.save() # saving the state of the user after it is updated 
-    context = {'form1': form1 , 'form2':form2 ,'form3':form3 , 'account':account }
+        request.user.save()
+    context= {'form':form , 'account':account , 'sender':'profilepic'}
     if(request.user.Role.lower() == 'bbmanager'):
-        return render(request, 'bbmanager/editaccount.html', context)
+        return render(request, 'bbmanager/editprofile.html', context)
     elif(request.user.Role.lower() == 'nurse'):
-        return render(request, 'nurse/editaccount.html', context)
+        return render(request, 'nurse/editprofile.html', context)
     elif(request.user.Role.lower() == 'labtechnician'):
-        return render(request, 'labtechnician/editaccount.html', context)
+        return render(request, 'labtechnician/editprofile.html', context)
 
+def EditPassword(request):
+    account = Userstate(request)['account']
+    form = PasswordChangeForm(request.user)
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if (form.is_valid()):
+            try:
+                user = form.save()
+                update_session_auth_hash(request, user)
+                messages.error(request,'Password Was  Updated Successfuly')
 
+            except:
+                messages.error(request,'Error occured during updating password')
+        else:
+                messages.error(request,'please input correct information')
+        request.user.save()
+    context= {'form':form , 'account':account , 'sender':'password'}
+    if(request.user.Role.lower() == 'bbmanager'):
+        return render(request, 'bbmanager/editpassword.html', context)
+    elif(request.user.Role.lower() == 'nurse'):
+        return render(request, 'nurse/editpassword.html', context)
+    elif(request.user.Role.lower() == 'labtechnician'):
+        return render(request, 'labtechnician/editpassword.html', context)
     
 
 

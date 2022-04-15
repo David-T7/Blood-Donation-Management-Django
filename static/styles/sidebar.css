@@ -43,14 +43,28 @@ body {
 }
 
 #profile-pic {
-  margin-left: -300px;
-  max-width: 300px; 
   height: 80px; 
   width: 80px;
+  border-radius: 50%; 
+}
+
+
+#image{
+  max-width: 300px; 
+  height: 80px;
   border-radius: 50%; 
   top: 10px;
   right: 0px;
 }
+#username{
+  margin-left: -300px;
+  max-width: 300px; 
+  height: 80px; 
+  width: 80px; 
+  top: 30px;
+  right: 0px;
+}
+
 
 .my-container input {
   border-radius: 2rem;
