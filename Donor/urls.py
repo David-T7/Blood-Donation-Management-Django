@@ -9,5 +9,7 @@ path('makerequest', views.MakeDonationRequest , name='makerequest'),
 path('makeappointment', views.MakeAppointment , name='makeappointment'),
 path('getevent/<type>' , views.GetEvent , name='getevent'),
 path('camps/<type>'  , views.GetCamp , name='getcamp' ),
-path('donoreditaccount/' , views.EditAccount , name='donoreditaccount'),
+path('donoreditusername' , views.EditUserName , name='donoreditusername'),
+path('donoreditpassword' , views.EditPassword , name='donoreditpassword'),
+path('donoreditprofilepicture' , views.EditProfile ,name= 'donoreditprofilepicture'),
 ]

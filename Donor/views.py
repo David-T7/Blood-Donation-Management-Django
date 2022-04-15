@@ -23,18 +23,21 @@ def Register(request):
         form3 = CustomUserCreationForm(request.POST)
         if (form1.is_valid() and form2.is_valid() and form3.is_valid()):  # checking  values send from the page are valid  
             try:
-                account = form3.save(commit=False) # saving the values but not in the table
-                account.Role='Donor'
-                account.save() # saving the user account
-                address = form2.save(commit=False)
-                address.save()
-                donor = form1.save(commit=False)
-                phone = request.POST['Phone']
-                donor.Address_id= Address.objects.get(Phone=phone)  # assingnin donor_id field in donor form adress table using phone
-                donor.Account_id = account
-                donor.save()
-                messages.success(request, 'Successfully Registered')
-                return redirect('/login/Donor')
+                if(int(request.POST['Age']) >=18):
+                    account = form3.save(commit=False) # saving the values but not in the table
+                    account.Role='Donor'
+                    account.save() # saving the user account
+                    address = form2.save(commit=False)
+                    address.save()
+                    donor = form1.save(commit=False)
+                    phone = request.POST['Phone']
+                    donor.Address_id= Address.objects.get(Phone=phone)  # assingnin donor_id field in donor form adress table using phone
+                    donor.Account_id = account
+                    donor.save()
+                    messages.success(request, 'Successfully Registered')
+                    return redirect('/login/Donor')
+                else:
+                    messages.error(request , 'You must be 18 or above to register')
             except:   
                 messages.error(request, 'An error has occurred during registration after form')
         else:
@@ -53,38 +56,67 @@ def Donors(request):
     context = {'user':request.user , 'donor':DonorState(request)['donor']}
     return render(request , 'donor/donor.html' , context)
 
-def EditAccount(request):
+def EditProfile(request):
     state = request.user
     useraccount = Account.objects.get(id=state.id)
     donor= Donor.objects.get(Account_id = useraccount.id)
-    form1= CustomUserChangeForm(instance= state)
-    form2= DonorAccountEditForm (instance=donor)
-    form3 = PasswordChangeForm(request.user)
+    form= DonorAccountEditForm (instance=donor)
     if request.method == 'POST':
-        form1 = CustomUserChangeForm(request.POST, instance=state)
-        form2 = DonorAccountEditForm(request.POST, request.FILES, instance=donor)
-        form3 = PasswordChangeForm(request.user, request.POST)
-
-        if (form1.is_valid() and form2.is_valid() and form3.is_valid()):
+        form = DonorAccountEditForm(request.POST, request.FILES, instance=donor)
+        if (form.is_valid()):
             try:
-                user = form3.save()
-                update_session_auth_hash(request, user)
-            except:
-                messages.error(request,'Error occured during updating password')
-            try:
-                form1.save()
-                messages.success(request,'Account updated successfuly')
-            except:
-                messages.error(request,'Error occured during updating account')
-            try:
-                form2.save()
+                form.save()
             except:
                 messages.error(request,'Error occured during updating profile pic')
         else:
                 messages.error(request,'please input correct information')
         request.user.save()
-    context = {'form1': form1 , 'form2':form2 ,'form3':form3 , 'donor':donor }
-    return render(request, 'donor/editaccount.html', context)
+    context = {'form': form , 'donor':donor , 'sender':'profile'}
+    return render(request, 'donor/editprofile.html', context)
+
+def EditUserName(request):
+    state = request.user
+    donor = DonorState(request)['donor']
+    form= CustomUserChangeForm (instance=state)
+    if request.method == 'POST':
+        form = CustomUserChangeForm(request.POST, instance=state)
+        if (form.is_valid()):
+            try:
+                form.save()
+            except:
+                messages.error(request,'Error occured during updating username')
+        else:
+                messages.error(request,'please input correct information')
+        request.user.save()
+    context = {'form': form , 'donor':donor , 'sender':'username'}
+    return render(request, 'donor/editusername.html', context)
+
+
+
+
+def EditPassword(request):
+    donor = DonorState(request)['donor']
+    form = PasswordChangeForm(request.user)
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+
+        if (form.is_valid()):
+            try:
+                user = form.save()
+                update_session_auth_hash(request, user)
+                messages.success(request , 'Successfuly updated password')
+            except:
+                messages.error(request,'Error occured during updating password')
+        else:
+                messages.error(request,'please input correct information')
+        request.user.save()
+    context = {'form': form ,'donor':donor , 'sender':'password' }
+    return render(request, 'donor/editpassword.html', context)
+
+
+
+
+
 
     
 def DonorDashbord(request , type):

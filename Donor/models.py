@@ -6,12 +6,15 @@ from UserAccount.models import Account, Address
 import uuid;
 
 blood_group = [
-    ( None, 'select type'),
+      ( None, 'Select type'),
     ('O+', 'O+'),
     ('O-', 'O-'),
     ('A+' , 'A+'),
+    ('A-' , 'A-'),
     ('B+','B+'),
-    ('AB+' ,'AB-')
+     ('B-','B-'),
+    ('AB+' ,'AB+'),
+    ('AB-' ,'AB-'),
     ]
 
 
@@ -30,7 +33,7 @@ class Donor(models.Model):
     Weight = models.FloatField(max_length=10, null=True , blank=True)
     BMS = models.FloatField(max_length=10 , null=True , blank=True)
     BloodPressure = models.CharField(max_length=10 ,  null=True , blank=True)
-    ProfilePic= models.FileField(null=True, blank=True, upload_to='profilepic/', default="profilepic/userdefault.png")
+    ProfilePic= models.FileField(null=True, blank=True, upload_to='profilepic/', default="profilepic/defaultprofile.jpeg.")
     def __str__(self):
         return str(self.Donor_id)
 
