@@ -33,9 +33,15 @@
 
 
     <div class="p-1 my-container active-cont" style="background-color:lightblue">
-        <nav class="navbar top-navbar navbar-light bg-light px-5">
-            <a class="btn border-0" id="menu-btn"><i class="bx bx-menu"></i></a>
-          </nav>
+      <nav class="navbar top-navbar navbar-light bg-light px-5">
+        <a class="btn border-0" id="menu-btn"><i class="bx bx-menu"></i></a>
+        <figure id="image">
+          <img src="/static/images/{{ hospital.ProfilePic }}" style="height: 80px; 
+          width: 80px;
+          border-radius: 50%; " >
+          <figcaption style="text-align: center;"><b>{{hospital.Username}}</b></figcaption>
+        </figure>
+              </nav>
 
 
       {% block content %}

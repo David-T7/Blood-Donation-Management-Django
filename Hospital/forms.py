@@ -6,7 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 class HospitalCreationForm(ModelForm):
     class Meta:
         model = Hospital
-        fields = ['HospitalName' , 'BranchNo' , 'HospitalRepresentative','Username']
+        fields = ['HospitalName' , 'BranchNo' , 'HospitalRepresentative','Username','ProfilePic']
 
 
 class BloodRequestForm(ModelForm):

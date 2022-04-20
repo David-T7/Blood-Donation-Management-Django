@@ -2,6 +2,7 @@ from django.db import models
 import uuid
 from Donor.models import Donor
 
+
 blood_type = [
     ( None, 'Select type'),
     ('O+', 'O+'),
@@ -23,4 +24,23 @@ class Blood(models.Model):
     RegDate = models.DateTimeField(auto_now_add=True)
     ExpDate = models.DateTimeField(max_length=10)
     QuantityOfBlood = models.CharField(max_length=4)
+
+
+class BloodHistory(models.Model):
+    Blood_id = models.UUIDField(blank=True , null=True)
+    Donor_id = models.UUIDField(null=True , blank=True )
+    BloodGroup = models.CharField(max_length=20 ,  choices=blood_type)
+    PackNo = models.CharField(max_length=20)
+    RegDate = models.DateTimeField(max_length=10)
+    ExpDate = models.DateTimeField(max_length=10)
+    QuantityOfBlood = models.CharField(max_length=4)
+    Action = models.CharField(max_length=20 , null=True , blank=True)
+
+
+
+
+    
+
+
+
   

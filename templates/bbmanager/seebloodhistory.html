@@ -9,6 +9,7 @@
          <th><a href="{% url 'bloodhistory' 'all' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Seeall</button></a>
           </th>
         <th></th> 
+        <th></th>
         </tr>
 
         <tr>
@@ -16,6 +17,7 @@
             <th>Volume</th>
             <th>RegDate</th>
             <th>ExpDate</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
@@ -26,11 +28,13 @@
          <td>{{ blood.QuantityOfBlood }}</td>
          <td>{{ blood.RegDate }}</td>
          <td>{{ blood.ExpDate }}</td>
+         <td>{{ blood.Action }}</td>
        </tr>
        {% endfor %}
       {% else %}
       <tr> 
        <td>No Blood History For Now </td>
+       <td></td>
        <td></td>
        <td></td>
        <td></td>

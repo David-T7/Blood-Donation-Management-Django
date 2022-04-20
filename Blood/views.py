@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from Donor.models import Appointment, Donor
 from LabTechnician.models import FininshedAppointment
-from .models import Blood
+from .models import Blood , BloodHistory
 from UserAccount.models import UserRegistration
 from .forms import BloodCreationForm
 from django.contrib import  messages
@@ -37,25 +37,27 @@ def AddBlood(request , pk , pk2):
                 blood = form.save(commit=False)
                 blood.Donor_id = donor
                 blood.save()
+                BloodHistory.objects.create(Blood_id=blood.Blood_id , Donor_id = donor.Donor_id ,BloodGroup = blood.BloodGroup , 
+                PackNo = blood.PackNo , RegDate = blood.RegDate , ExpDate = blood.ExpDate , QuantityOfBlood = blood.QuantityOfBlood , Action='Added'      ) 
                 appointment = Appointment.objects.get(App_id = pk2)
                 FininshedAppointment.objects.create(Appointment_id = appointment)
                 messages.success(request, 'Successfully added blood')
                 return redirect('/labdonationrequest/notall')
             except:
                 messages.error(request, 'Error during adding blood')
-        else:
+        else: 
             messages.error(request, 'Error during adding blood form')
     context = {'form':form , 'account':account}
     return render (request , 'labtechnician/addblood.html' , context)
         
-def BloodHistory(request , type):
+def BloodsHistory(request , type):
     account = UserState(request)['account']
     bloods = None
     try:
         if(type == 'all'):
-            bloods = Blood.objects.all()[::-1]
+            bloods = BloodHistory.objects.all()[::-1]
         else:
-            bloods = Blood.objects.all()[0:5][::-1]   
+            bloods = BloodHistory.objects.all()[0:5][::-1]   
     except:
         bloods = None
     context = {'account':account , 'bloods':bloods}

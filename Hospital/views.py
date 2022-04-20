@@ -1,9 +1,11 @@
+from multiprocessing import context
 from django.shortcuts import redirect, render
 from django.contrib import  messages
+from Donor.models import Donor
 from Hospital.forms import BloodRequestForm, HospitalCreationForm 
 from UserAccount.forms import AddressCreationForm
-from .models import BloodRequest , Hospital
-from Blood.models import Blood
+from .models import BloodRequest , Hospital, HospitalSentBloods
+from Blood.models import Blood, BloodHistory
 from UserAccount.models import Account, Address, UserRegistration
 from django.contrib.auth.forms import PasswordChangeForm 
 from django.contrib.auth import update_session_auth_hash
@@ -17,7 +19,6 @@ def bbmanagerstate(request):
 
 def HospitalState(request):
     hospital_username = request.user.username
-    print('username is',hospital_username)
     context = {'hospital': Hospital.objects.get( Username = hospital_username)  }
     return context
 
@@ -44,7 +45,9 @@ def HospitalRequest(request, type):
     return render (request , 'bbmanager/hospitalrequest.html' , context)
 
 def  HospitalRep(request):
-    return render (request , 'hospitalrep/hospitalrep.html')
+    hospital = HospitalState(request)['hospital']
+    context = {'hospital':hospital}
+    return render (request , 'hospitalrep/hospitalrep.html' , context)
 
 def Hospitals(request , type):
     hopitals = None
@@ -61,7 +64,7 @@ def AddHospital(request):
     form1 = HospitalCreationForm()
     form2 = AddressCreationForm()
     if request.method == 'POST':
-        form1= HospitalCreationForm(request.POST)
+        form1= HospitalCreationForm(request.POST , request.FILES)
         form2 = AddressCreationForm(request.POST)
         if (form1.is_valid() and form2.is_valid()):
             try:
@@ -85,10 +88,10 @@ def AddHospital(request):
 def UpdateHospital(request , pk ):
     hospital = Hospital.objects.get(Hospital_id=pk)
     address = Address.objects.get(Address_id = str(hospital.Address_id))
-    form1 = HospitalCreationForm(instance=hospital)
+    form1 = HospitalCreationForm(instance=hospital )
     form2 = AddressCreationForm(instance=address )
     if request.method == 'POST':
-        form1 = HospitalCreationForm(request.POST, instance=hospital)
+        form1 = HospitalCreationForm(request.POST, request.FILES ,   instance=hospital)
         form2 = AddressCreationForm(request.POST , instance=address )
         if (form1.is_valid() and form2.is_valid()):
             hospital = form1.save(commit=False)
@@ -102,7 +105,7 @@ def UpdateHospital(request , pk ):
                 messages.error(request ,'NO hospital with that username found' )     
         else:
             messages.success(request, 'Hospital was not updated successfully!')
-    context = {'form1': form1 ,'form2':form2 , 'type':'update' , 'account':bbmanagerstate(request)['account']}
+    context = {'form1': form1 ,'form2':form2 , 'type':'update' , 'account':bbmanagerstate(request)['account'],'hospital':hospital}
     return render(request, 'bbmanager/addhospital.html', context)
 
 def DeleteHospital(request , pk):
@@ -130,7 +133,7 @@ def BloodRequests(request , type):
             bloodreq = BloodRequest.objects.filter( Hospital_id  =  hospital.Hospital_id)[0:5]
     except:
         bloodreq = None
-    context = {'bloodreq': bloodreq , 'hospital': Hospital}
+    context = {'bloodreq': bloodreq , 'hospital': hospital}
     return render (request , 'hospitalrep/bloodreq.html' , context )
 
 def HospitalDashbord(request , type):
@@ -270,15 +273,38 @@ def AcceptBloodRequest(request , pk ,  type):
             breq = BloodRequest.objects.get(Blood_Req_Id = pk)
             breq.Status = 'accepted'
             breq.save()
+            blood= Blood.objects.get(Blood_id = str(breq.Blood_id.Blood_id))
+            BloodHistory.objects.create(Blood_id=blood.Blood_id , Donor_id = blood.Donor_id.Donor_id ,BloodGroup = blood.BloodGroup , 
+                PackNo = blood.PackNo , RegDate = blood.RegDate , ExpDate = blood.ExpDate , QuantityOfBlood = blood.QuantityOfBlood , Action='Removed')
+            HospitalSentBloods.objects.create(Blood_Req_Id = breq.Blood_Req_Id , Blood_id=blood.Blood_id)
+            blood.delete()
             messages.success(request,'Request was Accepted Succesfuly')
-        else:
+        elif(type=='firstreject'):
             breq = BloodRequest.objects.get(Blood_Req_Id = pk)
             breq.Status = 'rejected'
             breq.save()
             messages.success(request,'Request was Rejected Successfully')
+        elif(type=='secondreject'):
+            print('in reject')
+            breq = BloodRequest.objects.get(Blood_Req_Id = pk)
+            breq.Status = 'rejected'
+            breq.save()
+            sentblood = HospitalSentBloods.objects.get(Blood_Req_Id = breq.Blood_Req_Id)
+            print('sent blood ', sentblood.Blood_id)
+            removedblood = BloodHistory.objects.filter(Blood_id = sentblood.Blood_id)[0]
+            donor = Donor.objects.get(Donor_id = removedblood.Donor_id)
+            blood = Blood.objects.create(Donor_id = donor , BloodGroup = removedblood.BloodGroup ,  
+            PackNo = removedblood.PackNo , RegDate= removedblood.RegDate ,ExpDate = removedblood.ExpDate ,QuantityOfBlood= removedblood.QuantityOfBlood)
+            BloodHistory.objects.create(Blood_id=blood.Blood_id , Donor_id = blood.Donor_id.Donor_id ,BloodGroup = blood.BloodGroup , 
+                PackNo = blood.PackNo , RegDate = blood.RegDate , ExpDate = blood.ExpDate , QuantityOfBlood = blood.QuantityOfBlood , Action='Added')
+            breq.Blood_id = blood
+            breq.save()
+            sentblood.delete()
+            messages.success(request,'Request was Rejected Successfully')
         return redirect('/hospitalrequest/notall')
     except:
         messages.error(request,'Error During confirming Request')
+        return redirect('/hospitalrequest/notall')
     context = {'account':account}
     return render (request , 'bbmanager/hospitalrequest.html', context)
     

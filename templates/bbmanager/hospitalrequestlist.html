@@ -43,9 +43,9 @@
         {% endif %}
         {% if sender != 'dashbord' %}
         {% if br.Status == 'in progress'  %}
-        <td><a href="{% url 'acceptbloodrequest' br.Blood_Req_Id 'accept'  %}"><button type="button" class="btn btn-success">Accept</button></a>&nbsp; <a href="{% url 'acceptbloodrequest' br.Blood_Req_Id 'reject'  %}"><button type="button" class="btn btn-danger">Reject</button></a> 
+        <td><a href="{% url 'acceptbloodrequest' br.Blood_Req_Id 'accept'  %}"><button type="button" class="btn btn-success">Accept</button></a>&nbsp; <a href="{% url 'acceptbloodrequest' br.Blood_Req_Id 'firstreject'  %}"><button type="button" class="btn btn-danger">Reject</button></a> 
         {% elif br.Status == 'accepted' %}
-        <td><a style="text-decoration: none;" href="{% url 'acceptbloodrequest' br.Blood_Req_Id  'reject'  %}"><button type="button" class="btn btn-success"     onmouseover="this.innerHTML='Reject';this.style.backgroundColor='red';"
+        <td><a style="text-decoration: none;" href="{% url 'acceptbloodrequest' br.Blood_Req_Id  'secondreject'  %}"><button type="button" class="btn btn-success"     onmouseover="this.innerHTML='Reject';this.style.backgroundColor='red';"
           onmouseout="this.innerHTML='Accepted';this.style.backgroundColor='green';">Accepted</button></a></td>
         {% elif br.Status == 'rejected' %}
         <td><a style="text-decoration: none;" href="{% url 'acceptbloodrequest' br.Blood_Req_Id  'accept'  %}"><button type="button" class="btn btn-danger"     onmouseover="this.innerHTML='Accept';this.style.backgroundColor='green';"

@@ -14,7 +14,7 @@
                   <div class="p-5">
                     <h3 class="fw-normal mb-5" style="color: #4835d4;">General Infomation</h3> 
                    
-                        <form  method="POST">
+                        <form  method="POST"  enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="row">
                         {% for field in form1 %}

@@ -3,3 +3,4 @@ from .models import Appointment, Donor , DonationRequestFormQuesitons , Donation
 # Register your models here.
 admin.site.register(DonationRequestFormResult )
 admin.site.register(Appointment)
+admin.site.register(Donor)
