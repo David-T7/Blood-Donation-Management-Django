@@ -8,7 +8,6 @@ from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm 
 
-
 class HomePage(ListView):   # class based view for just rendering the home page         
     model= Account           
     template_name = 'home.html' 
@@ -18,8 +17,7 @@ def Login(request , role):          # function based view for handling user logi
         username = request.POST['username'].lower()      # making sure the user name is in lowercase 
         password = request.POST['password1']
         try:
-            user = Account.objects.get(username=username)
-            user = authenticate(request, username=username, password=password , Role  =role)   # full user authenticaton including role
+            user = authenticate(request=request, username=username, password=password , Role  =role)   # full user authenticaton including role
             if user is not None:
                 login(request, user) 
                 if(role.lower() =='bbmanager' ):    
@@ -34,10 +32,13 @@ def Login(request , role):          # function based view for handling user logi
                     print('in checking')
                     return redirect('/hospitaldashbord/notall')
             else:
-                messages.error(request, 'Username OR password is incorrect')   # Searching the user in Account table
+                login(request, user , backend='django.contrib.auth.backends.ModelBackend')
         except:
-            messages.error(request, 'Username does not exist')
-        
+            try:
+                testusername = Account.objects.get(username = username)
+                messages.error(request, 'Incorrect Password')
+            except:
+                messages.error(request, 'Username doestnot exist')
     return render(request, 'login.html',{'Role':role,'form':form})  
 
 def Logout(request):

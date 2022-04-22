@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'UserAccount',
     'widget_tweaks',
+    'axes',
     'django_google_maps',
     'location_field.apps.DefaultConfig',
     'Donor',
@@ -50,6 +51,15 @@ LOCATION_FIELD = {
 
 AUTH_USER_MODEL = 'UserAccount.Account'
 #LOGOUT_REDIRECT_URL = 'home'
+AUTHENTICATION_BACKENDS = [
+# AxesBackend should be the first backend in the AUTHENTICATION_
+'axes.backends.AxesBackend',
+# Django ModelBackend is the default authentication backend.
+'django.contrib.auth.backends.ModelBackend',
+]
+
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -58,8 +68,15 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'axes.middleware.AxesMiddleware',
 ]
 
+
+
+
+SILENCED_SYSTEM_CHECKS = ['axes.W003']
+AXES_ONLY_ADMIN_SITE = False
+AXES_ONLY_USER_FAILURES = True
 ROOT_URLCONF = 'BloodBankManagement.urls'
 
 TEMPLATES = [
