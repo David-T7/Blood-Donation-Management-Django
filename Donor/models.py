@@ -33,7 +33,7 @@ class Donor(models.Model):
     Weight = models.FloatField(max_length=10, null=True , blank=True)
     BMS = models.FloatField(max_length=10 , null=True , blank=True)
     BloodPressure = models.CharField(max_length=10 ,  null=True , blank=True)
-    ProfilePic= models.FileField(null=True, blank=True, upload_to='profilepic/', default="profilepic/defaultprofile.jpeg.")
+    ProfilePic= models.FileField(null=True, blank=True, upload_to='profilepic/', default="profilepic/defaultprofile.jpeg")
     def __str__(self):
         return str(self.Donor_id)
 

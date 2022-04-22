@@ -20,7 +20,7 @@ def Register(request):
     form2= AddressCreationForm()
     form3= CustomUserCreationForm()
     if request.method == 'POST':
-        form1= DonorCreationForm(request.POST)  # getting values send from the page
+        form1= DonorCreationForm(request.POST , request.FILES)  # getting values send from the page
         form2= AddressCreationForm(request.POST)
         form3 = CustomUserCreationForm(request.POST)
         if (form1.is_valid() and form2.is_valid() and form3.is_valid()):  # checking  values send from the page are valid  
