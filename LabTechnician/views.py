@@ -6,6 +6,8 @@ from Blood.models import Blood
 from Donor.models import Appointment, DonationRequestFormResult, Donor
 from LabTechnician.models import FininshedAppointment , DeferringList
 from UserAccount.models import Address, UserRegistration
+from django.utils.dateparse import parse_date 
+
 
 def UserState(request):
     user = request.user
@@ -33,15 +35,48 @@ def DonationRequest(request ,  type):
     try:
         if(type=='all'):
             donation = DonationRequestFormResult.objects.all()
-        else:
+        elif(type == 'notall'):
             donation = DonationRequestFormResult.objects.all()[0:5]
+        elif(type=='searched'):
+            print('in searched ')
+            if request.method == 'POST':
+                print('in post')
+                searchby = request.POST['searchby']
+                searched = request.POST['searched']
+                if(searchby == 'DonorName'):
+                    dn = Donor.objects.get(Donorname = searched)
+                    donation = DonationRequestFormResult.objects.filter(Donor_id = dn.Donor_id)
+                elif(searchby == 'Phone'):
+                    addr = Address.objects.get(Phone = int(searched))
+                    dn = Donor.objects.get(Address_id = addr)
+                    donation = DonationRequestFormResult.objects.filter(Donor_id = dn.Donor_id)
+                elif(searchby == 'AppointDate'):
+                    date = parse_date(searched)
+                    appointment = Appointment.objects.get(Date =  date)
+                    donation = DonationRequestFormResult.objects.filter(Donor_id = appointment.Donor_id)   
     except:
         donation = None
     try:
         if(type=='all'):
             appointment = Appointment.objects.all()
-        else:
+        elif(type=='notall'):
             appointment = Appointment.objects.all()[0:5]
+        elif(type=='searched'):
+            print('in searched ')
+            if request.method == 'POST':
+                print('in post')
+                searchby = request.POST['searchby']
+                searched = request.POST['searched']
+                if(searchby == 'DonorName'):
+                    dn = Donor.objects.get(Donorname = searched)
+                    appointment = Appointment.objects.filter(Donor_id = dn.Donor_id)
+                elif(searchby == 'Phone'):
+                    addr = Address.objects.get(Phone = int(searched))
+                    dn = Donor.objects.get(Address_id = addr)
+                    appointment = Appointment.objects.filter(Donor_id = dn.Donor_id)
+                elif(searchby == 'AppointDate'):
+                    date = parse_date(searched)
+                    appointment = Appointment.objects.filter(Date =  date) 
     except:
         appointment = None
     try:
@@ -49,7 +84,10 @@ def DonationRequest(request ,  type):
             deferringlist.append(str(dl.Donor_id))
     except:
         deferringlist = []
-    my_list = list(itertools.zip_longest(donation,appointment))
+    try:
+        my_list = list(itertools.zip_longest(donation,appointment))
+    except:
+        my_list = []
     context = {'list':my_list , 'donation':donation ,'account':account , 'finished':finished_appointment , 'deferringlist':deferringlist }
     return render (request , 'labtechnician/donationrequest.html' , context  )
 

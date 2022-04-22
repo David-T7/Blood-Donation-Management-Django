@@ -1,6 +1,8 @@
        <tr >
-           <th>Time</th>
+           <th>Date</th>
            <th>Status</th>
+           <th></th>
+           <th></th>
        </tr>
    </thead>
    <tbody>
@@ -22,11 +24,15 @@
       </svg>
       {% endif %}
       &nbsp;{{ req.Status}} </td>
+      <td></td>
+      <td></td>
     </tr>
      {% endfor %}
      {% else %}
      <tr> 
       <td>No Blood Request For Now </td>
+      <td></td>
+      <td></td>
       <td></td>
     </tr>
     {% endif %}  

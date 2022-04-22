@@ -9,6 +9,7 @@ from Blood.models import Blood, BloodHistory
 from UserAccount.models import Account, Address, UserRegistration
 from django.contrib.auth.forms import PasswordChangeForm 
 from django.contrib.auth import update_session_auth_hash
+from django.utils.dateparse import parse_date 
 
 
 def bbmanagerstate(request):
@@ -28,8 +29,24 @@ def HospitalRequest(request, type):
     try:
         if(type=='all'):
             bloodrequest = BloodRequest.objects.all()
-        else:
+        elif(type=='notall'):
             bloodrequest = BloodRequest.objects.all()[0:5]
+        elif(type=='searched'):
+            print('in searched ')
+            if request.method == 'POST':
+                print('in post')
+                searchby = request.POST['searchby']
+                searched = request.POST['searched']
+                if(searchby == 'HospitalName'):
+                    hs = Hospital.objects.get(HospitalName = searched)
+                    bloodrequest = BloodRequest.objects.filter(Hospital_id = hs.Hospital_id)
+                elif(searchby == 'Phone'):
+                    addr = Address.objects.get(Phone = int(searched))
+                    hs = Hospital.objects.get(Address_id = addr)
+                    bloodrequest = BloodRequest.objects.filter(Hospital_id = hs.Hospital_id)
+                elif(searchby == 'RequestDate'):
+                    date = parse_date(searched)
+                    bloodrequest = BloodRequest.objects.filter(Request_Date =  date)  
 
     except:
         bloodrequest= None
@@ -50,12 +67,23 @@ def  HospitalRep(request):
     return render (request , 'hospitalrep/hospitalrep.html' , context)
 
 def Hospitals(request , type):
-    hopitals = None
+    hospitals = None
     try:
         if(type=='all'):
             hospitals = Hospital.objects.all()
-        else:
+        elif(type=='notall'):
             hospitals = Hospital.objects.all()[0:5]
+        elif(type=='searched'):
+            if request.method == 'POST':
+                searchby = request.POST['searchby']
+                searched = request.POST['searched']
+                if(searchby == 'HospitalName'):
+                    hospitals = Hospital.objects.filter(HospitalName = searched)
+                elif(searchby == 'Phone'):
+                    addr = Address.objects.get(Phone = int(searched))
+                    hospitals = Hospital.objects.filter(Address_id = addr)
+                elif(searchby == 'Representative'):
+                    hospitals = Hospital.objects.filter(HospitalRepresentative = searched)
     except:
         hospitals= None
     context={'hospitals' : hospitals , 'account':bbmanagerstate(request)['account']}
@@ -129,8 +157,19 @@ def BloodRequests(request , type):
     try:
         if(type=='all'):
             bloodreq = BloodRequest.objects.filter( Hospital_id  =  hospital.Hospital_id)
-        else:
+        elif(type=='notall'):
             bloodreq = BloodRequest.objects.filter( Hospital_id  =  hospital.Hospital_id)[0:5]
+        elif(type=='searched'):
+            print('in searched ')
+            if request.method == 'POST':
+                print('in post')
+                searchby = request.POST['searchby']
+                searched = request.POST['searched']
+                if(searchby == 'Status'):
+                    bloodreq = BloodRequest.objects.filter(Status = searched)
+                elif(searchby == 'RequestDate'):
+                    date = parse_date(searched)
+                    bloodreq = BloodRequest.objects.filter(Request_Date =  date)  
     except:
         bloodreq = None
     context = {'bloodreq': bloodreq , 'hospital': hospital}

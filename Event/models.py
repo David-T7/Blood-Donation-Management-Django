@@ -11,6 +11,7 @@ class Event(models.Model):
     EventDate = models.DateField(max_length=20)
     EventPlace = models.CharField(max_length=50)
     EventTime = models.TimeField()
+    EventDate = models.DateField()
     EventType = models.CharField(max_length=10)
     EventPic= models.FileField(null=True, blank=True, upload_to='events/', default="events/defaultevent.png")
 

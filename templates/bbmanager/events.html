@@ -20,22 +20,48 @@
              <th></th>
              <th></th>
              <th></th>
+             <th><a href="{% url 'events' 'all' %}"> <button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">SeeAll</button></a>
+             </th>
+             <th><a href="{% url 'addevent' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">AddEvent</button></a>
+             </th>
              <th></th>
-             <th></th>
-           <th><a href="{% url 'events' 'all' %}"> <button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">SeeAll</button></a>
+             <form method="post" action="{% url 'events' 'searched' %}">
+              {% csrf_token %}
+             <th>
+              <select class="form-select form-select-sm" name='searchby' aria-label=".form-select-sm example">
+              <option selected>searchby</option>
+              <option value="EventName">EventName</option>
+              <option value="EventDate">EventDate</option>
+              <option value="EventType">EventType</option>
+            </select>
             </th>
-            <th><a href="{% url 'addevent' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">AddEvent</button></a>
-            </th> 
+            <th>
+              <div class="input-group">
+                <input class="form-control border-end-0 border rounded-pill" name='searched' placeholder="search" id="example-search-input">
+                <span class="input-group-append">
+                    <button type="submit" class="btn btn-outline-secondary bg-white border-start-0 border rounded-pill ms-n3">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                      </svg>
+                    </button>
+                </span>
+              </div>
+            </th>
+             </form>
+            <th></th>
+         
           </tr>
         <tr>
             <th>Event</th>
             <th>Address</th>
             <th>Place</th>
+            <th>Date</th>
             <th>Time</th>
             <th>Type</th>
             <th>Picture</th>
             <th></th>
-             <th></th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -45,16 +71,20 @@
           <td>{{ ev.EventName }}</td>
           <td>{{ ev.EventPlace }}</td>
           <td>{{ ev.EventPlace }}</td>
+          <td>{{ ev.EventDate }}</td>
           <td>{{ ev.EventTime }}</td>
           <td>{{ ev.EventType }}</td>
           <td><img src="/static/images/{{ ev.EventPic }}" style="height: 150px;width: 150px;"></td> 
           <td><a href="{% url 'updateevent' ev.Event_id %}"><button type="button" class="btn btn-info">Update</button></a></td>&nbsp;
           <td><a href="{% url 'deleteevent' ev.Event_id %}"><button type="button" class="btn btn-danger">Delete</button></a></td>
+          <td></td>
         </tr> 
       {% endfor %}
       {% else %}
       <tr>
-        <td>No Events For Now</td>
+        <td>No Event</td>
+        <td></td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>

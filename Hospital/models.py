@@ -37,7 +37,8 @@ class BloodRequest(models.Model):
     Blood_id =   models.ForeignKey(Blood , null=True , on_delete=models.SET_NULL,blank=True , unique=False)
     Blood_Group = models.CharField(max_length=10 , choices=blood_type,  null=True , blank=True)
     Quantity = models.CharField(max_length=10 , null=True , blank=True)
-    Request_Date = models.DateTimeField(auto_now_add=True , null=True , blank=True)
+    Request_Date = models.DateField(auto_now_add=True , null=True , blank=True)
+    Request_Time = models.TimeField(auto_now_add=True , null=True , blank=True)
     Status = models.CharField(max_length=12 , null=True , blank= True , default='in progress')
 
 class HospitalSentBloods(models.Model):

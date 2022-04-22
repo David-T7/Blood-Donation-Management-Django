@@ -5,6 +5,7 @@ from .models import Camp , Event
 from .forms import EventCreationForm , CampCreationForm
 from django.contrib import  messages
 from UserAccount.models import UserRegistration
+from django.utils.dateparse import parse_date 
 
 def bbmanagerstate(request):
     bbmanager = request.user
@@ -34,8 +35,21 @@ def Events(request , type):
     try:
         if(type=='all'):
             events=Event.objects.all()
-        else:
+        elif(type=='notall'):
             events=Event.objects.all()[0:5]
+        elif(type=='searched'):
+            print('in searched ')
+            if request.method == 'POST':
+                print('in post')
+                searchby = request.POST['searchby']
+                searched = request.POST['searched']
+                if(searchby == 'EventName'):
+                    events = Event.objects.filter(EventName = searched)
+                elif(searchby == 'EventType'):
+                     events = Event.objects.filter(EventType = searched)
+                elif(searchby == 'EventDate'):
+                    date = parse_date(searched)
+                    events = Event.objects.filter(EventDate = date) 
     except:
         events=None
     context={'events':events , 'account':bbmanagerstate(request)['account']}

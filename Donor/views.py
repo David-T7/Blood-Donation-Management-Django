@@ -12,6 +12,8 @@ from Event.models import Event
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from LabTechnician.models import DeferringList
+from django.utils.dateparse import parse_date 
+
 
 def Register(request):
     form1 = DonorCreationForm()   # using the donor creation form created in forms.py
@@ -176,19 +178,62 @@ def DonationRequest(request , type):
     try:
         if(type=='all'):
             donation = DonationRequestFormResult.objects.filter(Donor_id = donor.Donor_id)
-        else:
+        elif(type=='notall'):
             donation = DonationRequestFormResult.objects.filter(Donor_id = donor.Donor_id)[0:5]
+        elif(type=='searched'):
+            print('in searched ')
+            if request.method == 'POST':
+                print('in post')
+                searchby = request.POST['searchby']
+                searched = request.POST['searched']
+                if(searchby == 'RequestDate'):
+                    date = parse_date(searched)
+                    donation = DonationRequestFormResult.objects.filter(Request_Date =  date)
+                    print('donation found',donation)
+                elif(searchby == 'RequestStatus'):
+                    donation = DonationRequestFormResult.objects.filter(Status =  searched)
+                    print('donation by reqstatus found',donation[0].Status)
+                elif(searchby == 'AppointmentDate'):
+                    date = parse_date(searched)
+                    app = Appointment.objects.get(Date = date)
+                    donation = DonationRequestFormResult.objects.filter(Donor_id = app.Donor_id)
+                elif(searchby == 'AppointmentStatus'):
+                    app = Appointment.objects.get(Status =  searched)
+                    donation = DonationRequestFormResult.objects.filter(Donor_id = app.Donor_id)
+
     except:
         donation = None
     try:
         if(type=='all'):
             appointment = Appointment.objects.filter(Donor_id = str(donor.Donor_id))
-        else:
+        elif(type=='notall'):
             appointment = Appointment.objects.filter(Donor_id = str(donor.Donor_id))[0:5]
+        elif(type=='searched'):
+            if(searchby == 'AppointmentDate'):
+                    date = parse_date(searched)
+                    appointment = Appointment.objects.filter(Date = date)
+            elif(searchby == 'AppointmentStatus'):
+                    appointment = Appointment.objects.filter(status =  searched)
+            elif(searchby == 'RequestDate'):
+                    date = parse_date(searched)
+                    dn = DonationRequestFormResult.objects.get(Request_Date =  date)
+                    appointment = Appointment.objects.filter(Donor_id = str(dn.Donor_id))
+                    print('appointment found',appointment[0])
+            elif(searchby == 'RequestStatus'):
+                    dn = DonationRequestFormResult.objects.get(Status =  searched)
+                    appointment = Appointment.objects.filter(Donor_id = str(dn.Donor_id))
+                    print('appointment by donation status found',appointment[0].status)
+
     except:
         print('no appointment')
         appointment = None
-    my_list = list(itertools.zip_longest(donation,appointment))
+    my_list=[]
+    try:
+        my_list = list(itertools.zip_longest(donation,appointment))
+        print('list is set')
+    except:
+        my_list = []
+        print('list is empty')
     context = {'list':my_list , 'donation':donation , 'donor':donor}
     return render (request , 'donor/donationrequest.html' , context  )
 
@@ -255,8 +300,21 @@ def GetEvent(request , type):
     try:
         if(type=='all'):
             events = Event.objects.all()
-        else:
+        elif(type=='notall'):
             events = Event.objects.all()[0:5]
+        elif(type=='searched'):
+            print('in searched ')
+            if request.method == 'POST':
+                print('in post')
+                searchby = request.POST['searchby']
+                searched = request.POST['searched']
+                if(searchby == 'EventName'):
+                    events = Event.objects.filter(EventName = searched)
+                elif(searchby == 'EventType'):
+                     events = Event.objects.filter(EventType = searched)
+                elif(searchby == 'EventDate'):
+                    date = parse_date(searched)
+                    events = Event.objects.filter(EventDate = date)  
     except:
         events=None
     context= {'events':events , 'donor':donor}

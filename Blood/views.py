@@ -6,6 +6,8 @@ from UserAccount.models import UserRegistration
 from .forms import BloodCreationForm
 from django.contrib import  messages
 from Donor.models import Appointment
+from django.utils.dateparse import parse_date 
+
 
 def UserState(request):
     user = request.user
@@ -56,8 +58,26 @@ def BloodsHistory(request , type):
     try:
         if(type == 'all'):
             bloods = BloodHistory.objects.all()[::-1]
-        else:
-            bloods = BloodHistory.objects.all()[0:5][::-1]   
+        elif(type=='notall'):
+            bloods = BloodHistory.objects.all()[0:5][::-1]
+        elif(type=='searched'):
+            print('in searched ')
+            if request.method == 'POST':
+                print('in post')
+                searchby = request.POST['searchby']
+                searched = request.POST['searched']
+                if(searchby == 'RegestrationDate'):
+                    date = parse_date(searched)
+                    bloods = BloodHistory.objects.filter(RegDate =  date)
+                elif(searchby == 'Expiration'):
+                    date = parse_date(searched)
+                    bloods = BloodHistory.objects.filter(ExpDate =  date)
+                elif(searchby == 'Volume'):
+                    bloods = BloodHistory.objects.filter(QuantityOfBlood =  searched)
+                elif(searchby == 'Action'):
+                    bloods = BloodHistory.objects.filter(Action =  searched)
+                elif(searchby == 'BloodGroup'):
+                    bloods = BloodHistory.objects.filter(BloodGroup =  searched)        
     except:
         bloods = None
     context = {'account':account , 'bloods':bloods}

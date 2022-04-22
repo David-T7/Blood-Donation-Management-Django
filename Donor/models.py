@@ -93,7 +93,8 @@ class DonationRequestFormResult(models.Model):
     BreastFeeding = models.CharField(max_length=3, null=True , blank=True,choices=Answer_choices)
     BloodHealthfulnessInfo = models.CharField(max_length=10, null=True , blank=True,choices=Answer_choices)
     Status = models.CharField(null=True , max_length=11 , blank=True , default='in progress')
-    Request_time = models.DateTimeField(auto_now_add=True , null=True , blank=True)
+    Request_time = models.TimeField(auto_now_add=True , null=True , blank=True)
+    Request_Date = models.DateField(auto_now_add=True  , null=True , blank=True)
 
 
    

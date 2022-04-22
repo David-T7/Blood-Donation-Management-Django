@@ -6,6 +6,7 @@ from Donor.forms import DonationRequestQuestionForm, DonationRequestFormQuesiton
 from Donor.models import  Appointment
 from UserAccount.models import  Address, UserRegistration
 from Donor.models import DonationRequestFormResult , DonationRequestFormQuesitons , Appointment , Donor
+from django.utils.dateparse import parse_date 
 
 def Userstate(request):  # for getting the state of the user 
     state = request.user
@@ -23,8 +24,24 @@ def DonationRequest(request , type):
     try:
         if(type=='all'):
             donreq = DonationRequestFormResult.objects.all()
-        else:
+        elif(type=='notall'):
             donreq = DonationRequestFormResult.objects.all()[0:5]
+        elif(type=='searched'):
+            print('in searched ')
+            if request.method == 'POST':
+                print('in post')
+                searchby = request.POST['searchby']
+                searched = request.POST['searched']
+                if(searchby == 'DonorName'):
+                    dn = Donor.objects.get(Donorname = searched)
+                    donreq = DonationRequestFormResult.objects.filter(Donor_id = dn.Donor_id)
+                elif(searchby == 'Phone'):
+                    addr = Address.objects.get(Phone = int(searched))
+                    dn = Donor.objects.get(Address_id = addr)
+                    donreq = DonationRequestFormResult.objects.filter(Donor_id = dn.Donor_id)
+                elif(searchby == 'RequestDate'):
+                    date = parse_date(searched)
+                    donreq = DonationRequestFormResult.objects.filter(Request_Date =  date)
     except:
         donreq = None
     try:
@@ -54,8 +71,25 @@ def CheckAppointments(request , type):
     try:
         if(type=='all'):
             appointment = Appointment.objects.all()
-        else:
+        elif(type == 'notall'):
             appointment = Appointment.objects.all()[0:5]
+        elif(type=='searched'):
+            print('in searched ')
+            if request.method == 'POST':
+                print('in post')
+                searchby = request.POST['searchby']
+                searched = request.POST['searched']
+                if(searchby == 'DonorName'):
+                    dn = Donor.objects.get(Donorname = searched)
+                    appointment = Appointment.objects.filter(Donor_id = dn.Donor_id)
+                elif(searchby == 'Phone'):
+                    addr = Address.objects.get(Phone = int(searched))
+                    dn = Donor.objects.get(Address_id = addr)
+                    appointment = Appointment.objects.filter(Donor_id = dn.Donor_id)
+                elif(searchby == 'Date'):
+                    date = parse_date(searched)
+                    appointment = Appointment.objects.filter(Date =  date)
+
     except:
         appointment = None
     context = {'account': Userstate(request)['account'] , 'appointments':appointment}
