@@ -1,8 +1,6 @@
 from contextlib import nullcontext
 from django.db import models
 import uuid
-from django_google_maps import fields as map_fields
-from location_field.models.plain import PlainLocationField
 
 class Event(models.Model):
     Event_id = models.UUIDField(default=uuid.uuid4, unique=True,
@@ -23,4 +21,4 @@ class Camp(models.Model):
     CampsWoreda = models.CharField(max_length=50)
     CampsKebele = models.IntegerField()
     city = models.CharField(max_length=255 , null=True)
-    location = PlainLocationField(based_fields=['city'], zoom=7 , null =True)
+    Location = models.CharField(max_length=1000 ,null=True)

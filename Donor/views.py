@@ -8,7 +8,7 @@ from Donor.models import Appointment, Donor
 from UserAccount.models import Account , Address
 from UserAccount.forms import AddressCreationForm, CustomUserCreationForm , CustomUserChangeForm
 from Donor.models import DonationRequestFormResult , DonationRequestFormQuesitons 
-from Event.models import Event
+from Event.models import Camp, Event
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from LabTechnician.models import DeferringList
@@ -319,14 +319,43 @@ def GetEvent(request , type):
         events=None
     context= {'events':events , 'donor':donor}
     return render(request , 'donor/events.html' , context)
-def GetCamp(request , type):
+
+
+
+
+def Camps(request , type):
     donor= DonorState(request)['donor']
-    context= {'donor':donor}
-    return render(request , 'donor/camps.html' , context)
+    camps = None
+    try:
+        if(type=='all'):
+            camps=Camp.objects.all()
+        elif(type=='notall'):
+            camps=Camp.objects.all()[0:5]
+        elif(type=='searched'):
+            if request.method == 'POST':
+                print('in post')
+                searchby = request.POST['searchby']
+                searched = request.POST['searched']
+                if(searchby == 'Name'):
+                    camps = Camp.objects.filter(CampsName = searched)
+                elif(searchby == 'City'):
+                     camps = Camp.objects.filter(city = searched)
+                elif(searchby == 'Kebele'):
+                    camps = Camp.objects.filter(CampsKebele = searched) 
+    except:
+        camps=None
+    context={'camps':camps , 'donor': donor}
+    return render(request ,'donor/camps.html' , context)
 
-
-
-
+def SeeCamp(request , pk):
+    donor= DonorState(request)['donor']
+    camp = None
+    try:
+        camp = Camp.objects.get(Camps_id=pk)
+    except:
+        camp = None
+    context={'camp':camp , 'donor':donor}
+    return render(request ,'donor/seecamp.html' , context)
 
 
 

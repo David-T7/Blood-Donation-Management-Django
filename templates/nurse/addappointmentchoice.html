@@ -1,0 +1,54 @@
+{% extends 'nurse/nurse.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<br>
+<section class="h-100">
+
+
+{% for msg in messages %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>{{msg}}</strong>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+
+
+
+<div class="container h-100">
+    <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
+<div class="card shadow-lg">
+<div class="card-body p-5">
+    <h1 class="fs-4 card-title fw-bold mb-4">Appointment Choice </h1>                
+        <form  method="POST" >
+            {% csrf_token %}
+                {% for field in form %}
+               <div class="col-md-8 mb-4 pb-2">
+                <div class="mb-2">
+                    <label class="form-label" for="formInput#text">{{field.label}}</label>
+                {% render_field field  id="name"  class="form-control form-control-lg" %} 
+                </div>
+               </div>
+                {% endfor %}
+
+            <br>
+            <div style="align-self:auto; margin-left: 130px;">
+                {% if type == 'add' %}
+                <button type="submit" class="btn btn-primary ms-auto">
+                    Add
+                </button>
+                {% else %}
+                <button type="submit" class="btn btn-primary ms-auto">
+                    update
+                </button>
+                {% endif %}
+
+            </div>
+
+        </form>
+    </div>
+    </div>
+    </div>
+    </div>
+    </section>
+    <br>
+{% endblock %}

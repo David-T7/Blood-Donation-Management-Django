@@ -4,6 +4,8 @@ from django.contrib import  messages
 from django.shortcuts import redirect, render
 from Donor.forms import DonationRequestQuestionForm, DonationRequestFormQuesitons
 from Donor.models import  Appointment
+from Nurse.models import AppointmentChoice
+from .forms import AppointmentChoiceCreationForm
 from UserAccount.models import  Address, UserRegistration
 from Donor.models import DonationRequestFormResult , DonationRequestFormQuesitons , Appointment , Donor
 from django.utils.dateparse import parse_date 
@@ -174,6 +176,60 @@ def AddQuestions(request , type):
             messages.error(request, 'Error during adding question')
     context = {'account':Userstate(request)['account'] , 'form':form , 'type':type}
     return render(request , 'nurse/addquestions.html' , context)
+
+def AddAppointmentDate(request , type):
+    form = AppointmentChoiceCreationForm()
+    if request.method == 'POST':
+        form = AppointmentChoiceCreationForm(request.POST)
+        if (form.is_valid()):
+            try:
+                form.save()
+                messages.success(request, 'Appointment Date Added Sucessfuly')
+                return redirect('/appointmentchoices/notall')
+            except:
+                messages.error(request, 'Error during adding Appointment Date')
+        else:
+            messages.error(request, 'Error during adding Appointment Date')
+    context = {'account':Userstate(request)['account'] , 'form':form , 'type':type}
+    return render(request , 'nurse/addappointmentchoice.html' , context)
+
+def AppointmentChoices(request , type):
+    choices = None
+    try:
+        if(type == 'all'):
+            choices = AppointmentChoice.objects.all()
+        else:
+            choices = AppointmentChoice.objects.all()[0:3]
+    except:
+        choices = None
+    context = {'account':Userstate(request)['account'] , 'choices':choices }
+    return render (request , 'nurse/appointmentchoices.html' , context)
+
+def UpdateAppointmentChoice(request , pk ):
+    appointmentchoice = AppointmentChoice.objects.get(Appchoice_id=pk)
+    form = AppointmentChoiceCreationForm (instance= appointmentchoice)
+    if request.method == 'POST':
+        form = AppointmentChoiceCreationForm(request.POST, instance=appointmentchoice)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Appointment choice was updated successfully!')
+            return redirect('/appointmentchoices/notall')
+        else:
+            messages.success(request, 'Appointmentchoice was not updated successfully!')
+
+    context = {'form': form , 'type':'update' , 'account':Userstate(request)['account']}
+    return render(request, 'nurse/addappointmentchoice.html', context)
+            
+def DeleteAppointmentChoice(request , pk):
+    appointmentChoice = AppointmentChoice.objects.get(Appchoice_id=pk)
+    try:
+        appointmentChoice.delete()
+        messages.success(request, 'Appointment Choice was deleted successfully!')
+        return redirect('/appointmentchoices/notall')
+    except:
+        messages.success(request, 'Appointment Choice was not deleted successfully!')
+    return render(request, 'nurse/appointmentchoices.html' , context)
+
 
 def UpdateQuestion(request , pk ):
     questions = DonationRequestFormQuesitons.objects.get(Question_id=pk)

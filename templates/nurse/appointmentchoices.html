@@ -1,0 +1,79 @@
+{% extends 'nurse/nurse.html' %}
+{% block content %}
+
+<br>
+
+{% for msg in messages%}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>{{msg}}</strong>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+<table class="styled-table">
+    <thead>
+         <tr>
+           <th>Appointment Choice</th>
+           <th><a href="{% url 'appointmentchoices' 'all' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">See All</button></a>
+            </th>
+            <th><a href="{% url 'addappointmentchoice' 'add' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Add</button></a>
+            </th>
+            <form method="post" action="{% url 'donorrequest' 'searched' %}">
+                {% csrf_token %}
+              <th>
+                <select class="form-select form-select-sm" name='searchby' aria-label=".form-select-sm example">
+                <option selected>searchby</option>
+                <option value="Date">Date</option>
+                <option value="Time">Time</option>
+                <option value="DonorsNo">DonorsNo</option>
+              </select></th>    
+              <th>
+                <div class="input-group">
+                  <div class="form-outline">
+                    <input type="search" id="form1" name='searched' placeholder="search" class="form-control" />
+                  </div>
+                  <button type="submit"  class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                      <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                    </svg>
+                  </button>
+                </div>
+              </th>
+            </form>
+
+
+        </tr>
+
+          <tr >
+            <th>Date</th>
+            <th>Time</th>
+            <th>NumberofDonors</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+      {% if choices %}
+      {% for choice in choices %}
+       <tr> 
+          <td>{{ choice.Date }}</td>
+         <td>{{ choice.Time }}</td>
+         <td>{{ choice.NumberofDonors }}</td>
+         <td><a href="{% url 'updateappointmentchoice' choice.Appchoice_id  %}"><button type="button" class="btn btn-success">Update</button></a>&nbsp;<a href="{% url 'deleteappointmentchoice' choice.Appchoice_id %}"><button type="button" class="btn btn-danger">Delete</button></a></td>      
+         <td></td>
+        </tr>
+      
+      {% endfor %}
+      {% else %}
+      <tr> 
+       <td>No Appointment Choice </td>
+       <td></td>
+       <td></td>
+       <td></td>
+
+
+     </tr>
+     {% endif %}
+      </tbody>
+  </table>
+  <br>
+{% endblock %}

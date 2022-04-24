@@ -21,14 +21,32 @@ def Camps(request , type):
     try:
         if(type=='all'):
             camps=Camp.objects.all()
-        else:
+        elif(type=='notall'):
             camps=Camp.objects.all()[0:5]
+        elif(type=='searched'):
+            if request.method == 'POST':
+                print('in post')
+                searchby = request.POST['searchby']
+                searched = request.POST['searched']
+                if(searchby == 'Name'):
+                    camps = Camp.objects.filter(CampsName = searched)
+                elif(searchby == 'City'):
+                     camps = Camp.objects.filter(city = searched)
+                elif(searchby == 'Kebele'):
+                    camps = Camp.objects.filter(CampsKebele = searched) 
     except:
         camps=None
     context={'camps':camps , 'account':bbmanagerstate(request)['account']}
     return render(request ,'bbmanager/camps.html' , context)
 
-
+def SeeCamp(request , pk):
+    camp = None
+    try:
+        camp = Camp.objects.get(Camps_id=pk)
+    except:
+        camp = None
+    context={'camp':camp , 'account':bbmanagerstate(request)['account']}
+    return render(request ,'bbmanager/seecamp.html' , context)
 
 def Events(request , type):
     events = None
@@ -75,7 +93,7 @@ def CreateEvent(request):
 def CreateCamp(request):
     form = CampCreationForm()
     if request.method == 'POST':
-        form= EventCreationForm(request.POST )
+        form= CampCreationForm(request.POST )
         if (form.is_valid()):
             try:
                 camp = form.save(commit=False)
@@ -93,19 +111,19 @@ def CreateCamp(request):
 def UpdateCamp(request , pk ):
     camp = None
     try:
-        camp = Event.objects.get(Event_id=pk)
-        form = EventCreationForm(instance=camp)
+        camp = Camp.objects.get(Camps_id=pk)
+        form = CampCreationForm(instance=camp)
     except:
         camp=None
-        form = EventCreationForm()
+        form = CampCreationForm()
     if request.method == 'POST':
-        form = EventCreationForm(request.POST, instance=camp)
+        form = CampCreationForm(request.POST, instance=camp)
         if form.is_valid():
             form.save()
-            messages.success(request, 'event was updated successfully!')
+            messages.success(request, 'Camp was updated successfully!')
             return redirect('/camps/notall')
         else:
-            messages.success(request, 'event was not updated successfully!')
+            messages.success(request, 'Camp was not updated successfully!')
 
     context = {'form': form , 'type':'update' , 'account':bbmanagerstate(request)['account']}
     return render(request, 'bbmanager/addcamp.html', context)
@@ -150,13 +168,13 @@ def DeleteEvent(request , pk):
 def DeleteCamp(request , pk):
     camp =None
     try:
-        camp = Event.objects.get(Event_id=pk)
+        camp = Camp.objects.get(Camps_id=pk)
     except:
         camp =None
     try:
         camp.delete()
-        messages.success(request, 'event was deleted successfully!')
-        return redirect('/events/notall')
+        messages.success(request, 'Camp was deleted successfully!')
+        return redirect('/camps/notall')
     except:
-        messages.success(request, 'event was not deleted successfully!')
-    return render(request, 'bbmanager/events.html')
+        messages.success(request, 'Camp was not deleted successfully!')
+    return render(request, 'bbmanager/camps.html')
