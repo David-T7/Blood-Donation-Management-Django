@@ -26,7 +26,8 @@
               <option selected>searchby</option>
               <option value="DonorName">DonorName</option>
               <option value="Phone">Phone</option>
-              <option value="AppointDate">AppointDate</option>
+              <option value="AppointmentDate">AppointDate</option>
+              <option value="AppointmentStatus">AppointStatus</option>
             </select>
             </th>
             <th></th>   
@@ -57,6 +58,7 @@
     <tbody>
       {% if list %}
       {% for don,app in list %}
+      {% if don and app %}
       <tr> 
        <td>{{ app.Date }}</td>
        {% if don.Status == 'in progress' %}
@@ -165,6 +167,7 @@
          {% endif %}
          {% endif %}   
      </tr>
+     {% endif %}
       {% endfor %}
       {% else %}
       <tr> 

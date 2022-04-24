@@ -10,7 +10,8 @@
    <tbody>
      {% if list %}
      {% for don,app in list %}
-     <tr> 
+     <tr>
+       {% if don and app %} 
       <td>{{ don.Request_Date }}</td> 
       <td>{{ don.Request_time }}</td>
       {% if don.Status == 'in progress' %}
@@ -43,16 +44,19 @@
         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
       </svg>
       {% else %}
-      <td><a href="{% url 'makeappointment' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Make Appointment</button></a></td>
+      <td><a href="{% url 'donappointmentchoices' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Make Appointment</button></a></td>
       {% endif %}
       &nbsp;{{ app.status}} </td>
       {% else %}
+      {% if don %}
       <td><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;" disabled>Make Appointment</button></td>
+      {% endif %}
       {% endif %}
       <td></td>
       <td></td>
        
     </tr>
+    {% endif %}
      {% endfor %}
      {% else %}
      <tr> 

@@ -7,7 +7,8 @@ class DateInput(forms.DateInput):
 class TimeInput(forms.TimeInput):
     input_type = 'time'
 
-
+class DateTimeInput(forms.DateTimeInput):
+    input_type = 'datetime'
 class AppointmentChoiceCreationForm(ModelForm):
     class Meta:
         model = AppointmentChoice

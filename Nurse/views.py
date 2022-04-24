@@ -29,9 +29,7 @@ def DonationRequest(request , type):
         elif(type=='notall'):
             donreq = DonationRequestFormResult.objects.all()[0:5]
         elif(type=='searched'):
-            print('in searched ')
             if request.method == 'POST':
-                print('in post')
                 searchby = request.POST['searchby']
                 searched = request.POST['searched']
                 if(searchby == 'DonorName'):
@@ -44,6 +42,9 @@ def DonationRequest(request , type):
                 elif(searchby == 'RequestDate'):
                     date = parse_date(searched)
                     donreq = DonationRequestFormResult.objects.filter(Request_Date =  date)
+                elif(searchby == 'RequestStatus'):
+                    donreq = DonationRequestFormResult.objects.filter(Status =  searched.lower())
+               
     except:
         donreq = None
     try:
@@ -76,9 +77,7 @@ def CheckAppointments(request , type):
         elif(type == 'notall'):
             appointment = Appointment.objects.all()[0:5]
         elif(type=='searched'):
-            print('in searched ')
             if request.method == 'POST':
-                print('in post')
                 searchby = request.POST['searchby']
                 searched = request.POST['searched']
                 if(searchby == 'DonorName'):
@@ -91,6 +90,8 @@ def CheckAppointments(request , type):
                 elif(searchby == 'Date'):
                     date = parse_date(searched)
                     appointment = Appointment.objects.filter(Date =  date)
+                elif(searchby == 'Status'):
+                    appointment = Appointment.objects.filter(status =  searched.lower())
 
     except:
         appointment = None
@@ -145,8 +146,6 @@ def GetDonorAddress(request , pk):
         address = Address.objects.get(Address_id = str(acc.Address_id))
     except:
         address= None
-    for ad in Address.objects.all():
-        print(ad.Address_id)
     context = {'account': Userstate(request)['account'] , 'address':address , 'donor':acc }
     return render(request , 'nurse/checkdonoraddress.html' , context)
 

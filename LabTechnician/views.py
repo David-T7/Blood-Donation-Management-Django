@@ -5,7 +5,7 @@ from django.shortcuts import redirect, render
 from Blood.models import Blood
 from Donor.models import Appointment, DonationRequestFormResult, Donor
 from LabTechnician.models import FininshedAppointment , DeferringList
-from UserAccount.models import Address, UserRegistration
+from UserAccount.models import Account, Address, UserRegistration
 from django.utils.dateparse import parse_date 
 
 
@@ -35,25 +35,31 @@ def DonationRequest(request ,  type):
     try:
         if(type=='all'):
             donation = DonationRequestFormResult.objects.all()
-        elif(type == 'notall'):
+        elif(type=='notall'):
             donation = DonationRequestFormResult.objects.all()[0:5]
         elif(type=='searched'):
-            print('in searched ')
             if request.method == 'POST':
                 print('in post')
                 searchby = request.POST['searchby']
                 searched = request.POST['searched']
-                if(searchby == 'DonorName'):
-                    dn = Donor.objects.get(Donorname = searched)
-                    donation = DonationRequestFormResult.objects.filter(Donor_id = dn.Donor_id)
+                if(searchby == 'RequestDate'):
+                    date = parse_date(searched)
+                    donation = DonationRequestFormResult.objects.filter(Request_Date =  date)
+                elif(searchby == 'AppointmentDate'):
+                    date = parse_date(searched)
+                    app = Appointment.objects.filter(Date = date)
+                    donation = DonationRequestFormResult.objects.filter(Donor_id = app[0].Donor_id)
+                elif(searchby == 'DonorName'):
+                    dn = Donor.objects.filter(Donorname = searched)
+                    donation = DonationRequestFormResult.objects.filter(Donor_id = str(dn[0].Donor_id))
                 elif(searchby == 'Phone'):
                     addr = Address.objects.get(Phone = int(searched))
-                    dn = Donor.objects.get(Address_id = addr)
-                    donation = DonationRequestFormResult.objects.filter(Donor_id = dn.Donor_id)
-                elif(searchby == 'AppointDate'):
-                    date = parse_date(searched)
-                    appointment = Appointment.objects.get(Date =  date)
-                    donation = DonationRequestFormResult.objects.filter(Donor_id = appointment.Donor_id)   
+                    dn = Donor.objects.filter(Address_id = addr)
+                    donation = DonationRequestFormResult.objects.filter(Donor_id = str(dn[0].Donor_id))
+                elif(searchby == 'AppointmentStatus'):
+                    app = Appointment.objects.filter(status =  searched)
+                    donation = DonationRequestFormResult.objects.filter(Donor_id = str(app[0].Donor_id))
+
     except:
         donation = None
     try:
@@ -62,21 +68,20 @@ def DonationRequest(request ,  type):
         elif(type=='notall'):
             appointment = Appointment.objects.all()[0:5]
         elif(type=='searched'):
-            print('in searched ')
             if request.method == 'POST':
-                print('in post')
                 searchby = request.POST['searchby']
                 searched = request.POST['searched']
-                if(searchby == 'DonorName'):
-                    dn = Donor.objects.get(Donorname = searched)
-                    appointment = Appointment.objects.filter(Donor_id = dn.Donor_id)
-                elif(searchby == 'Phone'):
-                    addr = Address.objects.get(Phone = int(searched))
-                    dn = Donor.objects.get(Address_id = addr)
-                    appointment = Appointment.objects.filter(Donor_id = dn.Donor_id)
-                elif(searchby == 'AppointDate'):
-                    date = parse_date(searched)
-                    appointment = Appointment.objects.filter(Date =  date) 
+            if(searchby == 'AppointmentDate'):
+                date = parse_date(searched)
+                appointment = Appointment.objects.filter(Date = date)
+            elif(searchby == 'DonorName'):
+                appointment = Appointment.objects.filter(Donor_id = donation[0].Donor_id)
+            elif(searchby == 'Phone'):
+                appointment = Appointment.objects.filter(Donor_id = donation[0].Donor_id)
+            elif(searchby == 'AppointmentStatus'):
+                appointment = Appointment.objects.filter(status =  searched)
+            elif(searchby == 'RequestDate'):
+                appointment = Appointment.objects.filter(Donor_id = donation[0].Donor_id)
     except:
         appointment = None
     try:
@@ -84,6 +89,7 @@ def DonationRequest(request ,  type):
             deferringlist.append(str(dl.Donor_id))
     except:
         deferringlist = []
+    my_list=[]
     try:
         my_list = list(itertools.zip_longest(donation,appointment))
     except:

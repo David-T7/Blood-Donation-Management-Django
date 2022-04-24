@@ -32,9 +32,7 @@ def HospitalRequest(request, type):
         elif(type=='notall'):
             bloodrequest = BloodRequest.objects.all()[0:5]
         elif(type=='searched'):
-            print('in searched ')
             if request.method == 'POST':
-                print('in post')
                 searchby = request.POST['searchby']
                 searched = request.POST['searched']
                 if(searchby == 'HospitalName'):
@@ -46,8 +44,9 @@ def HospitalRequest(request, type):
                     bloodrequest = BloodRequest.objects.filter(Hospital_id = hs.Hospital_id)
                 elif(searchby == 'RequestDate'):
                     date = parse_date(searched)
-                    bloodrequest = BloodRequest.objects.filter(Request_Date =  date)  
-
+                    bloodrequest = BloodRequest.objects.filter(Request_Date =  date)
+                elif(searchby == 'RequestStatus'):
+                    bloodrequest = BloodRequest.objects.filter(Status =  searched.lower())    
     except:
         bloodrequest= None
     try:
@@ -160,7 +159,6 @@ def BloodRequests(request , type):
         elif(type=='notall'):
             bloodreq = BloodRequest.objects.filter( Hospital_id  =  hospital.Hospital_id)[0:5]
         elif(type=='searched'):
-            print('in searched ')
             if request.method == 'POST':
                 print('in post')
                 searchby = request.POST['searchby']
@@ -226,13 +224,8 @@ def MakeBloodRequest(request):
             try:
                 bloodreq = form.save(commit=False)
               
-                blood = Blood.objects.filter(BloodGroup = bloodreq.Blood_Group).filter(QuantityOfBlood = bloodreq.Quantity)
-                if(blood):
-                    print('blood is',blood[0])
-                    bloodreq.Blood_id = blood[0]
-                    print('blood found')
-                else:
-                    print('blood not found')
+                blood = Blood.objects.filter(BloodGroup = bloodreq.Blood_Group).filter(QuantityOfBlood = bloodreq.Quantity)                
+                bloodreq.Blood_id = blood[0]
                 bloodreq.Hospital_id = hospital
                 bloodreq.save()
                 return redirect('/bloodrequest/notall')
@@ -324,12 +317,10 @@ def AcceptBloodRequest(request , pk ,  type):
             breq.save()
             messages.success(request,'Request was Rejected Successfully')
         elif(type=='secondreject'):
-            print('in reject')
             breq = BloodRequest.objects.get(Blood_Req_Id = pk)
             breq.Status = 'rejected'
             breq.save()
             sentblood = HospitalSentBloods.objects.get(Blood_Req_Id = breq.Blood_Req_Id)
-            print('sent blood ', sentblood.Blood_id)
             removedblood = BloodHistory.objects.filter(Blood_id = sentblood.Blood_id)[0]
             donor = Donor.objects.get(Donor_id = removedblood.Donor_id)
             blood = Blood.objects.create(Donor_id = donor , BloodGroup = removedblood.BloodGroup ,  

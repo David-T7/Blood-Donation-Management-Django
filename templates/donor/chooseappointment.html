@@ -1,0 +1,42 @@
+{% extends 'donor/donor.html' %}
+
+{% block content %}
+
+<br>
+<table class="styled-table">
+    <thead>
+         <tr>
+             <th></th>
+             <th></th>
+           <th><a href="{% url 'donappointmentchoices' 'all' %}"> <button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">SeeAll</button></a>
+            </th>
+          </tr>
+        <tr>
+            <th>Date</th>
+            <th>Time</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+      {% if choices %}
+      {% for choice in choices %}
+        <tr>
+          <td>{{  choice.Date }}</td>
+          <td>{{  choice.Time }}</td>
+          <td><a href="{% url 'makeappointment' choice.Appchoice_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Make Appointment</button></a></td>
+        </tr> 
+      {% endfor %}
+      {% else %}
+      <tr>
+        <td>No Choice For Now</td>
+        <td></td>
+        <td></td>
+      </tr>
+      {% endif %}  
+    </tbody>
+  </table>
+  <br>
+
+
+
+{% endblock %}

@@ -1,10 +1,13 @@
+from datetime import datetime
 import imp
 import itertools
 from multiprocessing import context
+from sqlite3 import Date
 from django.contrib import  messages
 from django.shortcuts import redirect, render
 from Donor.forms import AppointmentCreationForm, DonorCreationForm , DonationRequestFormQuesitons, DonorAccountEditForm , RequestAnswerCreationForm
-from Donor.models import Appointment, Donor 
+from Donor.models import Appointment, Donor
+from Nurse.models import AppointmentChoice 
 from UserAccount.models import Account , Address
 from UserAccount.forms import AddressCreationForm, CustomUserCreationForm , CustomUserChangeForm
 from Donor.models import DonationRequestFormResult , DonationRequestFormQuesitons 
@@ -12,7 +15,7 @@ from Event.models import Camp, Event
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from LabTechnician.models import DeferringList
-from django.utils.dateparse import parse_date 
+from django.utils.dateparse import parse_date , parse_time
 
 
 def Register(request):
@@ -142,7 +145,6 @@ def DonorDashbord(request , type):
         else:
             appointment = Appointment.objects.filter(Donor_id = str(donor.Donor_id))[0:5]
     except:
-        print('no appointment')
         appointment = None
     try:
         donationrequest_no = len(DonationRequestFormResult.objects.filter(Donor_id = donor.Donor_id))
@@ -181,25 +183,21 @@ def DonationRequest(request , type):
         elif(type=='notall'):
             donation = DonationRequestFormResult.objects.filter(Donor_id = donor.Donor_id)[0:5]
         elif(type=='searched'):
-            print('in searched ')
             if request.method == 'POST':
-                print('in post')
                 searchby = request.POST['searchby']
                 searched = request.POST['searched']
                 if(searchby == 'RequestDate'):
                     date = parse_date(searched)
                     donation = DonationRequestFormResult.objects.filter(Request_Date =  date)
-                    print('donation found',donation)
                 elif(searchby == 'RequestStatus'):
-                    donation = DonationRequestFormResult.objects.filter(Status =  searched)
-                    print('donation by reqstatus found',donation[0].Status)
+                    donation = DonationRequestFormResult.objects.filter(Donor_id = donor.Donor_id , Status =  searched)
                 elif(searchby == 'AppointmentDate'):
                     date = parse_date(searched)
-                    app = Appointment.objects.get(Date = date)
+                    app = Appointment.objects.filter(Date = date)
                     donation = DonationRequestFormResult.objects.filter(Donor_id = app.Donor_id)
                 elif(searchby == 'AppointmentStatus'):
-                    app = Appointment.objects.get(Status =  searched)
-                    donation = DonationRequestFormResult.objects.filter(Donor_id = app.Donor_id)
+                    app = Appointment.objects.filter(status =  searched)
+                    donation = DonationRequestFormResult.objects.filter(Donor_id = str(app[0].Donor_id))
 
     except:
         donation = None
@@ -209,31 +207,25 @@ def DonationRequest(request , type):
         elif(type=='notall'):
             appointment = Appointment.objects.filter(Donor_id = str(donor.Donor_id))[0:5]
         elif(type=='searched'):
+            if request.method == 'POST':
+                searchby = request.POST['searchby']
+                searched = request.POST['searched']
             if(searchby == 'AppointmentDate'):
                     date = parse_date(searched)
                     appointment = Appointment.objects.filter(Date = date)
             elif(searchby == 'AppointmentStatus'):
                     appointment = Appointment.objects.filter(status =  searched)
             elif(searchby == 'RequestDate'):
-                    date = parse_date(searched)
-                    dn = DonationRequestFormResult.objects.get(Request_Date =  date)
-                    appointment = Appointment.objects.filter(Donor_id = str(dn.Donor_id))
-                    print('appointment found',appointment[0])
+                    appointment = Appointment.objects.filter(Donor_id = donation[0].Donor_id)
             elif(searchby == 'RequestStatus'):
-                    dn = DonationRequestFormResult.objects.get(Status =  searched)
-                    appointment = Appointment.objects.filter(Donor_id = str(dn.Donor_id))
-                    print('appointment by donation status found',appointment[0].status)
-
+                    appointment = Appointment.objects.filter(Donor_id = donation[0].Donor_id)
     except:
-        print('no appointment')
         appointment = None
     my_list=[]
     try:
         my_list = list(itertools.zip_longest(donation,appointment))
-        print('list is set')
     except:
         my_list = []
-        print('list is empty')
     context = {'list':my_list , 'donation':donation , 'donor':donor}
     return render (request , 'donor/donationrequest.html' , context  )
 
@@ -272,26 +264,34 @@ def MakeDonationRequest(request):
     
     context = { 'form':form , 'questions':questions , 'donor':donor}
     return render(request, 'donor/createdonationrequest.html',context)                   
-
-
-def MakeAppointment(request):
+def AppointmentChoices(request , type):
     donor = DonorState(request)['donor']
-    form = AppointmentCreationForm()
-    if request.method == 'POST':
-        form= AppointmentCreationForm(request.POST)
-        if (form.is_valid()):
-            try:
-                appointment = form.save(commit=False)
-                appointment.Donor_id = donor
-                appointment.save()
-                messages.success(request , 'Appointment request sent successfuly')
-                return redirect('/donationrequest/all')
-            except:
-                messages.error(request , 'Error during appointment request')
+    choices = None
+    try:
+        if(type == 'all'):
+            choices = AppointmentChoice.objects.all()
         else:
-            messages.error(request , 'Error during appointment request')
-    context = {'form':form , 'donor':donor}
-    return  render(request , 'donor/makeappointment.html', context)
+            choices = AppointmentChoice.objects.all()[0:3]
+    except:
+        choices = None
+    context = {'donor':donor, 'choices':choices }
+    return render (request , 'donor/chooseappointment.html' , context)
+
+def MakeAppointment(request , pk):
+    donor = DonorState(request)['donor']
+    appchoices = None
+    try:
+        appchoices = AppointmentChoice.objects.get(Appchoice_id = pk)
+    except:
+        appchoices = None
+    try:
+        Appointment.objects.create(Donor_id = donor , Date = appchoices.Date ,  Time = appchoices.Time)
+        messages.success(request , 'Appointment request sent successfuly')
+        return redirect('/donationrequest/all')
+    except:
+        messages.error(request , 'Error during appointment request')
+    context = {'donor':donor}
+    return  render(request , 'donor/chooseappointment.html', context)
 
             
 def GetEvent(request , type):

@@ -1,4 +1,5 @@
 from cProfile import label
+from datetime import datetime
 from multiprocessing.sharedctypes import Value
 from django.db import models
 from pyrsistent import field
@@ -43,8 +44,8 @@ class Appointment(models.Model):
     App_id = models.UUIDField(default=uuid.uuid4, unique=True,
                           primary_key=True, editable=False)
     Donor_id = models.ForeignKey(Donor , on_delete=models.SET_NULL, null=True , blank=True , unique=False)
-    Date = models.DateField()
-    Time = models.TimeField()
+    Date = models.DateField(default= datetime.now)
+    Time = models.TimeField( default= datetime.now)
     status = models.CharField(null=True , max_length=11 , blank=True , default='in progress')
     def __str__(self):
         return str(self.App_id)
