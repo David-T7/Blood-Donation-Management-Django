@@ -48,7 +48,7 @@ def Register(request):
         else:
             messages.error(
                 request, 'An error has occurred during registration')
-    context = {'form1': form1,'form2':form2,'form3':form3}  # forms that are passed to the page rendered
+    context = {'form1': form1,'form2':form2,'form3':form3 , 'sender':'donor'}  # forms that are passed to the page rendered
     return render(request, 'register1.html',context)
 
 

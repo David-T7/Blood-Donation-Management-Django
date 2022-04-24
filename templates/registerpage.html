@@ -27,12 +27,14 @@
                         {% endfor %}
                         {% if type != 'update' %}
                         {% for field in form3 %}
+                        {% if field.label != 'Role' %}
                        <div class="col-md-6 mb-4 pb-2">
                         <div class="form-outline">
                         <label class="form-label" for="formInput#text">{{field.label}}</label>
                         {% render_field field  id="form-label"  class="form-control form-control-lg" %} 
                         </div>
                        </div>
+                       {% endif %}
                         {% endfor %}
                         {% endif %}
                       </div>
