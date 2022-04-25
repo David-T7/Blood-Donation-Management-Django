@@ -156,12 +156,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
 
 
 
-# EMAIL_HOST = 'smtp.sendgrid.net'
-# SENDGRID_API_KEY = os.getenv('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')
-# EMAIL_HOST_USER = 'apikey' #keep this as it is
-# EMAIL_HOST_PASSWORD = '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' 
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# DEFAULT_FROM_EMAIL = 'bloodbank979@gmail.com' 
+EMAIL_HOST = 'smtp.sendgrid.net'
+SENDGRID_API_KEY = os.getenv('')
+EMAIL_HOST_USER = 'apikey' #keep this as it is
+EMAIL_HOST_PASSWORD = '' 
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+DEFAULT_FROM_EMAIL = 'bloodbank979@gmail.com' 
 
