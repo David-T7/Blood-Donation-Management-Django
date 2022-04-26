@@ -37,7 +37,11 @@
                <div class="col-md-6 mb-4 pb-2">
                 <div class="mb-3">
                     <label class="form-label" for="formInput#text">{{field.label}}</label>
+                {% if  field.label == 'Quantity' %}
+                {% render_field field  id="name" placeholder="0ML"  class="form-control form-control-lg" %} 
+                {% else %}
                 {% render_field field  id="name"  class="form-control form-control-lg" %} 
+                {% endif %}
                 </div>
                </div>
                 {% endfor %}

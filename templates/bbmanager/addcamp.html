@@ -4,28 +4,6 @@
 
 <br>
 <section class="h-50">
-    {% for msg in messages%}
-			<div class="alert alert-warning alert-dismissible fade show" role="alert">
-				<strong>{{msg}}</strong>
-				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-			</div>
-	{% endfor %}
-
-    <form  method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {% if form.errors %}
-        {% for field in form %}
-            {% for error in field.errors %} 
-               <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <strong>{{ error|escape }}</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" ></button>
-            </div>
-            {% endfor %}
-        {% endfor %}
-        {% endif %}
-    </form>
-
-
 <div class="container h-50">
         <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
 <div class="card shadow-lg">
@@ -36,7 +14,8 @@
             {% for field in form %}
             <div class="mb-3">
                 <label for="formInput#text">{{field.label}}</label>
-                {% render_field field  id="formInput#text"  class="form-control"  %} 	
+                {% render_field field  id="formInput#text"  class="form-control"  %}
+                <span > <h style="color: red;">{{field.errors}}</h></span>	
             </div>
             {% endfor %}
             <a href="https://www.google.com/maps"><button type="button" class="btn btn-info">GoogleMaps</button></a>

@@ -2,8 +2,8 @@ from multiprocessing import context
 from django.shortcuts import redirect, render
 from django.contrib import  messages
 from Donor.models import Donor
-from Hospital.forms import BloodRequestForm, HospitalCreationForm 
-from UserAccount.forms import AddressCreationForm
+from Hospital.forms import BloodRequestForm, HospitalCreationForm, hopsitalProfilePictureForm 
+from UserAccount.forms import AddressCreationForm, CustomUserChangeForm
 from .models import BloodRequest , Hospital, HospitalSentBloods
 from Blood.models import Blood, BloodHistory
 from UserAccount.models import Account, Address, UserRegistration
@@ -103,11 +103,14 @@ def AddHospital(request):
                     hospital.save()
                 messages.success(request, 'Successfully Added Hospital')
                 return redirect('/hospitals/notall')
-            except:   
-                messages.error(request, 'An error has occurred during adding hospital')
+            except:
+                 try:
+                    Account.objects.get(username = hospital.Username)
+                    messages.error('unable to create hosptial')
+                 except:
+                    messages.success(request, 'Username doest not exist')
         else:
-            messages.error(
-                request, 'An error has occurred during adding hospital')
+            messages.error(request, 'Unable to create Hospital')
     context = {'form1': form1 ,'form2':form2 ,'type':'add' ,'sender':'bbmanager', 'account':bbmanagerstate(request)['account']}
     return render(request, 'bbmanager/addhospital.html',context)
 
@@ -129,9 +132,7 @@ def UpdateHospital(request , pk ):
                     messages.success(request, 'Hospital was updated successfully!')
                     return redirect('/hospitals/notall')
             except:
-                messages.error(request ,'NO hospital with that username found' )     
-        else:
-            messages.success(request, 'Hospital was not updated successfully!')
+                hospital = None   
     context = {'form1': form1 ,'form2':form2 , 'type':'update' , 'account':bbmanagerstate(request)['account'],'hospital':hospital}
     return render(request, 'bbmanager/addhospital.html', context)
 
@@ -223,31 +224,38 @@ def MakeBloodRequest(request):
         if (form.is_valid()):
             try:
                 bloodreq = form.save(commit=False)
-              
+                blood = None
                 blood = Blood.objects.filter(BloodGroup = bloodreq.Blood_Group).filter(QuantityOfBlood = bloodreq.Quantity)                
                 bloodreq.Blood_id = blood[0]
                 bloodreq.Hospital_id = hospital
                 bloodreq.save()
+                messages.success(request , 'Request was Successful')
                 return redirect('/bloodrequest/notall')
             except:
-                messages.success(request , 'error during request')
+                blood =None
+                try:
+                    blood = Blood.objects.filter(BloodGroup = request.POST['Blood Group'])
+                except:
+                    blood =None
+                if(blood):
+                        volumes =''
+                        for bl in blood:
+                            volumes+= bl.QuantityOfBlood
+                        messages.error(request ,'Bloods in the stock with that group is ' +volumes  )
+                else:
+                    messages.error(request , 'Not enough blood on stock')
         else:
             messages.success(request , 'request was not successful')
     
     context = {'form':form ,  'hospital': hospital}
     return render(request, 'hospitalrep/makebloodrequest.html',context)   
 
-def EditAccount(request):
-    hospital = HospitalState(request)['hospital']
-    context= {'hospital':hospital}
-    return render(request , 'hospitalrep/editaccount.html' , context )
 
-def EditHospital(request):
+def EditHospitalProfilePicture(request):
     hospital = HospitalState(request)['hospital']
-    state = request.user
-    form = HospitalCreationForm(instance= hospital)
+    form = hopsitalProfilePictureForm(instance= hospital)
     if request.method == 'POST':
-        form = HospitalCreationForm (request.POST, instance=state)
+        form = hopsitalProfilePictureForm (request.POST, request.FILES ,  instance=hospital)
         if(form.is_valid()):
             try:
                 form.save()
@@ -257,9 +265,31 @@ def EditHospital(request):
         else:
                 messages.error(request,'Error during updating account ')
     context = {'form':form , 'hospital':hospital  }
-    return render (request , 'hospitalrep/edithospital.html' , context)
+    return render (request , 'hospitalrep/editprofilepic.html' , context)
 
-        
+def EditUserName(request):
+    state = request.user
+    hospital = HospitalState(request)['hospital']
+    form= CustomUserChangeForm (instance=state)
+    if request.method == 'POST':
+        form = CustomUserChangeForm(request.POST, instance=state)
+        if (form.is_valid()):
+            try:
+                form.save()
+                messages.success(request , 'Sucessfuly updated user name')
+            except:
+                messages.error(request,'Error occured during updating username')
+        else:
+                messages.error(request,'please input correct information')
+        request.user.save()
+        try:
+            hospital.Username = request.user.username
+            hospital.save()
+        except:
+            messages.error(request,'Error during updating username')
+
+    context = {'form': form , 'hospital':hospital , 'sender':'username'}
+    return render(request, 'hospitalrep/editusername.html', context)
 
 
 def EditHospitalAccount(request):

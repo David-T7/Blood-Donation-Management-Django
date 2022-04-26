@@ -82,11 +82,8 @@ def CreateEvent(request):
                 events.save()
                 messages.success(request, 'Successfully Added event')
                 return redirect('/events/notall')
-            except:   
-                messages.error(request, 'An error has occurred during adding event')
-        else:
-            messages.error(
-                request, 'An error has occurred during adding event')
+            except:
+                events = None   
     context = {'form': form , 'type':'add' , 'account':bbmanagerstate(request)['account']}
     return render(request, 'bbmanager/addevent.html',context)
 
@@ -101,10 +98,7 @@ def CreateCamp(request):
                 messages.success(request, 'Successfully Added camp')
                 return redirect('/camps/notall')
             except:   
-                messages.error(request, 'An error has occurred during adding event')
-        else:
-            messages.error(
-                request, 'An error has occurred during adding event')
+                camp = None
     context = {'form': form , 'type':'add' , 'account':bbmanagerstate(request)['account']}
     return render(request, 'bbmanager/addcamp.html',context)
 
@@ -122,9 +116,6 @@ def UpdateCamp(request , pk ):
             form.save()
             messages.success(request, 'Camp was updated successfully!')
             return redirect('/camps/notall')
-        else:
-            messages.success(request, 'Camp was not updated successfully!')
-
     context = {'form': form , 'type':'update' , 'account':bbmanagerstate(request)['account']}
     return render(request, 'bbmanager/addcamp.html', context)
 
@@ -148,7 +139,6 @@ def UpdateEvent(request , pk ):
             return redirect('/events/notall')
         else:
             messages.success(request, 'event was not updated successfully!')
-
     context = {'form': form , 'type':'update' , 'account':bbmanagerstate(request)['account']}
     return render(request, 'bbmanager/addevent.html', context)
 

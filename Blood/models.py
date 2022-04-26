@@ -24,6 +24,8 @@ class Blood(models.Model):
     RegDate = models.DateField(auto_now_add=True)
     ExpDate = models.DateField(max_length=10)
     QuantityOfBlood = models.CharField(max_length=4)
+    class Meta:
+        db_table = "Blood"
 
 
 class BloodHistory(models.Model):
@@ -35,6 +37,8 @@ class BloodHistory(models.Model):
     ExpDate = models.DateField(max_length=10)
     QuantityOfBlood = models.CharField(max_length=4)
     Action = models.CharField(max_length=20 , null=True , blank=True)
+    class Meta:
+        db_table = "BloodHistory"
 
 
 

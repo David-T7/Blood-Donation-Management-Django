@@ -12,6 +12,8 @@ class Event(models.Model):
     EventDate = models.DateField()
     EventType = models.CharField(max_length=10)
     EventPic= models.FileField(null=True, blank=True, upload_to='events/', default="events/defaultevent.png")
+    class Meta:
+        db_table = "Event"
 
 
 class Camp(models.Model):
@@ -22,3 +24,6 @@ class Camp(models.Model):
     CampsKebele = models.IntegerField()
     city = models.CharField(max_length=255 , null=True)
     Location = models.CharField(max_length=1000 ,null=True)
+    class Meta:
+        db_table = "Camp"
+    

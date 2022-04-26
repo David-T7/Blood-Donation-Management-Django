@@ -11,3 +11,5 @@ class AppointmentChoice(models.Model):
     Date = models.DateField(default=datetime.now)
     Time = models.TimeField(default=datetime.now)
     NumberofDonors = models.IntegerField(null=True , blank= True , default=0) 
+    class Meta:
+        db_table = "AppointmentChoice"

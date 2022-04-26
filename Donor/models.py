@@ -37,6 +37,8 @@ class Donor(models.Model):
     ProfilePic= models.FileField(null=True, blank=True, upload_to='profilepic/', default="profilepic/defaultprofile.jpeg")
     def __str__(self):
         return str(self.Donor_id)
+    class Meta:
+        db_table = "Donor"
 
 
 
@@ -46,9 +48,11 @@ class Appointment(models.Model):
     Donor_id = models.ForeignKey(Donor , on_delete=models.SET_NULL, null=True , blank=True , unique=False)
     Date = models.DateField(default= datetime.now)
     Time = models.TimeField( default= datetime.now)
-    status = models.CharField(null=True , max_length=11 , blank=True , default='in progress')
+    status = models.CharField(null=True , max_length=12 , blank=True , default='in progress')
     def __str__(self):
         return str(self.App_id)
+    class Meta:
+        db_table = "Appointment"
 
 
 
@@ -69,6 +73,9 @@ class DonationRequestFormQuesitons(models.Model):
    Type = models.CharField(max_length=10 , null=True , blank=True)
    def __str__(self):
         return str(self.Type)
+   class Meta:
+       db_table = "DonationRequestFormQuesitons"
+    
 
 
 
@@ -96,6 +103,8 @@ class DonationRequestFormResult(models.Model):
     Status = models.CharField(null=True , max_length=11 , blank=True , default='in progress')
     Request_time = models.TimeField(auto_now_add=True , null=True , blank=True)
     Request_Date = models.DateField(auto_now_add=True  , null=True , blank=True)
+    class Meta:
+        db_table = "DonationRequestFormResult"
 
 
    

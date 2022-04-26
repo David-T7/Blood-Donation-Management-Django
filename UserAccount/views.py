@@ -28,7 +28,7 @@ def Login(request , role):          # function based view for handling user logi
                     return redirect('/donorrequest/notall')
                 elif(role.lower()=='labtechnician'):
                     return redirect('/labdonationrequest/notall')
-                elif(role =='HospitalRepresentative'):
+                elif(role =='HospitalRepresentative' or role == 'Hospital'):
                     print('in checking')
                     return redirect('/hospitaldashbord/notall')
             else:
@@ -73,9 +73,7 @@ def EditUserName(request):
                 form.save()
                 messages.success(request,'Account updated successfuly')
             except:
-                messages.error(request,'Error occured during updating account')
-        else:
-                messages.error(request,'please input correct information')
+                None
         request.user.save() # saving the state of the user after it is updated 
     context = {'form': form , 'account':account , 'sender':'username'}
     if(request.user.Role.lower() == 'bbmanager'):
@@ -95,8 +93,6 @@ def EditProfilePicture(request):
                 form.save()
             except:
                 messages.error(request,'Error occured during updating profile pic')
-        else:
-                messages.error(request,'please input correct information')
         request.user.save()
     context= {'form':form , 'account':account , 'sender':'profilepic'}
     if(request.user.Role.lower() == 'bbmanager'):

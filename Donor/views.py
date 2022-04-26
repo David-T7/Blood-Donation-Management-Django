@@ -31,6 +31,7 @@ def Register(request):
                 if(int(request.POST['Age']) >=18):
                     account = form3.save(commit=False) # saving the values but not in the table
                     account.Role='Donor'
+                    account.email = request.POST['Email']
                     account.save() # saving the user account
                     address = form2.save(commit=False)
                     address.save()
@@ -43,11 +44,8 @@ def Register(request):
                     return redirect('/login/Donor')
                 else:
                     messages.error(request , 'You must be 18 or above to register')
-            except:   
-                messages.error(request, 'An error has occurred during registration after form')
-        else:
-            messages.error(
-                request, 'An error has occurred during registration')
+            except:
+                True
     context = {'form1': form1,'form2':form2,'form3':form3 , 'sender':'donor'}  # forms that are passed to the page rendered
     return render(request, 'register1.html',context)
 
@@ -73,8 +71,6 @@ def EditProfile(request):
                 form.save()
             except:
                 messages.error(request,'Error occured during updating profile pic')
-        else:
-                messages.error(request,'please input correct information')
         request.user.save()
     context = {'form': form , 'donor':donor , 'sender':'profile'}
     return render(request, 'donor/editprofile.html', context)
@@ -90,8 +86,6 @@ def EditUserName(request):
                 form.save()
             except:
                 messages.error(request,'Error occured during updating username')
-        else:
-                messages.error(request,'please input correct information')
         request.user.save()
     context = {'form': form , 'donor':donor , 'sender':'username'}
     return render(request, 'donor/editusername.html', context)
@@ -112,8 +106,6 @@ def EditPassword(request):
                 messages.success(request , 'Successfuly updated password')
             except:
                 messages.error(request,'Error occured during updating password')
-        else:
-                messages.error(request,'please input correct information')
         request.user.save()
     context = {'form': form ,'donor':donor , 'sender':'password' }
     return render(request, 'donor/editpassword.html', context)

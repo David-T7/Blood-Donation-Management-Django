@@ -108,8 +108,15 @@ DEFAULT_AUTO_FIELD='django.db.models.AutoField'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': '',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+        }
     }
 }
 
@@ -157,8 +164,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
 
 
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'emailaddress'
-EMAIL_HOST_PASSWORD = 'apppassword' 
+EMAIL_HOST_USER = 'youremailaddress'
+EMAIL_HOST_PASSWORD = 'yourapppassword' 
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
