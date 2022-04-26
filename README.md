@@ -13,6 +13,16 @@ pip install -r requirements.txt
 
 
 ```
+# set up mysql connection in settings.py
+set the database name 
+set the password
+
+
+# set the email setting in settings.py
+EMAIL_HOST_USER = 'youremailaddress'
+EMAIL_HOST_PASSWORD = 'yourapppassword' 
+
+
 # to make migrations 
 python manage.py makemigrations
 python manage.py migrate
