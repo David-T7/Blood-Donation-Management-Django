@@ -1,11 +1,18 @@
-import profile
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 import uuid
+rolechoice = [
+      ( None, 'SelectRole'),
+    ('BBManager', 'BBManager'),
+    ('Nurse', 'Nurse'),
+    ('LabTechnician', 'LabTechnician'),
+    ('HospitalRepresentative', 'HospitalRepresentative'),
+    ]
 
-from django.forms import CharField
+
+
 class Account(AbstractUser):
-    Role = models.CharField(max_length=25, null=True , blank=True)
+    Role = models.CharField(max_length=25, null=True , choices=rolechoice ,  blank=True)
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,

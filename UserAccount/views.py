@@ -28,8 +28,7 @@ def Login(request , role):          # function based view for handling user logi
                     return redirect('/donorrequest/notall')
                 elif(role.lower()=='labtechnician'):
                     return redirect('/labdonationrequest/notall')
-                elif(role =='HospitalRepresentative' or role == 'Hospital'):
-                    print('in checking')
+                elif(role =='HospitalRepresentative'):
                     return redirect('/hospitaldashbord/notall')
             else:
                 login(request, user , backend='django.contrib.auth.backends.ModelBackend')
