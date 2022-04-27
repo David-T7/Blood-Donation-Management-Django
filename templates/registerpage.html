@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load widget_tweaks %}
-
 {% block content %}
+
+
+
 <section class="h-100">
     <div class="container py-5 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
@@ -22,7 +24,14 @@
                         <div class="form-outline">
                         <label class="form-label" for="formInput#text">{{field.label}}</label>
                         {% render_field field  id="name"  class="form-control form-control-lg" %} 
-                        <br>  
+                        <br>
+                        {% if field.label == 'Age' %}
+                        {% for msg in messages %}
+                        {% if msg|stringformat:"s" == 'You must be 18 or above to register' %}
+							  	    <span style="color: red;" >{{msg}}</span>
+	                      {% endif %}
+                        {% endfor %}
+                        {% endif %}    
                        <span > <h style="color: red;">{{field.errors}}</h></span>
                       </div>
                        </div>

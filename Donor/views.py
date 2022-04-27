@@ -47,7 +47,7 @@ def Register(request):
             except:
                 True
     context = {'form1': form1,'form2':form2,'form3':form3 , 'sender':'donor'}  # forms that are passed to the page rendered
-    return render(request, 'register1.html',context)
+    return render(request, 'registerpage.html',context)
 
 
 def DonorState(request):
@@ -166,6 +166,7 @@ def DonorDashbord(request , type):
     return render(request, 'donor/dashbord.html' ,context)
 
 def DonationRequest(request , type):
+    print('in donor request')
     donor = DonorState(request)['donor']
     donation = None
     appointment = None
@@ -216,9 +217,11 @@ def DonationRequest(request , type):
     my_list=[]
     try:
         my_list = list(itertools.zip_longest(donation,appointment))
+        print('list found ')
     except:
         my_list = []
-    context = {'list':my_list , 'donation':donation , 'donor':donor}
+        print('list not set')
+    context = {'list':my_list , 'donation':donation , 'donor':donor , 'searchtype':type}
     return render (request , 'donor/donationrequest.html' , context  )
 
 def MakeDonationRequest(request):
@@ -234,7 +237,6 @@ def MakeDonationRequest(request):
         deferringList =  DeferringList.objects.get(Donor_id = donor)
     except:
         deferringList = None
-        print('list not found')
     if request.method == 'POST':
         form= RequestAnswerCreationForm(request.POST)
         if (form.is_valid()):
@@ -253,7 +255,6 @@ def MakeDonationRequest(request):
                 messages.success(request , 'error during request')
         else:
             messages.success(request , 'request was not successful')
-    
     context = { 'form':form , 'questions':questions , 'donor':donor}
     return render(request, 'donor/createdonationrequest.html',context)                   
 def AppointmentChoices(request , type):

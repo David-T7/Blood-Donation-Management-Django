@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+from MySQLdb import Date
 from django.shortcuts import redirect, render
 from Donor.models import Appointment, Donor
 from LabTechnician.models import FininshedAppointment
@@ -51,6 +53,69 @@ def AddBlood(request , pk , pk2):
             messages.error(request, 'Error during adding blood form')
     context = {'form':form , 'account':account}
     return render (request , 'labtechnician/addblood.html' , context)
+
+
+def GetBlood(request , type):
+    account = UserState(request)['account']
+    bloods = None
+    try:
+        if(type=='all'):
+            bloods = Blood.objects.all()
+        elif(type=='notall'):
+            bloods = Blood.objects.all()[0:5]
+        elif(type=='searched'):
+            print('in searched')
+            if request.method == 'POST':
+                searchby = request.POST['searchby']
+                searched = request.POST['searched']
+                if(searchby == 'BloodType'):
+                    print('by blood type')
+                    bloods = Blood.objects.filter( BloodGroup =  searched)
+                elif(searchby == 'Volume'):
+                    bloods = Blood.objects.filter( QuantityOfBlood =  searched) 
+                elif(searchby == 'ExpirationDate'):
+                    date = parse_date(searched)
+                    bloods = Blood.objects.filter(ExpDate =  date)
+    except:
+        bloods = None
+    context = {'account': account , 'bloods':bloods }
+    return render(request , 'labtechnician/bloods.html' , context)
+
+
+  
+def UpdateBlood(request , pk ):
+    account = UserState(request)['account']
+    blood = None
+    try:
+        blood = Blood.objects.get(Blood_id=pk)
+        form = BloodCreationForm(instance=blood)
+    except:
+        blood =None
+        form = BloodCreationForm()
+    if request.method == 'POST':
+        form = BloodCreationForm(request.POST, instance=blood)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Blood was updated successfully!')
+            return redirect('/getlabbloods/notall') 
+        else:
+            messages.success(request, 'event was not updated successfully!')
+    context = {'form': form ,'type':'update' ,  'account':account}
+    return render(request, 'labtechnician/addblood.html', context)
+
+
+def DeleteBlood(request , pk):
+    account = UserState(request)['account']
+    blood = None
+    try:
+        blood = Blood.objects.get(Blood_id=pk)
+        blood.delete()
+        messages.success(request, 'Blood was deleted successfully!')
+    except:
+        messages.success(request, 'Blood was not  deleted successfully!')
+    context = { 'account':account}
+    return render(request, 'labtechnician/addblood.html', context)
+
         
 def BloodsHistory(request , type):
     account = UserState(request)['account']

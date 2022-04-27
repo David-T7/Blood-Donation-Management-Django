@@ -1,3 +1,4 @@
+       
        <tr >
            <th>Date</th>
            <th>Time</th>
@@ -11,7 +12,7 @@
      {% if list %}
      {% for don,app in list %}
      <tr>
-       {% if don and app %} 
+       {% if don and app %}
       <td>{{ don.Request_Date }}</td> 
       <td>{{ don.Request_time }}</td>
       {% if don.Status == 'in progress' %}

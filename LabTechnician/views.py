@@ -2,6 +2,7 @@ from multiprocessing import context
 from django.contrib import  messages
 import itertools
 from django.shortcuts import redirect, render
+from Blood.forms import BloodCreationForm
 from Blood.models import Blood
 from Donor.models import Appointment, DonationRequestFormResult, Donor
 from LabTechnician.models import FininshedAppointment , DeferringList
@@ -133,6 +134,64 @@ def GetDonorAddress(request , pk):
         address= None
     context = {'account': account , 'address':address , 'donor':acc }
     return render(request , 'labtechnician/checkdonor.html' , context)
+
+def GetBlood(request , type):
+    account = UserState(request)['account']
+    bloods = None
+    try:
+        if(type=='all'):
+            bloods = Blood.objects.all()
+        elif(type=='notall'):
+            bloods = Blood.objects.all()[0:5]
+    except:
+        bloods = None
+    context = {'account': account , 'bloods':bloods }
+    return render(request , 'labtechnician/bloods.html' , context)
+
+
+  
+def UpdateBlood(request , pk ):
+    account = UserState(request)['account']
+    blood = None
+    try:
+        blood = Blood.objects.get(Blood_id=pk)
+        form = BloodCreationForm(instance=blood)
+    except:
+        blood =None
+        form = BloodCreationForm()
+    if request.method == 'POST':
+        form = BloodCreationForm(request.POST, instance=blood)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Blood was updated successfully!')
+            return redirect('/labdonationrequest/notall')
+        else:
+            messages.success(request, 'event was not updated successfully!')
+    context = {'form': form ,'type':'update' ,  'account':account}
+    return render(request, 'bbmanager/addblood.html', context)
+
+
+def DeleteBlood(request , pk):
+    account = UserState(request)['account']
+    blood = None
+    try:
+        blood = Blood.objects.get(Blood_id=pk)
+        blood.delete()
+        messages.success(request, 'Blood was deleted successfully!')
+    except:
+        messages.success(request, 'Blood was not  deleted successfully!')
+    context = { 'account':account}
+    return render(request, 'bbmanager/addblood.html', context)
+    
+
+
+
+
+
+            
+
+
+
 
 
     

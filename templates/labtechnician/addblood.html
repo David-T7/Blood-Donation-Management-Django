@@ -38,12 +38,19 @@
                 </div>
                 {% endfor %}
             <br>
+            {% if type == 'update' %}
+            <div style="align-self:auto; margin-left: 130px;">
+                <button type="submit" class="btn btn-primary ms-auto">
+                    Update
+                </button>
+            </div>
+            {% else %}
             <div style="align-self:auto; margin-left: 130px;">
                 <button type="submit" class="btn btn-primary ms-auto">
                     Add
                 </button>
             </div>
-
+            {% endif %}
         </form>
     </div>
 </div>
