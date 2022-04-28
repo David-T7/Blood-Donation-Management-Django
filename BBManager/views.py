@@ -62,5 +62,6 @@ def BBDashbord(request , type):
                    'hospitals':Hospital.objects.all(),
                    'account':Userstate(request)['account'],
                    'sender':'dashbord',
+                   'type':type,
     }
     return render(request, 'bbmanager/dashbord.html' ,context)

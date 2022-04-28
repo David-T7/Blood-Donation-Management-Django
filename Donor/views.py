@@ -1,5 +1,5 @@
 from datetime import datetime
-import imp
+from datetime import date
 import itertools
 from multiprocessing import context
 from sqlite3 import Date
@@ -162,6 +162,8 @@ def DonorDashbord(request , type):
             'donation':donation,
             'donor':donor,
             'list':my_list,
+            'type':type,
+            'sender':'dashbord',
     }
     return render(request, 'donor/dashbord.html' ,context)
 
@@ -221,12 +223,14 @@ def DonationRequest(request , type):
     except:
         my_list = []
         print('list not set')
-    context = {'list':my_list , 'donation':donation , 'donor':donor , 'searchtype':type}
+    context = {'list':my_list , 'donation':donation ,'type':type, 'donor':donor , 'searchtype':type}
     return render (request , 'donor/donationrequest.html' , context  )
 
 def MakeDonationRequest(request):
     donor = DonorState(request)['donor']
     form = RequestAnswerCreationForm()
+    todays_req = 0
+    request_limit_daily = 3
     questions = None
     deferringList = None
     try:
@@ -237,24 +241,32 @@ def MakeDonationRequest(request):
         deferringList =  DeferringList.objects.get(Donor_id = donor)
     except:
         deferringList = None
-    if request.method == 'POST':
-        form= RequestAnswerCreationForm(request.POST)
-        if (form.is_valid()):
-            try:
-                req = form.save(commit=False)
-                req.Donor_id = donor
-                if(deferringList):
-                    req.Status = 'rejected'
-                    messages.error(request , 'Sorry you cant make a donation because of health issues')
-                    req.save()
-                else:
+    try:
+        today = date.today()
+        todays_req = len(DonationRequestFormResult.objects.filter(Request_Date = today , Donor_id = donor  ))
+    except:
+        todays_req = 0
+    if (not deferringList and todays_req <= request_limit_daily):
+        if request.method == 'POST':
+            form= RequestAnswerCreationForm(request.POST)
+            if (form.is_valid()):
+                try:
+                    req = form.save(commit=False)
+                    req.Donor_id = donor   
                     req.save()
                     messages.success(request , 'request sent successfuly')
-                return redirect('/donationrequest/notall')
-            except:
-                messages.success(request , 'error during request')
-        else:
-            messages.success(request , 'request was not successful')
+                    return redirect('/donationrequest/notall')
+                except:
+                    messages.success(request , 'error during request')
+            else:
+                messages.success(request , 'request was not successful')
+    else:
+        if(deferringList):
+            messages.error(request , 'Sorry you cant make a donation because of health issues')
+            return redirect('/donationrequest/notall')
+        elif(todays_req > request_limit_daily):
+            messages.error(request , 'You have reached request limit for today')
+            return redirect('/donationrequest/notall')
     context = { 'form':form , 'questions':questions , 'donor':donor}
     return render(request, 'donor/createdonationrequest.html',context)                   
 def AppointmentChoices(request , type):
@@ -310,7 +322,7 @@ def GetEvent(request , type):
                     events = Event.objects.filter(EventDate = date)  
     except:
         events=None
-    context= {'events':events , 'donor':donor}
+    context= {'events':events , 'donor':donor , 'type':type}
     return render(request , 'donor/events.html' , context)
 
 
@@ -337,7 +349,7 @@ def Camps(request , type):
                     camps = Camp.objects.filter(CampsKebele = searched) 
     except:
         camps=None
-    context={'camps':camps , 'donor': donor}
+    context={'camps':camps , 'donor': donor , 'type':type}
     return render(request ,'donor/camps.html' , context)
 
 def SeeCamp(request , pk):

@@ -78,7 +78,7 @@ def GetBlood(request , type):
                     bloods = Blood.objects.filter(ExpDate =  date)
     except:
         bloods = None
-    context = {'account': account , 'bloods':bloods }
+    context = {'account': account , 'type':type ,  'bloods':bloods }
     return render(request , 'labtechnician/bloods.html' , context)
 
 

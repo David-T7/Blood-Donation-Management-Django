@@ -54,7 +54,7 @@
        <tr>
         <td>{{ dr.Request_Date }}</td> 
          <td>{{ dr.Request_time }}</td>
-          <td><a href="{% url 'donoraddress' dr.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Check Donor</button></a>
+          <td><a href="{% url 'donoraddress' dr.Donor_id 'request' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Check Donor</button></a>
             <td><a href="{% url 'checkrequest' dr.Result_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Check Request</button></a>
          {% if dr.Status == 'in progress' %}
          <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" s class="bi bi-circle" viewBox="0 0 16 16" style="background-color:yellow"> 
@@ -72,6 +72,15 @@
        </tr>
       
       {% endfor %}
+      <tr>{% if type == 'all' %}
+        <td><a href="{% url 'donorrequest' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Shrink</button></a>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        {% endif %}</tr>
       {% else %}
       <tr> 
        <td>No Donation Request For Now </td>

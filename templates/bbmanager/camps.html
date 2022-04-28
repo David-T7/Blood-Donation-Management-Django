@@ -77,6 +77,18 @@
           <td></td>
         </tr> 
       {% endfor %}
+      <tr>{% if type == 'all' %}
+        <td><a href="{% url 'camps' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Shrink</button></a></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      {% endif %}
+      </tr>
       {% else %}
       <tr>
         <td>No Camps For Now</td>

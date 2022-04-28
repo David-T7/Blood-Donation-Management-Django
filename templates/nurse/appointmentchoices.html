@@ -63,8 +63,18 @@
         </tr>
       
       {% endfor %}
+      <tr>{% if type == 'all' %}
+        <td><a href="{% url 'appointmentchoices' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Shrink</button></a>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        {% endif %}</tr>
       {% else %}
       <tr> 
+
+       
        <td>No Appointment Choice </td>
        <td></td>
        <td></td>

@@ -54,6 +54,24 @@
         {% endif %}
         {% endif %}
      {% endfor %}
+     <tr>{% if type == 'all' %}
+      {% if sender != 'dashbord' %} 
+      <td><a href="{% url 'hospitalrequest' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Shrink</button></a></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      {% else %}
+      <td><a href="{% url 'bbdashbord' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Shrink</button></a>
+      </td>
+      <td></td>
+      <td></td>
+      <td></td>
+        {% endif %}
+      
+      {% endif %}</tr>
+
      {% else %}
      <tr> 
       <td>No Blood Request For Now </td>

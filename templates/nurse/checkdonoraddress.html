@@ -36,6 +36,12 @@
             <label>PostOffice:</label>
             <b>{{address.PostOffice}}</b>
             <br>
+            {% if sender  == 'appointment' %}
+            <a href="{% url 'checkappointment' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Ok</button>
+            {% else %}
+            <a href="{% url 'donorrequest' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Ok</button>
+
+            {% endif %}
 
 
         </div>

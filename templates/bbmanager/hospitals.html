@@ -52,6 +52,15 @@
           <td></td>
         </tr>
       {% endfor %}
+      <tr>{% if type == 'all' %}
+        <td><a href="{% url 'hospitals' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Shrink</button></a></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      {% endif %}
       {% else %}
       <tr>
         <td>NO Hospital For Now </td>

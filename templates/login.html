@@ -19,7 +19,7 @@
 								<div class="mb-3">
 									<label class="mb-2 " for="name">Username</label>
 								{% render_field form.username  id="name" type="text" class="form-control" name="username"  %} 	
-								<br>
+								
 								{% for msg in messages%}
 								{% if msg|stringformat:"s" == 'Username doestnot exist' %}
 								<span style="color: red;" >{{msg}}</span>
@@ -30,7 +30,7 @@
 								<div class="mb-3">
 									<label class="mb-2 " for="password">Password</label>
 								{% render_field form.password1  id="password" type="password" class="form-control" name="password1"  %}
-								<br>
+								
 								{% for msg in messages%}
 								{% if msg|stringformat:"s" == 'Incorrect Password' %}
 								<span style="color: red;" >{{msg}}</span>

@@ -52,7 +52,7 @@ def DonationRequest(request , type):
         donor_account = Address.objects.filter(Address_id =donor.Address_id)
     except:
         donor_account=None
-    context = {'account':Userstate(request)['account'] ,'donor_account':donor_account, 'donationrequest': donreq}
+    context = {'account':Userstate(request)['account'] ,'donor_account':donor_account,'type':type ,'donationrequest': donreq}
     return render (request , 'nurse/donationrequest.html' , context)
 
 def CheckRequest(request , pk):
@@ -95,7 +95,7 @@ def CheckAppointments(request , type):
 
     except:
         appointment = None
-    context = {'account': Userstate(request)['account'] , 'appointments':appointment}
+    context = {'account': Userstate(request)['account'] ,'type':type ,  'appointments':appointment}
     return render (request , 'nurse/appointment.html' , context)
 
 def Confirmrequest(request ,  pk , type):
@@ -135,7 +135,7 @@ def confirmappointment(request , pk , type):
 
 
 
-def GetDonorAddress(request , pk):
+def GetDonorAddress(request , pk , sender ):
     address = None
     acc = None
     try:
@@ -146,7 +146,7 @@ def GetDonorAddress(request , pk):
         address = Address.objects.get(Address_id = str(acc.Address_id))
     except:
         address= None
-    context = {'account': Userstate(request)['account'] , 'address':address , 'donor':acc }
+    context = {'account': Userstate(request)['account'] , 'sender':sender ,'address':address , 'donor':acc }
     return render(request , 'nurse/checkdonoraddress.html' , context)
 
 def DonorQuestions(request , type):
@@ -158,7 +158,7 @@ def DonorQuestions(request , type):
             questions = DonationRequestFormQuesitons.objects.all()[0:3]
     except:
         question = None
-    context = {'account':Userstate(request)['account'] , 'questions':questions }
+    context = {'account':Userstate(request)['account'] , 'type':type ,'questions':questions }
     return render (request , 'nurse/donorquestions.html' , context)
 
 def AddQuestions(request , type):
@@ -201,7 +201,7 @@ def AppointmentChoices(request , type):
             choices = AppointmentChoice.objects.all()[0:3]
     except:
         choices = None
-    context = {'account':Userstate(request)['account'] , 'choices':choices }
+    context = {'account':Userstate(request)['account'] , 'type':type ,  'choices':choices }
     return render (request , 'nurse/appointmentchoices.html' , context)
 
 def UpdateAppointmentChoice(request , pk ):

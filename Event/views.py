@@ -36,7 +36,7 @@ def Camps(request , type):
                     camps = Camp.objects.filter(CampsKebele = searched) 
     except:
         camps=None
-    context={'camps':camps , 'account':bbmanagerstate(request)['account']}
+    context={'camps':camps , 'account':bbmanagerstate(request)['account']  , 'type':type}
     return render(request ,'bbmanager/camps.html' , context)
 
 def SeeCamp(request , pk):
@@ -70,7 +70,7 @@ def Events(request , type):
                     events = Event.objects.filter(EventDate = date) 
     except:
         events=None
-    context={'events':events , 'account':bbmanagerstate(request)['account']}
+    context={'events':events , 'account':bbmanagerstate(request)['account'] , 'type':type }
     return render(request ,'bbmanager/events.html' , context)
 def CreateEvent(request):
     form = EventCreationForm()

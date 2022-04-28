@@ -51,7 +51,7 @@
       {% if appointments %}
       {% for appointment in appointments %}
        <tr> 
-        <td><a href="{% url 'donoraddress' appointment.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Check Donor</button></a></td>
+        <td><a href="{% url 'donoraddress' appointment.Donor_id 'appointment' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Check Donor</button></a></td>
           <td>{{ appointment.Date }}</td>
          <td>{{ appointment.Time }}</td>
          {% if appointment.status == 'in progress'  %}
@@ -66,6 +66,14 @@
         </tr>
       
       {% endfor %}
+      <tr>{% if type == 'all' %}
+        <td><a href="{% url 'checkappointment' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Shrink</button></a>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        {% endif %}</tr>
+
       {% else %}
       <tr> 
        <td>No Appointment Request Now </td>

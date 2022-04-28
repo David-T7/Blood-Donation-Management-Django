@@ -10,6 +10,8 @@ from UserAccount.models import Account, Address, UserRegistration
 from django.contrib.auth.forms import PasswordChangeForm 
 from django.contrib.auth import update_session_auth_hash
 from django.utils.dateparse import parse_date 
+from datetime import date
+
 
 
 def bbmanagerstate(request):
@@ -56,7 +58,8 @@ def HospitalRequest(request, type):
     context={
                    'bloodrequest':bloodrequest,
                    'hospitals':hospitals,
-                   'account':bbmanagerstate(request)['account']
+                   'account':bbmanagerstate(request)['account'],
+                   'type':type,
     }
     return render (request , 'bbmanager/hospitalrequest.html' , context)
 
@@ -85,7 +88,7 @@ def Hospitals(request , type):
                     hospitals = Hospital.objects.filter(HospitalRepresentative = searched)
     except:
         hospitals= None
-    context={'hospitals' : hospitals , 'account':bbmanagerstate(request)['account']}
+    context={'hospitals' : hospitals , 'account':bbmanagerstate(request)['account'] , 'type':type}
     return render(request ,  'bbmanager/hospitals.html' , context)
 def AddHospital(request):
     form1 = HospitalCreationForm()
@@ -171,8 +174,8 @@ def BloodRequests(request , type):
                     bloodreq = BloodRequest.objects.filter(Request_Date =  date)  
     except:
         bloodreq = None
-    context = {'bloodreq': bloodreq , 'hospital': hospital}
-    return render (request , 'hospitalrep/bloodreq.html' , context )
+    context = {'bloodreq': bloodreq , 'hospital': hospital , 'type':type}
+    return render (request , 'hospitalrep/bloodreq.html' ,   context )
 
 def HospitalDashbord(request , type):
     hospital = HospitalState(request)['hospital']
@@ -211,6 +214,8 @@ def HospitalDashbord(request , type):
             'rejected_no':rejected_no ,
             'bloodreq':bloodreq,
             'hospital': hospital,
+            'sender' : 'dashbord',
+            'type': type , 
     }
     return render(request, 'hospitalrep/homepage.html' ,context)
 
@@ -219,34 +224,46 @@ def HospitalDashbord(request , type):
 def MakeBloodRequest(request):
     hospital = HospitalState(request)['hospital']
     form = BloodRequestForm()
-    if request.method == 'POST':
-        form= BloodRequestForm(request.POST)
-        if (form.is_valid()):
-            try:
-                bloodreq = form.save(commit=False)
-                blood = None
-                blood = Blood.objects.filter(BloodGroup = bloodreq.Blood_Group).filter(QuantityOfBlood = bloodreq.Quantity)                
-                bloodreq.Blood_id = blood[0]
-                bloodreq.Hospital_id = hospital
-                bloodreq.save()
-                messages.success(request , 'Request was Successful')
-                return redirect('/bloodrequest/notall')
-            except:
-                blood =None
+    todays_req = 0
+    request_limit_daily = 3
+    try:
+        today = date.today()
+        todays_req = len(BloodRequest.objects.filter(Request_Date = today  , Hospital_id = hospital))
+    except:
+        todays_req = 0
+        print('not found')
+    if(todays_req <=  request_limit_daily):
+        if request.method == 'POST':
+            form= BloodRequestForm(request.POST)
+            if (form.is_valid()):
                 try:
-                    blood = Blood.objects.filter(BloodGroup = request.POST['Blood Group'])
+                    bloodreq = form.save(commit=False)
+                    blood = None
+                    blood = Blood.objects.filter(BloodGroup = bloodreq.Blood_Group).filter(QuantityOfBlood = bloodreq.Quantity)                
+                    bloodreq.Blood_id = blood[0]
+                    bloodreq.Hospital_id = hospital
+                    bloodreq.save()
+                    messages.success(request , 'Request was Successful')
+                    return redirect('/bloodrequest/notall')
                 except:
                     blood =None
-                if(blood):
+                    try:
+                        blood = Blood.objects.filter(BloodGroup = request.POST['Blood_Group'])
+                    except:
+                        blood =None
+                    if(blood):
                         volumes =''
                         for bl in blood:
                             volumes+= bl.QuantityOfBlood
                         messages.error(request ,'Bloods in the stock with that group is ' +volumes  )
-                else:
-                    messages.error(request , 'Not enough blood on stock')
-        else:
-            messages.success(request , 'request was not successful')
-    
+                    else:
+                        messages.error(request , 'Not enough blood on stock')
+            else:
+                messages.success(request , 'request was not successful')
+    else:
+        messages.error(request , 'You have reached the request limit for today')
+        return redirect('/bloodrequest/notall')
+
     context = {'form':form ,  'hospital': hospital}
     return render(request, 'hospitalrep/makebloodrequest.html',context)   
 
@@ -337,7 +354,7 @@ def AcceptBloodRequest(request , pk ,  type):
             breq.save()
             blood= Blood.objects.get(Blood_id = str(breq.Blood_id.Blood_id))
             BloodHistory.objects.create(Blood_id=blood.Blood_id , Donor_id = blood.Donor_id.Donor_id ,BloodGroup = blood.BloodGroup , 
-                PackNo = blood.PackNo , RegDate = blood.RegDate , ExpDate = blood.ExpDate , QuantityOfBlood = blood.QuantityOfBlood , Action='Removed')
+            PackNo = blood.PackNo , RegDate = blood.RegDate , ExpDate = blood.ExpDate , QuantityOfBlood = blood.QuantityOfBlood , Action='Removed')
             HospitalSentBloods.objects.create(Blood_Req_Id = breq.Blood_Req_Id , Blood_id=blood.Blood_id)
             blood.delete()
             messages.success(request,'Request was Accepted Succesfuly')
@@ -363,6 +380,9 @@ def AcceptBloodRequest(request , pk ,  type):
             messages.success(request,'Request was Rejected Successfully')
         return redirect('/hospitalrequest/notall')
     except:
+        breq = BloodRequest.objects.get(Blood_Req_Id = pk)
+        breq.Status = 'in progress'
+        breq.save()
         messages.error(request,'Error During confirming Request')
         return redirect('/hospitalrequest/notall')
     context = {'account':account}
