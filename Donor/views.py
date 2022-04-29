@@ -1,4 +1,3 @@
-from datetime import datetime
 from datetime import date
 import itertools
 from multiprocessing import context
@@ -189,7 +188,7 @@ def DonationRequest(request , type):
                 elif(searchby == 'AppointmentDate'):
                     date = parse_date(searched)
                     app = Appointment.objects.filter(Date = date)
-                    donation = DonationRequestFormResult.objects.filter(Donor_id = app.Donor_id)
+                    donation = DonationRequestFormResult.objects.filter(Donor_id = app[0].Donor_id)
                 elif(searchby == 'AppointmentStatus'):
                     app = Appointment.objects.filter(status =  searched)
                     donation = DonationRequestFormResult.objects.filter(Donor_id = str(app[0].Donor_id))

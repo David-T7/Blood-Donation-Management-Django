@@ -120,7 +120,7 @@ def DeleteBlood(request , pk):
     except:
         messages.success(request, 'Blood was not  deleted successfully!')
     context = { 'account':account}
-    return render(request, 'labtechnician/addblood.html', context)
+    return render(request, 'labtechnician/bloods.html', context)
 
         
 def BloodsHistory(request , type):

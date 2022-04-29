@@ -43,23 +43,20 @@ def DonationRequest(request ,  type):
                 print('in post')
                 searchby = request.POST['searchby']
                 searched = request.POST['searched']
-                if(searchby == 'RequestDate'):
-                    date = parse_date(searched)
-                    donation = DonationRequestFormResult.objects.filter(Request_Date =  date)
-                elif(searchby == 'AppointmentDate'):
+                if(searchby == 'AppointmentDate'):
                     date = parse_date(searched)
                     app = Appointment.objects.filter(Date = date)
                     donation = DonationRequestFormResult.objects.filter(Donor_id = app[0].Donor_id)
                 elif(searchby == 'DonorName'):
                     dn = Donor.objects.filter(Donorname = searched)
-                    donation = DonationRequestFormResult.objects.filter(Donor_id = str(dn[0].Donor_id))
+                    donation = DonationRequestFormResult.objects.filter(Donor_id = dn[0].Donor_id)
                 elif(searchby == 'Phone'):
                     addr = Address.objects.get(Phone = int(searched))
                     dn = Donor.objects.filter(Address_id = addr)
-                    donation = DonationRequestFormResult.objects.filter(Donor_id = str(dn[0].Donor_id))
+                    donation = DonationRequestFormResult.objects.filter(Donor_id = dn[0].Donor_id)
                 elif(searchby == 'AppointmentStatus'):
                     app = Appointment.objects.filter(status =  searched)
-                    donation = DonationRequestFormResult.objects.filter(Donor_id = str(app[0].Donor_id))
+                    donation = DonationRequestFormResult.objects.filter(Donor_id = app[0].Donor_id)
 
     except:
         donation = None
@@ -72,17 +69,19 @@ def DonationRequest(request ,  type):
             if request.method == 'POST':
                 searchby = request.POST['searchby']
                 searched = request.POST['searched']
-            if(searchby == 'AppointmentDate'):
-                date = parse_date(searched)
-                appointment = Appointment.objects.filter(Date = date)
-            elif(searchby == 'DonorName'):
-                appointment = Appointment.objects.filter(Donor_id = donation[0].Donor_id)
-            elif(searchby == 'Phone'):
-                appointment = Appointment.objects.filter(Donor_id = donation[0].Donor_id)
-            elif(searchby == 'AppointmentStatus'):
-                appointment = Appointment.objects.filter(status =  searched)
-            elif(searchby == 'RequestDate'):
-                appointment = Appointment.objects.filter(Donor_id = donation[0].Donor_id)
+                if(searchby == 'AppointmentDate'):
+                    date = parse_date(searched)
+                    appointment = Appointment.objects.filter(Date = date)
+                elif(searchby == 'DonorName'):
+                    appointment = Appointment.objects.filter(Donor_id = donation[0].Donor_id)
+                    print('donors number ',len(donation))
+
+                elif(searchby == 'Phone'):
+                    appointment = Appointment.objects.filter(Donor_id = donation[0].Donor_id)
+                elif(searchby == 'AppointmentStatus'):
+                    appointment = Appointment.objects.filter(status =  searched)
+                elif(searchby == 'RequestDate'):
+                    appointment = Appointment.objects.filter(Donor_id = donation[0].Donor_id)
     except:
         appointment = None
     try:

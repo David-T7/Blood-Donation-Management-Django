@@ -17,7 +17,7 @@
             </th>
             <th><a href="{% url 'addappointmentchoice' 'add' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Add</button></a>
             </th>
-            <form method="post" action="{% url 'donorrequest' 'searched' %}">
+            <form method="post" action="{% url 'appointmentchoices' 'searched' %}">
                 {% csrf_token %}
               <th>
                 <select class="form-select form-select-sm" name='searchby' aria-label=".form-select-sm example">

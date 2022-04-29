@@ -8,7 +8,7 @@ from Nurse.models import AppointmentChoice
 from .forms import AppointmentChoiceCreationForm
 from UserAccount.models import  Address, UserRegistration
 from Donor.models import DonationRequestFormResult , DonationRequestFormQuesitons , Appointment , Donor
-from django.utils.dateparse import parse_date 
+from django.utils.dateparse import parse_date  , parse_time
 
 def Userstate(request):  # for getting the state of the user 
     state = request.user
@@ -33,8 +33,8 @@ def DonationRequest(request , type):
                 searchby = request.POST['searchby']
                 searched = request.POST['searched']
                 if(searchby == 'DonorName'):
-                    dn = Donor.objects.get(Donorname = searched)
-                    donreq = DonationRequestFormResult.objects.filter(Donor_id = dn.Donor_id)
+                    dn = Donor.objects.filter(Donorname = searched)
+                    donreq = DonationRequestFormResult.objects.filter(Donor_id = dn[0].Donor_id)
                 elif(searchby == 'Phone'):
                     addr = Address.objects.get(Phone = int(searched))
                     dn = Donor.objects.get(Address_id = addr)
@@ -197,8 +197,20 @@ def AppointmentChoices(request , type):
     try:
         if(type == 'all'):
             choices = AppointmentChoice.objects.all()
-        else:
+        elif(type == 'notall'):
             choices = AppointmentChoice.objects.all()[0:3]
+        elif(type=='searched'):
+            if request.method == 'POST':
+                searchby = request.POST['searchby']
+                searched = request.POST['searched']
+                if(searchby == 'Date'):
+                    date = parse_date(searched)
+                    choices = AppointmentChoice.objects.filter(Date = date)
+                elif(searchby == 'Time'):
+                    time = parse_time(searched)
+                    choices = AppointmentChoice.objects.filter(Time = time)
+                elif(searchby == 'DonorsNo'):
+                    choices = AppointmentChoice.objects.filter(NumberofDonors = int(searched))
     except:
         choices = None
     context = {'account':Userstate(request)['account'] , 'type':type ,  'choices':choices }

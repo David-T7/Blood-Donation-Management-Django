@@ -7,6 +7,14 @@
 }
 
 .nav-item:hover{
-    background-color: #ffffff26;
+    background-color: white ;
     border: 20px;
 }
+
+.container {
+    background-color: white;
+}
+
+.navbar-brand {
+    color: black;  
+} 
