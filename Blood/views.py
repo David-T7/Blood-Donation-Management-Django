@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from datetime import date
 from MySQLdb import Date
 from django.shortcuts import redirect, render
 from Donor.models import Appointment, Donor
@@ -72,10 +73,15 @@ def GetBlood(request , type):
                     print('by blood type')
                     bloods = Blood.objects.filter( BloodGroup =  searched)
                 elif(searchby == 'Volume'):
+                    print('in volume')
                     bloods = Blood.objects.filter( QuantityOfBlood =  searched) 
                 elif(searchby == 'ExpirationDate'):
-                    date = parse_date(searched)
-                    bloods = Blood.objects.filter(ExpDate =  date)
+                    expdate = parse_date(searched)
+                    bloods = Blood.objects.filter(ExpDate =  expdate) 
+                elif(searchby == 'Expired'):
+                    print('in expired')
+                    today = date.today()
+                    bloods = Blood.objects.filter(ExpDate__lte = today) 
     except:
         bloods = None
     context = {'account': account , 'type':type ,  'bloods':bloods }

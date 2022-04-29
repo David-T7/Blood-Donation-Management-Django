@@ -25,7 +25,9 @@
               <select class="form-select form-select-sm" name='searchby' aria-label=".form-select-sm example">
               <option selected>searchby</option>
               <option value="BloodType">BloodType</option>
+              <option value="Volume">Volume</option>
               <option value="ExpirationDate">ExpiryDate</option>
+              <option value="Expired">Expired</option>
             </select>
             </th>
             <th>
@@ -40,6 +42,7 @@
                 </span>
               </div>
             </th>
+            <th></th>
             </form>
           </tr>
     </thead>
@@ -52,6 +55,14 @@
           <td>{{ blood.QuantityOfBlood }}</td>
           <td>{{ blood.RegDate }}</td>
           <td>{{ blood.ExpDate }}</td>
+          <td>
+            {% now "Y-m-d" as todays_date %}
+          {% if todays_date  >= blood.ExpDate|date:"Y-m-d" %}
+          <img src="{% static 'images/logo/expired.jpeg' %}" alt="error" width="100">          
+           {% else %}
+           <img src="{% static 'images/logo/safeblood.jpg' %}" alt="error" width="100"> 
+            {% endif %}
+          </td>
           <td><a href="{% url 'updateblood' blood.Blood_id  %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color:red;">Update</button></a>
           </td>
           <td><a href="{% url 'deleteblood' blood.Blood_id   %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Delete</button></a>
@@ -62,6 +73,8 @@
       <tr>{% if type == 'all' %}
         <td><a href="{% url 'getlabbloods' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Shrink</button></a>
         </td>
+        <td></td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
