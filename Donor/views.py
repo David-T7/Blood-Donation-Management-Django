@@ -2,6 +2,7 @@ from datetime import date
 import itertools
 from multiprocessing import context
 from sqlite3 import Date
+from time import time
 from django.contrib import  messages
 from django.shortcuts import redirect, render
 from Donor.forms import AppointmentCreationForm, DonorCreationForm , DonationRequestFormQuesitons, DonorAccountEditForm , RequestAnswerCreationForm
@@ -274,12 +275,22 @@ def AppointmentChoices(request , type):
     try:
         if(type == 'all'):
             choices = AppointmentChoice.objects.all()
-        else:
-            choices = AppointmentChoice.objects.all()[0:3]
+        elif (type == 'notall'):
+            choices = AppointmentChoice.objects.all()[0:5]
+        elif(type=='searched'):
+            if request.method == 'POST':
+                searchby = request.POST['searchby']
+                searched = request.POST['searched']
+            if(searchby == 'AppointmentDate'):
+                    date = parse_date(searched)
+                    choices = AppointmentChoice.objects.filter(Date = date)
+            elif(searchby == 'AppointmentTime'):
+                    time = parse_time(searched)
+                    choices = AppointmentChoice.objects.filter(Time = time)    
     except:
         choices = None
-    context = {'donor':donor, 'choices':choices }
-    return render (request , 'donor/chooseappointment.html' , context)
+    context = {'donor':donor, 'choices':choices , 'type':type }
+    return render (request , 'donor/chooseappointment.html' ,  context)
 
 def MakeAppointment(request , pk):
     donor = DonorState(request)['donor']

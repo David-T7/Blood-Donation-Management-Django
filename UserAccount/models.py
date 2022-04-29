@@ -7,6 +7,7 @@ rolechoice = [
     ('Nurse', 'Nurse'),
     ('LabTechnician', 'LabTechnician'),
     ('HospitalRepresentative', 'HospitalRepresentative'),
+    ('Donor'  , 'Donor'),
     ]
 
 
