@@ -1,10 +1,9 @@
 from django.contrib import admin
 from .models import Address,Account, UserRegistration
 from django.contrib.auth.admin import UserAdmin
-from .forms import CustomUserCreationForm, CustomUserChangeForm
+from .forms import  CustomUserCreationForm
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
-    form = CustomUserChangeForm
     model = Account
     add_fieldsets = (
         (None, {
