@@ -1,4 +1,5 @@
 {% extends 'bbmanager/bbmanager.html' %}
+{% load static %}
 {% block content %}
 <!-- Main Wrapper -->
 
@@ -24,7 +25,6 @@
              </th>
              <th><a href="{% url 'addevent' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">AddEvent</button></a>
              </th>
-             <th></th>
              <form method="post" action="{% url 'events' 'searched' %}">
               {% csrf_token %}
              <th>
@@ -34,7 +34,7 @@
               <option value="EventDate">EventDate</option>
               <option value="EventType">EventType</option>
             </select>
-            </th>
+            </th>            
             <th>
               <div class="input-group">
                 <input class="form-control border-end-0 border rounded-pill" name='searched' placeholder="search" id="example-search-input">
@@ -47,9 +47,8 @@
                 </span>
               </div>
             </th>
-             </form>
             <th></th>
-         
+             </form>         
           </tr>
         <tr>
             <th>Event</th>
@@ -58,9 +57,8 @@
             <th>Date</th>
             <th>Time</th>
             <th>Type</th>
+            <th>Status</th>
             <th>Picture</th>
-            <th></th>
-            <th></th>
             <th></th>
         </tr>
     </thead>
@@ -74,10 +72,17 @@
           <td>{{ ev.EventDate }}</td>
           <td>{{ ev.EventTime }}</td>
           <td>{{ ev.EventType }}</td>
+          <td>
+          {% now "Y-m-d" as todays_date %}
+          {% if todays_date  > ev.EventDate|date:"Y-m-d" %}
+          <img src="{% static 'images/events/passedevent.png' %}" alt="error" width="100">          
+          {% else %}
+          <img src="{% static 'images/events/timecounting.png' %}" alt="error" width="100">      
+          {% endif %}
+          </td>
           <td><img src="/static/images/{{ ev.EventPic }}" style="height: 150px;width: 150px;"></td> 
-          <td><a href="{% url 'updateevent' ev.Event_id %}"><button type="button" class="btn btn-info">Update</button></a></td>&nbsp;
-          <td><a href="{% url 'deleteevent' ev.Event_id %}"><button type="button" class="btn btn-danger">Delete</button></a></td>
-          <td></td>
+          <td><a href="{% url 'updateevent' ev.Event_id %}"><button type="button" class="btn btn-info">Update</button></a>
+           <br><br><a href="{% url 'deleteevent' ev.Event_id %}"><button type="button" class="btn btn-danger">Delete</button></a></td>
         </tr> 
       {% endfor %}
       <tr>{% if type == 'all' %}

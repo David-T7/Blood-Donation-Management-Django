@@ -47,7 +47,11 @@
             <br>
                 <div style="align-self:auto; margin-left: 130px;">
                     <button type="submit" class="btn btn-primary ms-auto">
+                        {% if type == 'add'%}
                         Submit
+                        {% else %}
+                        Update
+                        {% endif %}
                     </button>
                 </div>
             {% else %}

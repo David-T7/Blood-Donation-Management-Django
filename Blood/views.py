@@ -58,6 +58,7 @@ def AddBlood(request , pk , pk2):
 
 def GetBlood(request , type):
     account = UserState(request)['account']
+    three_days_after = None
     bloods = None
     try:
         if(type=='all'):
@@ -84,7 +85,11 @@ def GetBlood(request , type):
                     bloods = Blood.objects.filter(ExpDate__lte = today) 
     except:
         bloods = None
-    context = {'account': account , 'type':type ,  'bloods':bloods }
+    try:
+        three_days_after = date.today() +  datetime.timedelta(days=3)
+    except:
+        three_days_after = None
+    context = {'account': account , 'type':type ,  'bloods':bloods , 'threedaysafter':three_days_after }
     return render(request , 'labtechnician/bloods.html' , context)
 
 

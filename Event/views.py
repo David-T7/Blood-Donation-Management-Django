@@ -90,7 +90,7 @@ def CreateEvent(request):
 def CreateCamp(request):
     form = CampCreationForm()
     if request.method == 'POST':
-        form= CampCreationForm(request.POST )
+        form= CampCreationForm(request.POST,request.FILES )
         if (form.is_valid()):
             try:
                 camp = form.save(commit=False)
@@ -111,7 +111,7 @@ def UpdateCamp(request , pk ):
         camp=None
         form = CampCreationForm()
     if request.method == 'POST':
-        form = CampCreationForm(request.POST, instance=camp)
+        form = CampCreationForm(request.POST,request.FILES ,  instance=camp)
         if form.is_valid():
             form.save()
             messages.success(request, 'Camp was updated successfully!')

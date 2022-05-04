@@ -59,9 +59,11 @@
             {% now "Y-m-d" as todays_date %}
           {% if todays_date  >= blood.ExpDate|date:"Y-m-d" %}
           <img src="{% static 'images/logo/expired.jpeg' %}" alt="error" width="100">          
-           {% else %}
+           {% elif threedaysafter >= blood.ExpDate|date:"Y-m-d"  %}
+           <img src="{% static 'images/logo/bloodexpirewarning.png' %}" alt="error" width="100">
+           {% else %} 
            <img src="{% static 'images/logo/safeblood.jpg' %}" alt="error" width="100"> 
-            {% endif %}
+          {% endif %}
           </td>
           <td><a href="{% url 'updateblood' blood.Blood_id  %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color:red;">Update</button></a>
           </td>

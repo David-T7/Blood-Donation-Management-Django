@@ -46,7 +46,7 @@
       </svg>
       {% else %}
       {% if sender != 'dashbord' %}
-      <td><a href="{% url 'donappointmentchoices' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Make Appointment</button></a></td>
+      <td><a href="{% url 'donappointmentchoices' 'notall' 'add' 'nothing' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Make Appointment</button></a></td>
       {% else %}
       <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color:yellow;" class="bi bi-circle"  viewBox="0 0 16 16">
         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>  </svg> not made </td>      {% endif %}
@@ -63,7 +63,12 @@
 
       {% endif %}
       {% endif %}
+      {% if sender != 'dashbord' %} 
+      <td><a href="{% url 'cancelrequest' don.Result_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">CancelRequest</button></a>&nbsp;<a href="{% url 'updaterequest' don.Result_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">UpdateRequest</button></a></td>
+      {% else %}
       <td></td>
+      {% endif %}
+
       <td></td>
     {% endif %}
      {% endfor %}
@@ -73,6 +78,7 @@
       <td><a href="{% url 'donationrequest' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Shrink</button></a>
       {% else %}
       <td><a href="{% url 'donordashbord' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Shrink</button></a>
+        
       {% endif %}
       </td>
       <td></td>

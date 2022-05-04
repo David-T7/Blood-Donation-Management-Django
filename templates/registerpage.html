@@ -3,9 +3,14 @@
 {% load widget_tweaks %}
 {% block content %}
 
-
+<title>Registeration Page</title>
 
 <section class="h-100">
+  {% if not  request.user %}
+  <div class="text-center my-5">
+    <img src="{% static 'images/logo/nbb.jpeg' %}" alt="logo" width="100">
+  </div>
+  {% endif %}
     <div class="container py-5 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-12">
@@ -14,6 +19,9 @@
               <div class="row g-0">
                 <div class="col-lg-6">
                   <div class="p-5">
+                    {% if not  request.user %}
+                    <h3 class="fw-normal mb-5" style="color:#4835d4"><b>Donor Registeration</b> </h3> 
+                    {% endif %}
                     <h3 class="fw-normal mb-5" style="color: #4835d4;">General Infomation</h3> 
                    
                         <form  method="POST"  enctype="multipart/form-data">
@@ -57,6 +65,9 @@
 
                 <div class="col-lg-6 bg-indigo text-white">
                   <div class="p-5">
+                    {% if not request.user %}
+                    <h3 class="fw-normal mb-5" style="color: black"></h3><br>
+                    {% endif %}
                     <h3 class="fw-normal mb-5">Contact Details</h3>
                     <div class="row">
 
@@ -73,11 +84,9 @@
                      </div>
                      
                      <button type="submit" class="btn btn-light btn-lg" data-mdb-ripple-color="dark" style="float: le;margin-left: 50px;" onmouseenter="this.style.backgroundColor='red';this.style.color = 'white';" onmouseleave="this.style.backgroundColor='white';this.style.color = 'black';"> 
-                       {% if type == 'update' %}  Update {% else %} Register {% endif %} </button>
-      
-                  <br><br> 
-
+                       {% if type == 'update' %}  Update {% else %} Register {% endif %} </button>                           
                    </div> 
+
 
                   </form>
                   </div>
@@ -87,6 +96,8 @@
           </div>
         </div>
       </div>
+    	
     </div>
+
   </section>
 {% endblock %}

@@ -13,7 +13,7 @@
 					</div>
 					<div class="card shadow-lg">
 						<div class="card-body p-5">
-							<h1 class="fs-4 card-title fw-bold mb-4">Login</h1>
+							<h1 class="fs-4 card-title fw-bold mb-4">{{Role}} Login</h1>
 							<form  method="POST" >
 								{% csrf_token %}
 								<div class="mb-3">
@@ -51,7 +51,10 @@
 										Forgot Password?
 									</a>
 								</div>
-			
+								<br>
+								<div style="align-self:auto; margin-left: 110px;">
+									<a href="{% url 'homepage' %}">Return Home</a>
+								</div>			
 							</form>
 						</div>
 						{% if Role == 'Donor' %}

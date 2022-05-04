@@ -4,7 +4,7 @@
 <table class="styled-table">
   <thead>
        <tr>
-         <th>Hospital  Blood  Request</th>
+         <th>Blood  Request History</th>
          <th><a href="{% url 'hospitalrequest' 'all' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Seeall</button></a>
           </th>
           <form method="post" action="{% url 'hospitalrequest' 'searched' %}">
@@ -32,6 +32,7 @@
               </span>
             </div>
           </th>
+          <th></th>
           </form>   
         </tr>
 
@@ -39,6 +40,7 @@
           <th>Name</th>
            <th>Date</th>
            <th>Blood Type</th>
+           <th>Volume</th>
            <th>Status</th>
            <th>Hospital</th>
            <th></th>

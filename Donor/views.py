@@ -1,11 +1,12 @@
 from datetime import date
 import itertools
 from multiprocessing import context
+import re
 from sqlite3 import Date
 from time import time
 from django.contrib import  messages
 from django.shortcuts import redirect, render
-from Donor.forms import AppointmentCreationForm, DonorCreationForm , DonationRequestFormQuesitons, DonorAccountEditForm , RequestAnswerCreationForm
+from Donor.forms import AppointmentCreationForm, DonationRequestQuestionForm, DonorCreationForm , DonationRequestFormQuesitons, DonorAccountEditForm , RequestAnswerCreationForm
 from Donor.models import Appointment, Donor
 from Nurse.models import AppointmentChoice 
 from UserAccount.models import Account , Address
@@ -267,9 +268,53 @@ def MakeDonationRequest(request):
         elif(todays_req > request_limit_daily):
             messages.error(request , 'You have reached request limit for today')
             return redirect('/donationrequest/notall')
-    context = { 'form':form , 'questions':questions , 'donor':donor}
-    return render(request, 'donor/createdonationrequest.html',context)                   
-def AppointmentChoices(request , type):
+    context = { 'form':form , 'questions':questions , 'donor':donor , 'type':'add'}
+    return render(request, 'donor/createdonationrequest.html',context)    
+
+
+def CancelRequest(request , pk):
+    donor = DonorState(request)['donor']
+    donreq = None
+    try:
+        donreq = DonationRequestFormResult.objects.get(Result_id = pk)
+        donreq.delete()
+        messages.success(request , 'You have successfuly canceled the request')
+        return redirect('/donationrequest/notall')
+
+    except:
+        messages.success(request , 'Error during canceling the request')
+        return redirect('/donationrequest/notall')
+
+
+def UpdateRequest(request , pk):
+    donor = DonorState(request)['donor']
+    questions = None
+    donreq = None
+    try:
+        donreq = DonationRequestFormResult.objects.get(Result_id=pk)
+    except:
+        donreq = None
+    try:
+        questions = DonationRequestFormQuesitons.objects.all()[0]
+    except:
+        questions = None
+    form = RequestAnswerCreationForm(instance= donreq)
+    if request.method == 'POST':
+        form = RequestAnswerCreationForm(request.POST, instance=donreq)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Request was updated successfully!')
+            return redirect('/donationrequest/notall') 
+        else:
+            messages.success(request, 'event was not updated successfully!')
+    context = { 'form':form  , 'donor':donor , 'questions':questions ,  'type':'update' }
+    return render(request, 'donor/createdonationrequest.html', context)    
+
+
+
+
+
+def AppointmentChoices(request , type , sender , pk):
     donor = DonorState(request)['donor']
     choices = None
     try:
@@ -289,7 +334,7 @@ def AppointmentChoices(request , type):
                     choices = AppointmentChoice.objects.filter(Time = time)    
     except:
         choices = None
-    context = {'donor':donor, 'choices':choices , 'type':type }
+    context = {'donor':donor, 'choices':choices , 'type':type , 'sender':sender , 'pk':pk  }
     return render (request , 'donor/chooseappointment.html' ,  context)
 
 def MakeAppointment(request , pk):
@@ -307,6 +352,62 @@ def MakeAppointment(request , pk):
         messages.error(request , 'Error during appointment request')
     context = {'donor':donor}
     return  render(request , 'donor/chooseappointment.html', context)
+
+def UpdateAppointment(request , pk1 , pk2):
+    donor = DonorState(request)['donor']
+    app = None
+    appchoices = None
+    try:
+        appchoices = AppointmentChoice.objects.get(Appchoice_id = pk1)
+    except:
+        appchoices = None
+    try:
+        app = Appointment.objects.get(App_id = pk2)
+        app.Date = appchoices.Date
+        app.Time = appchoices.Time 
+        app.save()
+        messages.success(request , 'Appointment was updated successfuly')
+        return redirect('/getappointments/notall')
+    except:
+        messages.error(request , 'Appointment was not successfuly updated')
+        return redirect('/getappointments/notall')
+
+def CancelAppointment(request , pk):
+    donor = DonorState(request)['donor']
+    app = None
+    try:
+        app = Appointment.objects.get(App_id = pk)
+        app.delete()
+        messages.success(request , 'Appointment Canceled successfuly')
+        return redirect('/getappointments/notall')
+    except:
+        messages.error(request , 'Error during canceling appointment')
+        return redirect('/getappointments/notall')
+
+def GetAppointments(request , type):
+    donor = DonorState(request)['donor']
+    appointment = None
+    try:
+        if(type=='all'):
+            appointment = Appointment.objects.all()
+        elif(type == 'notall'):
+            appointment = Appointment.objects.all()[0:5]
+        elif(type=='searched'):
+            if request.method == 'POST':
+                searchby = request.POST['searchby']
+                searched = request.POST['searched']
+                if(searchby == 'Date'):
+                    date = parse_date(searched)
+                    appointment = Appointment.objects.filter(Date =  date)
+                elif(searchby == 'Status'):
+                    appointment = Appointment.objects.filter(status =  searched.lower())
+    except:
+        appointment = None
+    context= {'appointments':appointment , 'donor':donor}
+    return render(request , 'donor/appointment.html' , context)
+
+    
+
 
             
 def GetEvent(request , type):

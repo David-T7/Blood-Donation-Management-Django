@@ -70,6 +70,7 @@
           <td>{{ camp.CampsWoreda }}</td>
           <td>{{ camp.CampsKebele }}</td>
           <td>{{ camp.city }}</td>
+          <td><img src="/static/images/{{ camp.CampPic }}" style="height: 150px;width: 150px;"></td> 
           <td><a href="{% url 'seecamps' camp.Camps_id %}"><button type="button" class="btn btn-info">Seemap</button></a></td>&nbsp;
           <td><a href="{% url 'updatecamp' camp.Camps_id %}"><button type="button" class="btn btn-info">Update</button></a></td>&nbsp;
           <td><a href="{% url 'deletecamp'  camp.Camps_id  %}"><button type="button" class="btn btn-danger">Delete</button></a></td>

@@ -24,6 +24,7 @@ class Camp(models.Model):
     CampsKebele = models.IntegerField()
     city = models.CharField(max_length=255 , null=True)
     Location = models.CharField(max_length=1000 ,null=True)
+    CampPic= models.FileField(null=True, blank=True, upload_to='camps/', default="camps/defaultcamp.png")
     class Meta:
         db_table = "Camp"
     
