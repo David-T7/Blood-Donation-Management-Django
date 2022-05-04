@@ -28,7 +28,6 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'axes',
     'django_google_maps',
-    'location_field.apps.DefaultConfig',
     'Donor',
     'Blood',
     'Hospital',
