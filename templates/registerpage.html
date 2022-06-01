@@ -19,8 +19,8 @@
               <div class="row g-0">
                 <div class="col-lg-6">
                   <div class="p-5">
-                    {% if not  request.user %}
-                    <h3 class="fw-normal mb-5" style="color:#4835d4"><b>Donor Registeration</b> </h3> 
+                    {% if sender == 'donor' %}
+                    <h3 class="fw-normal mb-5" style="color:red"><b>Donor Registeration</b> </h3> 
                     {% endif %}
                     <h3 class="fw-normal mb-5" style="color: #4835d4;">General Infomation</h3> 
                    
@@ -84,7 +84,11 @@
                      </div>
                      
                      <button type="submit" class="btn btn-light btn-lg" data-mdb-ripple-color="dark" style="float: le;margin-left: 50px;" onmouseenter="this.style.backgroundColor='red';this.style.color = 'white';" onmouseleave="this.style.backgroundColor='white';this.style.color = 'black';"> 
-                       {% if type == 'update' %}  Update {% else %} Register {% endif %} </button>                           
+                       {% if type == 'update' %}  Update {% else %} Register {% endif %} </button>
+
+                       <a href="{% url 'homepage' %}"><button type="button" class="btn btn-light btn-lg" data-mdb-ripple-color="dark" style="float: le;margin-left: 50px;" onmouseenter="this.style.backgroundColor='red';this.style.color = 'white';" onmouseleave="this.style.backgroundColor='white';this.style.color = 'black';">
+                       Return Home
+                      </button> </a>
                    </div> 
 
 

@@ -11,6 +11,12 @@ from django.contrib.auth.forms import PasswordChangeForm
 class HomePage(ListView):   # class based view for just rendering the home page         
     model= Account           
     template_name = 'home.html' 
+
+class AboutUs(ListView):       
+    model= Account           
+    template_name = 'aboutus.html' 
+
+
 def Login(request , role):          # function based view for handling user login
     form = CustomUserCreationForm()
     if request.method == 'POST':

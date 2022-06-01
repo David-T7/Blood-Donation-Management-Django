@@ -108,9 +108,9 @@ DEFAULT_AUTO_FIELD='django.db.models.AutoField'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
+        'NAME': 'blood_bank',
+        'USER': 'root',
+        'PASSWORD': '1234',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
@@ -159,11 +159,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
 
 
 
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = '' 
-EMAIL_PORT = 587
+SENDGRID_API_KEY = os.getenv('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') 
+EMAIL_HOST = 'smtp.sendgrid.net' 
+EMAIL_HOST_USER = 'apikey' # this is exactly the value 'apikey' 
+EMAIL_HOST_PASSWORD = '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'
+EMAIL_PORT = 587 
 EMAIL_USE_TLS = True
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+DEFAULT_FROM_EMAIL = 'bloodbank979@gmail.com'
 
 

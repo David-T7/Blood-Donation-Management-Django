@@ -53,7 +53,7 @@
             <th>Kebele</th>
             <th>City</th>
             <th>Location</th>
-            <th></th>
+            <th>Picture</th>
             <th></th>
         </tr>
     </thead>
@@ -66,7 +66,7 @@
           <td>{{ camp.CampsKebele }}</td>
           <td>{{ camp.city }}</td>
           <td><a href="{% url 'seecamp' camp.Camps_id %}"><button type="button" class="btn btn-info">Seemap</button></a></td>&nbsp;
-          <td></td>
+          <td><img src="/static/images/{{ camp.CampPic }}" style="height: 150px;width: 150px;"></td> 
           <td></td>
         </tr> 
       {% endfor %}
