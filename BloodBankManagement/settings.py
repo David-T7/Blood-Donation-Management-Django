@@ -109,10 +109,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'blood_bank',
-        'USER': 'root',
-        'PASSWORD': '1234',
+        'USER': '',
+        'PASSWORD': '',
         'HOST': '127.0.0.1',
-        'PORT': '3306',
+        'PORT': '',
     }
 }
 
@@ -159,12 +159,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
 
 
 
-SENDGRID_API_KEY = os.getenv('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') 
-EMAIL_HOST = 'smtp.sendgrid.net' 
-EMAIL_HOST_USER = 'apikey' # this is exactly the value 'apikey' 
-EMAIL_HOST_PASSWORD = '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'
-EMAIL_PORT = 587 
-EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'bloodbank979@gmail.com'
 
 
