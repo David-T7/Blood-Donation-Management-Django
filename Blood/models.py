@@ -23,7 +23,7 @@ class Blood(models.Model):
     PackNo = models.CharField(max_length=20)
     RegDate = models.DateField(auto_now_add=True)
     ExpDate = models.DateField(max_length=10)
-    QuantityOfBlood = models.CharField(max_length=4)
+    QuantityOfBlood = models.CharField(max_length=100)
     class Meta:
         db_table = "Blood"
 

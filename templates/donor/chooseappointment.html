@@ -1,74 +1,41 @@
 {% extends 'donor/donor.html' %}
+{% load widget_tweaks %}
 
 {% block content %}
+<br><br>
+<section class="h-100">
+  <div class="container h-100">
+          <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
+  <div class="card shadow-lg">
+      <div class="card-body p-5">
+        <h1 class="fs-4 card-title fw-bold mb-4">Choose Appointment </h1>
 
-<br>
-<table class="styled-table">
-    <thead>
-         <tr>
-             <th></th>
-           <th><a href="{% url 'donappointmentchoices' 'all' sender pk %}"> <button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">SeeAll</button></a>
-            </th>
-            <form method="post" action="{% url 'donappointmentchoices' 'searched' sender pk %}">
+          <form  method="POST" enctype="multipart/form-data">
               {% csrf_token %}
-            <th>
-              <select class="form-select form-select-sm" name='searchby' aria-label=".form-select-sm example">
-              <option selected>searchby</option>
-              <option value="AppointmentDate">AppDate</option>
-              <option value="AppointmentTime">AppTime</option>
-            </select>
-            </th>
-            <th>
-              <div class="input-group">
-                <div class="form-outline">
-                  <input type="search" id="form1" name='searched' placeholder="search" class="form-control" />
-                </div>
-                <button type="submit"  class="btn btn-primary">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-                  </svg>
-                </button>
+              
+              {% for field in form %}
+              <div class="mb-3">
+                  <label for="formInput#text">{{field.label}}</label>
+                  {% render_field field  id="formInput#text"  class="form-control"  %} 
+                  <span > <h style="color: red;">{{field.errors}}</h></span>	
               </div>
-            </th>
-          </tr>
-        <tr>
-            <th>Date</th>
-            <th>Time</th>
-            <th></th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-      {% if choices %}
-      {% for choice in choices %}
-        <tr>
-          <td>{{  choice.Date }}</td>
-          <td>{{  choice.Time }}</td>
-          {% if sender == 'add' %}
-          <td><a href="{% url 'makeappointment' choice.Appchoice_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Make Appointment</button></a></td>
-          {% else %}
-          <td><a href="{% url 'updateappointment' choice.Appchoice_id  pk    %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Update Appointment</button></a></td>
-          {% endif %}
-          <td></td>
-        </tr> 
-      {% endfor %}
-      <tr>{% if type == 'all' %}
-        <td><a href="{% url 'donappointmentchoices' 'notall' sender pk %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Shrink</button></a></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        {% endif %}</tr>
+              {% endfor %}
+              <div style="align-self:auto; margin-left: 130px;">  
+                  <button type="submit" class="btn btn-primary ms-auto">
+                      {% if type == 'add'%}
+                      Submit
+                      {% else %}
+                      Update
+                      {% endif %}
+                  </button>
+              </div>
   
-      {% else %}
-      <tr>
-        <td>No Choice For Now</td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-      {% endif %}  
-    </tbody>
-  </table>
+          </form>
+      </div>
+  </div>
+  </div>
+  </div>
+  </section>
   <br>
 
 

@@ -40,9 +40,9 @@
             <th>Event</th>
             <th>Place</th>
             <th>Date</th>
-            <th>Time</th>
             <th>Type</th>
             <th>Picture</th>
+            <th></th>
             <th></th>
         </tr>
     </thead>
@@ -53,15 +53,14 @@
           <td>{{ ev.EventName }}</td>
           <td>{{ ev.EventPlace }}</td>
           <td>{{ ev.EventDate }}</td>
-          <td>{{ ev.EventTime }}</td>
           <td>{{ ev.EventType }}</td>
           <td><img src="/static/images/{{ ev.EventPic }}" style="height: 150px;width: 150px;"></td> 
+          <td></td>
           <td></td>
         </tr> 
       {% endfor %}
       <tr>{% if type == 'all' %}
         <td><a href="{% url 'getevent' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Shrink</button></a></td>
-        <td></td>
         <td></td>
         <td></td>
         <td></td>

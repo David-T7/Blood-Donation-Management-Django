@@ -20,20 +20,19 @@
     <div class="card" style="width: 10rem;">
 
       <div class="card-body">
-        <p class="card-text"><b>{{ recent_blood_count }}</b> <br>{% if recent_blood %}
-                                                                  {{ recent_blood.BloodGroup }}
-                                                                {%  else %}
-                                                                   Bloods
-                                                                   {% endif %} 
-                                                                   </p>
+        <p class="card-text"><b>{{ totalbloodcount }}ML</b> <br>TotalBlood  </p>
       </div>
     </div>
-    <div class="card" style="width: 10rem; background-color: red;">
+
+    <div class="card" style="width: 10rem;">
 
       <div class="card-body">
-        <p class="card-text"><b>Stock</b> <br>100%</p>
+        <p class="card-text"><b>{{ acceptedrequest }}</b> <br>Accepted</p>
       </div>
     </div>
+
+
+
   </div>
   <br>
   <div class="row" style="column-gap: 70px;">
@@ -42,15 +41,6 @@
 
       <div class="card-body">
         <p class="card-text"><b>{{ bloodrequest_no }}</b> <br>Requests</p>
-      </div>
-    </div>
-
-    
-    
-    <div class="card" style="width: 10rem;">
-
-      <div class="card-body">
-        <p class="card-text"><b>{{ acceptedrequest }}</b> <br>Accepted</p>
       </div>
     </div>
     <div class="card" style="width: 10rem;">

@@ -5,10 +5,10 @@ import uuid
 class Event(models.Model):
     Event_id = models.UUIDField(default=uuid.uuid4, unique=True,
                           primary_key=True, editable=False)
-    EventName = models.CharField(max_length=10)
+    EventName = models.CharField(max_length=20)
     EventDate = models.DateField(max_length=20)
     EventPlace = models.CharField(max_length=50)
-    EventTime = models.TimeField()
+    EventDescription = models.CharField(max_length=150 , null=True) 
     EventDate = models.DateField()
     EventType = models.CharField(max_length=10)
     EventPic= models.FileField(null=True, blank=True, upload_to='events/', default="events/defaultevent.png")

@@ -22,7 +22,7 @@ class Hospital(models.Model):
     Hospital_id = models.UUIDField(default=uuid.uuid4, unique=True,
                           primary_key=True, editable=False)
     Username = models.CharField(max_length=20, null=True , blank=True)
-    HospitalName = models.CharField(max_length=20, null=True , blank=True)
+    HospitalName = models.CharField(max_length=60, null=True , blank=True)
     Address_id = models.OneToOneField(Address, on_delete=models.CASCADE , null=True , blank=True)
     BranchNo= models.CharField(max_length=10)
     HospitalRepresentative = models.CharField(max_length=10)

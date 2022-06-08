@@ -8,7 +8,6 @@ from django.contrib import  messages
 from django.shortcuts import redirect, render
 from Donor.forms import AppointmentCreationForm, DonationRequestQuestionForm, DonorCreationForm , DonationRequestFormQuesitons, DonorAccountEditForm , RequestAnswerCreationForm
 from Donor.models import Appointment, Donor
-from Nurse.models import AppointmentChoice 
 from UserAccount.models import Account , Address
 from UserAccount.forms import AddressCreationForm, CustomUserCreationForm , CustomUserChangeForm
 from Donor.models import DonationRequestFormResult , DonationRequestFormQuesitons 
@@ -17,7 +16,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from LabTechnician.models import DeferringList
 from django.utils.dateparse import parse_date , parse_time
-
+from .forms import AppointmentCreationForm
 
 def Register(request):
     form1 = DonorCreationForm()   # using the donor creation form created in forms.py
@@ -314,63 +313,69 @@ def UpdateRequest(request , pk):
 
 
 
-def AppointmentChoices(request , type , sender , pk):
-    donor = DonorState(request)['donor']
-    choices = None
-    try:
-        if(type == 'all'):
-            choices = AppointmentChoice.objects.all()
-        elif (type == 'notall'):
-            choices = AppointmentChoice.objects.all()[0:5]
-        elif(type=='searched'):
-            if request.method == 'POST':
-                searchby = request.POST['searchby']
-                searched = request.POST['searched']
-            if(searchby == 'AppointmentDate'):
-                    date = parse_date(searched)
-                    choices = AppointmentChoice.objects.filter(Date = date)
-            elif(searchby == 'AppointmentTime'):
-                    time = parse_time(searched)
-                    choices = AppointmentChoice.objects.filter(Time = time)    
-    except:
-        choices = None
-    context = {'donor':donor, 'choices':choices , 'type':type , 'sender':sender , 'pk':pk  }
-    return render (request , 'donor/chooseappointment.html' ,  context)
+# def AppointmentChoices(request , type , sender , pk):
+#     donor = DonorState(request)['donor']
+#     choices = None
+#     try:
+#         if(type == 'all'):
+#             choices = AppointmentChoice.objects.all()
+#         elif (type == 'notall'):
+#             choices = AppointmentChoice.objects.all()[0:5]
+#         elif(type=='searched'):
+#             if request.method == 'POST':
+#                 searchby = request.POST['searchby']
+#                 searched = request.POST['searched']
+#             if(searchby == 'AppointmentDate'):
+#                     date = parse_date(searched)
+#                     choices = AppointmentChoice.objects.filter(Date = date)
+#             elif(searchby == 'AppointmentTime'):
+#                     time = parse_time(searched)
+#                     choices = AppointmentChoice.objects.filter(Time = time)    
+#     except:
+#         choices = None
+#     context = {'donor':donor, 'choices':choices , 'type':type , 'sender':sender , 'pk':pk  }
+#     return render (request , 'donor/chooseappointment.html' ,  context)
 
-def MakeAppointment(request , pk):
+
+
+
+def MakeAppointment(request ):
     donor = DonorState(request)['donor']
-    appchoices = None
-    try:
-        appchoices = AppointmentChoice.objects.get(Appchoice_id = pk)
-    except:
-        appchoices = None
-    try:
-        Appointment.objects.create(Donor_id = donor , Date = appchoices.Date ,  Time = appchoices.Time)
-        messages.success(request , 'Appointment request sent successfuly')
-        return redirect('/donationrequest/all')
-    except:
-        messages.error(request , 'Error during appointment request')
-    context = {'donor':donor}
+    form = AppointmentCreationForm()
+    if request.method == 'POST':
+        form= AppointmentCreationForm(request.POST)
+        if (form.is_valid()):
+            try:
+                app = form.save(commit=False)
+                app.Donor_id = donor
+                app.save()
+                return redirect('/getappointments/notall')
+            except:
+                messages.error(request , 'Error during appointment request')
+    context = {'donor':donor ,'type':'add', 'form':form}
     return  render(request , 'donor/chooseappointment.html', context)
 
-def UpdateAppointment(request , pk1 , pk2):
+def UpdateAppointment(request , pk):
     donor = DonorState(request)['donor']
-    app = None
-    appchoices = None
+    app=None
     try:
-        appchoices = AppointmentChoice.objects.get(Appchoice_id = pk1)
+        app = Appointment.objects.get(App_id = pk)
+        form = AppointmentCreationForm(instance=app)
     except:
-        appchoices = None
-    try:
-        app = Appointment.objects.get(App_id = pk2)
-        app.Date = appchoices.Date
-        app.Time = appchoices.Time 
-        app.save()
-        messages.success(request , 'Appointment was updated successfuly')
-        return redirect('/getappointments/notall')
-    except:
-        messages.error(request , 'Appointment was not successfuly updated')
-        return redirect('/getappointments/notall')
+        app=None
+        form = AppointmentCreationForm(instance=app)
+    if request.method == 'POST':
+        form = AppointmentCreationForm(request.POST,  instance=app)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Appointment was updated successfully!')
+            return redirect('/getappointments/notall')
+        else:
+            messages.success(request, 'Appointment was not updated successfully!')
+    context = {'form': form , 'type':'update' , 'donor':donor}
+    return render(request, 'donor/chooseappointment.html', context)
+
+            
 
 def CancelAppointment(request , pk):
     donor = DonorState(request)['donor']

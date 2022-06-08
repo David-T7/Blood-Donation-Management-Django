@@ -12,16 +12,11 @@
 <table class="styled-table">
     <thead>
          <tr>
-             <th></th>
-             <th></th>
-             <th></th>
-             <th></th>
-           <th><a href="{% url 'getappointments' 'all' %}"> <button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">SeeAll</button></a>
-            </th>
-            <form method="post" action="{% url 'getappointments' 'searched' %}">
-              {% csrf_token %}
+             <th>Appointments</th>
+             <th><a href="{% url 'getappointments' 'all' %}"> <button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">SeeAll</button></th></a>
              <th>
               <select class="form-select form-select-sm" name='searchby' aria-label=".form-select-sm example">
+                <option selected>searchby</option>
               <option value="Date">Date</option>
               <option value="Status">Status</option>
             </select>
@@ -38,6 +33,13 @@
                 </span>
               </div>
             </th>
+             <th></th>
+           <th> </th>
+            <form method="post" action="{% url 'getappointments' 'searched' %}">
+              {% csrf_token %}
+          
+           
+            <th></th>
              </form>
           </tr>
         <tr>
@@ -56,26 +58,23 @@
          <tr> 
             <td>{{ appointment.Date }}</td>
            <td>{{ appointment.Time }}</td>
+
            {% if appointment.status == 'in progress'  %}
            <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color:yellow;" class="bi bi-circle"  viewBox="0 0 16 16">
             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
           </svg>&nbsp;In progress</td>
-            <td><a href="{% url 'cancelappointment' appointment.App_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">cancelappointment</button></a> </td>
-            <td><a href="{% url 'donappointmentchoices' 'notall' 'update' appointment.App_id  %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">UpdateAppointment</button></a></td>
+            
            {% elif appointment.status == 'accepted' %}
            <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color:green;" class="bi bi-circle"  viewBox="0 0 16 16">
             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
           </svg>&nbsp;Accepted </td>
-          <td></td>
-           <td></td>
            {% elif appointment.status == 'rejected' %}
            <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color:red;" class="bi bi-circle"  viewBox="0 0 16 16">
             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
           </svg>&nbsp;Rejected</td>
-          <td></td>
-           <td></td>
            {% endif %}
-        
+           <td><a href="{% url 'cancelappointment' appointment.App_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">cancelappointment</button></a>&nbsp; <a href="{% url 'updateappointment' appointment.App_id  %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">UpdateAppointment</button></a></td>
+           <td></td>
            <td></td>
            <td></td>
           </tr>

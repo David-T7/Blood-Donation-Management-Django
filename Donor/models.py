@@ -84,7 +84,6 @@ class DonationRequestFormQuesitons(models.Model):
    Abortion = models.TextField( null=True , blank=True )
    BreastFeeding = models.TextField( null=True , blank=True  )
    BloodHealthfulnessInfo = models.TextField( null=True , blank=True)
-   Type = models.CharField(max_length=10 , null=True , blank=True)
    def __str__(self):
         return str(self.Type)
    class Meta:

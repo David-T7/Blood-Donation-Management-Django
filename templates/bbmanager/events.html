@@ -47,7 +47,6 @@
                 </span>
               </div>
             </th>
-            <th></th>
              </form>         
           </tr>
         <tr>
@@ -55,7 +54,6 @@
             <th>Address</th>
             <th>Place</th>
             <th>Date</th>
-            <th>Time</th>
             <th>Type</th>
             <th>Status</th>
             <th>Picture</th>
@@ -70,7 +68,6 @@
           <td>{{ ev.EventPlace }}</td>
           <td>{{ ev.EventPlace }}</td>
           <td>{{ ev.EventDate }}</td>
-          <td>{{ ev.EventTime }}</td>
           <td>{{ ev.EventType }}</td>
           <td>
           {% now "Y-m-d" as todays_date %}
@@ -102,8 +99,6 @@
       {% else %}
       <tr>
         <td>No Event</td>
-        <td></td>
-        <td></td>
         <td></td>
         <td></td>
         <td></td>

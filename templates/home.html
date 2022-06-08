@@ -12,7 +12,7 @@
 <body id='bg'>
 	<nav class="navbar navbar-expand-lg  navbar-light  py-3 fixed-top"  >
 		<div class="container" >
-		  <a href="" class="navbar-brand"><img class="logoimage" src="{% static 'images/logo/logonbb.jpg' %}"  width="80" height="80"><b> National Blood Bank of Ethiopia</b> </a>
+		  <a href="" class="navbar-brand"><img class="logoimage" src="{% static 'images/logo/nbb.jpeg' %}"  width="80" height="80"><b> National Blood Bank of Ethiopia</b> </a>
 		  <button
 			class="navbar-toggler"
 			type="button"
@@ -26,25 +26,25 @@
 		  <div class="collapse navbar-collapse" id="navmenu">
 			<ul class="navbar-nav ms-auto">
 			  <li class="nav-item">
-				<a href="{% url 'admin:index' %}" class="nav-link" style="color: black;  "  onmouseenter="this.style.backgroundColor='red';this.style.color = 'white';" onmouseleave="this.style.backgroundColor=' rgb(241, 175, 175)';this.style.color = 'black';"  > <b> Admin</b> </a>
+				<a href="{% url 'admin:index' %}" class="nav-link" style="color: black;  "  onmouseenter="this.style.backgroundColor='red';this.style.color = 'white';" onmouseleave="this.style.backgroundColor='white';this.style.color = 'black';"  > <b> Admin</b> </a>
 			  </li>
 			  <li class="nav-item">
-				<a href="{% url 'login' 'Labtechnician' %}" class="nav-link" style="color: black;" onmouseenter="this.style.backgroundColor='red';this.style.color = 'white';" onmouseleave="this.style.backgroundColor='rgb(241, 175, 175)';this.style.color = 'black';" ><b>Lab technician</b></a>
+				<a href="{% url 'login' 'Labtechnician' %}" class="nav-link" style="color: black;" onmouseenter="this.style.backgroundColor='red';this.style.color = 'white';" onmouseleave="this.style.backgroundColor='white';this.style.color = 'black';" ><b>Lab technician</b></a>
 			  </li>
 			  <li class="nav-item">
-				<a href="{% url 'login' 'BBmanager' %}" class="nav-link" style="color: black;" onmouseenter="this.style.backgroundColor='red';this.style.color = 'white';" onmouseleave="this.style.backgroundColor='rgb(241, 175, 175)';this.style.color = 'black';" > <b> BB Manager </b></a>
+				<a href="{% url 'login' 'BBmanager' %}" class="nav-link" style="color: black;" onmouseenter="this.style.backgroundColor='red';this.style.color = 'white';" onmouseleave="this.style.backgroundColor='white';this.style.color = 'black';" > <b> BB Manager </b></a>
 			  </li>
 			  <li class="nav-item">
-				<a href="{% url 'login' 'HospitalRepresentative' %}" class="nav-link" style="color: black;" onmouseenter="this.style.backgroundColor='red';this.style.color = 'white';" onmouseleave="this.style.backgroundColor='rgb(241, 175, 175)';this.style.color = 'black';" ><b> Hospitals</b></a>
+				<a href="{% url 'login' 'HospitalRepresentative' %}" class="nav-link" style="color: black;" onmouseenter="this.style.backgroundColor='red';this.style.color = 'white';" onmouseleave="this.style.backgroundColor='white';this.style.color = 'black';" ><b> Hospitals</b></a>
 			  </li>
 			  <li class="nav-item">
-				<a href="{% url 'login' 'Donor' %}" class="nav-link" style="color: black;"onmouseenter="this.style.backgroundColor='red';this.style.color = 'white';" onmouseleave="this.style.backgroundColor='rgb(241, 175, 175)';this.style.color = 'black';"  > <b> Donor</b></a>
+				<a href="{% url 'login' 'Donor' %}" class="nav-link" style="color: black;"onmouseenter="this.style.backgroundColor='red';this.style.color = 'white';" onmouseleave="this.style.backgroundColor='white';this.style.color = 'black';"  > <b> Donor</b></a>
 			  </li>
 			  <li class="nav-item">
-				<a href="{% url 'login' 'Nurse' %}" class="nav-link" style="color: black;" onmouseenter="this.style.backgroundColor='red';this.style.color = 'white';" onmouseleave="this.style.backgroundColor='rgb(241, 175, 175)';this.style.color = 'black';" > <b>Nurse</b></a>
+				<a href="{% url 'login' 'Nurse' %}" class="nav-link" style="color: black;" onmouseenter="this.style.backgroundColor='red';this.style.color = 'white';" onmouseleave="this.style.backgroundColor='white';this.style.color = 'black';" > <b>Nurse</b></a>
 			  </li>
 			  <li class="nav-item">
-				<a href="{% url 'aboutus' %}" class="nav-link" style="color: black;" onmouseenter="this.style.backgroundColor='red';this.style.color = 'white';" onmouseleave="this.style.backgroundColor='rgb(241, 175, 175)';this.style.color = 'black';" ><b>About Us</b></a>
+				<a href="{% url 'aboutus' %}" class="nav-link" style="color: black;" onmouseenter="this.style.backgroundColor='red';this.style.color = 'white';" onmouseleave="this.style.backgroundColor='white';this.style.color = 'black';" ><b>About Us</b></a>
 			  </li>
 			</ul>
 		  </div>
