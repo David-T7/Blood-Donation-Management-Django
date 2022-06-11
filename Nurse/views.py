@@ -57,6 +57,7 @@ def DonationRequest(request , type):
 def CheckRequest(request , pk):
     questions = None 
     answer = None
+    status = 'Good'
     try:
         questions = DonationRequestFormQuesitons.objects.all()[0]
     except:
@@ -65,7 +66,32 @@ def CheckRequest(request , pk):
         answer = DonationRequestFormResult.objects.get(Result_id = pk)
     except:
         answer = None
-    context = {'account':Userstate(request)['account'] , 'questions':questions , 'answers':answer}
+    try:
+        male_excluded_list = ['Result_id' , 'Donor_id ' , 'BloodHealthfulnessInfo' ,'Status','Request_time','Request_Date','Preagnant', 
+        'Abortion','BreastFeeding']
+        female_excluded_list=['Result_id' , 'Donor_id ' , 'BloodHealthfulnessInfo' ,'Status','Request_time','Request_Date']
+        answerlist = list(DonationRequestFormResult.objects.filter(Result_id = pk))
+        donor = Donor.objects.get(Donor_id = str(answer.Donor_id))
+        gender = donor.Gender
+        for ans in answerlist:
+            for field in ans._meta.fields: # field is a django field
+                fieldname = field.name
+                if(gender == 'Male'):
+                    if (fieldname not in male_excluded_list):
+                        object_field_value = getattr(answer, fieldname)
+                        if(str(object_field_value)  == 'yes' or object_field_value == None ):
+                            status = 'Notgood'
+                            break
+                else:
+                    if (fieldname not in female_excluded_list):
+                        object_field_value = getattr(answer, fieldname)
+                        if(str(object_field_value)  == 'yes' or object_field_value==None):
+                            status = 'Notgood'
+                            break
+    except:
+        status=None
+    print(status)
+    context = {'account':Userstate(request)['account'] , 'questions':questions , 'answers':answer , 'status':status , 'gender':gender}
     return render(request , 'nurse/checkrequest.html',context)
 
 def CheckAppointments(request , type):

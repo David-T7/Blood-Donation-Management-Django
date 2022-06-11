@@ -63,8 +63,10 @@
                     {{answers.SeriousSkinRepair}}
 
                     <br> <br>
+                    {% if gender != 'Male' %}
                     {{questions.Preagnant}} 
                     <br>
+                    
                     <label for="formInput#text"><b>Answer</b></label>
                     {{answers.Preagnant}}
 
@@ -79,8 +81,9 @@
                     <br>
                     <label for="formInput#text"><b>Answer</b></label>
                     {{answers.BreastFeeding}}
-                    
                     <br> <br>
+                    {% endif %}
+                    
                     {{questions.BloodHealthfulnessInfo}} 
                     <br>
                     <label for="formInput#text"><b>Answer</b></label>
@@ -96,9 +99,15 @@
 
                 <br>
                 <div style="align-self:auto; margin-left: 130px;">
-                    <a href="{% url 'confirmrequest' answers.Result_id 'accept' %}"><button type="button" class="btn btn-info" style="background-color: green;color: white;">Accept</button></a>&nbsp;
-                    <a href="{% url 'confirmrequest' answers.Result_id 'reject' %}"><button type="button" class="btn btn-info" style="background-color: red; color: white;">Reject</button></a>&nbsp;
- 
+                    {% if status == 'Good' %}
+                    <h style="color: green"> Donor is legitimate! </h>
+                    <a href="{% url 'confirmrequest' answers.Result_id 'accept' %}"><button type="button" class="btn btn-info" style="background-color: green;color: white;">Accept</button></a>&nbsp;                   
+                    <button type="button" disabled class="btn btn-info" style="background-color: red; color: white;">Reject</button>&nbsp;
+                    {% else %}
+                    <h style="color: red"> Donor is  not legitimate!</h>
+                    <button type="button"  class="btn btn-info" style="background-color: green;color: white;" disabled>Accept</button>&nbsp;                   
+                    <a href="{% url 'confirmrequest' answers.Result_id 'reject' %}"><button type="button"  class="btn btn-info" style="background-color: red; color: white;">Reject</button></a>&nbsp;
+                    {% endif %}
                 </div>
 
             {% else %}
