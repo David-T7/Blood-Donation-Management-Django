@@ -1,54 +1,56 @@
 {% extends 'nurse/nurse.html' %}
 {% block content %}
 
-<br>
-{% for msg in messages %}
-<div class="alert alert-warning alert-dismissible fade show" role="alert">
-  <strong>{{msg}}</strong>
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+<div class="container-fluid">
+    <br>
+    {% for msg in messages %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>{{msg}}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    <br>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Questions</th>
+                    <th>
+                        <a href="{% url 'donorquestions' 'all' %}" class="btn btn-primary btn-sm" style="background-color: red;">See All</a>&nbsp;
+                        <a href="{% url 'addquestions' 'add' %}" class="btn btn-primary btn-sm" style="background-color: red;">Add Question</a>
+                    </th>
+                </tr>
+                <tr>
+                    <th>Number</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if questions %}
+                {% for question in questions %}
+                <tr>
+                    <td>{{ forloop.counter }}</td> <!-- Display question number -->
+                    <td>
+                        <a href="{% url 'updatequestion' question.Question_id %}" class="btn btn-info">Update</a>&nbsp;
+                        <a href="{% url 'deletequestion' question.Question_id %}" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    {% if type == 'all' %}
+                    <td><a href="{% url 'donorquestions' 'notall' %}" class="btn btn-primary btn-sm" style="background-color: red;">less</a></td>
+                    <td></td>
+                    {% endif %}
+                </tr>
+                {% else %}
+                <tr>
+                    <td>No Donation Request For Now</td>
+                    <td></td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
 </div>
-{% endfor %}
 <br>
-<table class="styled-table">
-    <thead>
-         <tr>
-           <th>Questions</th>
-           <th><a href="{% url 'donorquestions' 'all' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">See All</button></a>&nbsp;
-          
-            <a href="{% url 'addquestions' 'add' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Add Question</button></a></th>
-            </tr>
-          <tr>
-            <th>Id</th>
-            <th></th>
-
-        </tr>
-    </thead>
-    <tbody>
-      {% if questions %}
-      {% for question in questions %}
-       <tr> 
-         <td>{{ question.Question_id }}</td>
-         <td><a href="{% url 'updatequestion' question.Question_id %}"><button type="button" class="btn btn-info">Update</button></a>&nbsp;
-         <a href="{% url 'deletequestion' question.Question_id %}"><button type="button" class="btn btn-danger">Delete</button></a></td> 
-         </tr>
-      
-      {% endfor %}
-      <tr>{% if type == 'all' %}
-        <td><a href="{% url 'donorquestions' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Shrink</button></a>
-        </td>
-        <td></td>
-        {% endif %}</tr>
-
-      {% else %}
-      <tr> 
-       <td>No Donation Request For Now </td>
-       <td></td>
-
-     </tr>
-     {% endif %}
- 
-        
-      </tbody>
-  </table>
-  <br>
 {% endblock %}

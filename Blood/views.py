@@ -1,6 +1,5 @@
 from datetime import datetime, timezone
 from datetime import date
-from MySQLdb import Date
 from django.shortcuts import redirect, render
 from Donor.models import Appointment, Donor
 from LabTechnician.models import FininshedAppointment
@@ -23,11 +22,12 @@ def BloodStock(request):
     account = UserState(request)['account']
     dic={'O+':0,'B+':0,'A+':0,'AB+':0,'O-':0,'B-':0,'A-':0,'AB-':0,}
     for i in Blood.objects.all():
-        dic[i.BloodGroup]+=int(i.QuantityOfBlood[:-2])
+        dic[i.BloodGroup]+=int(i.QuantityOfBlood)
     context = {
         'account':account,
         'Op':dic['O+'],'Ap':dic['A+'],'Bp':dic['B+'],'ABp':dic['AB+'],
         'Om':dic['O-'],'Am':dic['A-'],'Bm':dic['B-'],'ABm':dic['AB-'], 
+        'active_page':'blood',
     }
     return render(request ,'bbmanager/bloodstock.html' , context)
 
@@ -52,7 +52,7 @@ def AddBlood(request , pk , pk2):
                 messages.error(request, 'Error during adding blood')
         else: 
             messages.error(request, 'Error during adding blood form')
-    context = {'form':form , 'account':account}
+    context = {'form':form , 'account':account ,   'active_page':'blood', 'blood_type':str(donor.Bloodgroup)}
     return render (request , 'labtechnician/addblood.html' , context)
 
 
@@ -89,7 +89,7 @@ def GetBlood(request , type):
         three_days_after = date.today() +  datetime.timedelta(days=3)
     except:
         three_days_after = None
-    context = {'account': account , 'type':type ,  'bloods':bloods , 'threedaysafter':three_days_after }
+    context = {'account': account , 'type':type ,  'bloods':bloods , 'threedaysafter':three_days_after ,   'active_page':'blood', }
     return render(request , 'labtechnician/bloods.html' , context)
 
 
@@ -111,7 +111,7 @@ def UpdateBlood(request , pk ):
             return redirect('/getlabbloods/notall') 
         else:
             messages.success(request, 'event was not updated successfully!')
-    context = {'form': form ,'type':'update' ,  'account':account}
+    context = {'form': form ,'type':'update' ,  'account':account ,   'active_page':'blood',}
     return render(request, 'labtechnician/addblood.html', context)
 
 
@@ -124,7 +124,7 @@ def DeleteBlood(request , pk):
         messages.success(request, 'Blood was deleted successfully!')
     except:
         messages.success(request, 'Blood was not  deleted successfully!')
-    context = { 'account':account}
+    context = { 'account':account ,   'active_page':'blood',}
     return render(request, 'labtechnician/bloods.html', context)
 
         
@@ -156,7 +156,7 @@ def BloodsHistory(request , type):
                     bloods = BloodHistory.objects.filter(BloodGroup =  searched)        
     except:
         bloods = None
-    context = {'account':account , 'bloods':bloods}
+    context = {'account':account , 'bloods':bloods ,   'active_page':'blood',}
     return render (request , 'bbmanager/seebloodhistory.html' , context)
 
 

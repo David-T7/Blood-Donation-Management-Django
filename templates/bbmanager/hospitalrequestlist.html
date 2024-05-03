@@ -12,32 +12,18 @@
      {% if bloodrequest %}
      {% for br in bloodrequest %}
       <tr>
-        {% if hospitals %}
-        {% for hospital in hospitals %}
-        {% if hospital.Hospital_id|slugify == br.Hospital_id|slugify  %}
-        <td>{{hospital.HospitalName}}</td>
-        {% endif %}
-        {% endfor %}
-        {% else %}
-        <td>NOhospital</td>
-        {% endif%}
+        <td>{{br.Hospital_id}}</td>
         <td>{{ br.Request_Date }}</td>
         <td>{{  br.Blood_Group}}</td>
-        <td>{{  br.Quantity }}</td>
+        <td>{{  br.Quantity }}ML</td>
           {% if br.Status == 'in progress' %}
-          <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color: yellow;" class="bi bi-circle"  viewBox="0 0 16 16">
-            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-          </svg>
+          <td><span class="badge bg-warning">In Progress</span>
           {% elif br.Status == 'accepted' %}
-          <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color: green;" class="bi bi-circle"  viewBox="0 0 16 16">
-            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-          </svg>
+          <td>  <span class="badge bg-success">Accepted</span>
           {% elif br.Status == 'rejected' %}
-          <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color: red;" class="bi bi-circle"  viewBox="0 0 16 16">
-            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-          </svg>
+          <td><span class="badge bg-danger">Rejected</span>
           {% endif %}
-          &nbsp;{{ br.Status }}</td>
+         </td>
        {% if sender != 'dashbord' %}
         <td><a href="{% url 'hospitaladdress' br.Hospital_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Check Hospital</button></a>
         </td>
@@ -46,25 +32,22 @@
         {% if br.Status == 'in progress'  %}
         <td><a href="{% url 'acceptbloodrequest' br.Blood_Req_Id 'accept'  %}"><button type="button" class="btn btn-success">Accept</button></a>&nbsp; <a href="{% url 'acceptbloodrequest' br.Blood_Req_Id 'firstreject'  %}"><button type="button" class="btn btn-danger">Reject</button></a> 
         {% elif br.Status == 'accepted' %}
-        <td><a style="text-decoration: none;" href="{% url 'acceptbloodrequest' br.Blood_Req_Id  'secondreject'  %}"><button type="button" class="btn btn-success"     onmouseover="this.innerHTML='Reject';this.style.backgroundColor='red';"
-          onmouseout="this.innerHTML='Accepted';this.style.backgroundColor='green';">Accepted</button></a></td>
+        <td><button type="button" class="btn btn-success disabled">Accepted</button>&nbsp; <a href="{% url 'acceptbloodrequest' br.Blood_Req_Id 'firstreject'  %}"><button type="button" class="btn btn-danger">Reject</button></a> 
         {% elif br.Status == 'rejected' %}
-        <td><a style="text-decoration: none;" href="{% url 'acceptbloodrequest' br.Blood_Req_Id  'accept'  %}"><button type="button" class="btn btn-danger"     onmouseover="this.innerHTML='Accept';this.style.backgroundColor='green';"
-          onmouseout="this.innerHTML='Rejected';this.style.backgroundColor='red';">Rejected</button></a></td>
-        </tr>
+        <td> <button type="button" class="btn btn-danger disabled">Rejected</button>&nbsp;<a href="{% url 'acceptbloodrequest' br.Blood_Req_Id 'accept'  %}"><button type="button" class="btn btn-success">Accept</button></a>
         {% endif %}
         {% endif %}
      {% endfor %}
      <tr>{% if type == 'all' %}
       {% if sender != 'dashbord' %} 
-      <td><a href="{% url 'hospitalrequest' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Shrink</button></a></td>
+      <td><a href="{% url 'hospitalrequest' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">less</button></a></td>
       <td></td>
       <td></td>
       <td></td>
       <td></td>
       <td></td>
       {% else %}
-      <td><a href="{% url 'bbdashbord' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Shrink</button></a>
+      <td><a href="{% url 'bbdashbord' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">less</button></a>
       </td>
       <td></td>
       <td></td>

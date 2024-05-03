@@ -2,7 +2,6 @@ from cProfile import label
 from datetime import datetime
 from multiprocessing.sharedctypes import Value
 from django.db import models
-from pyrsistent import field
 from UserAccount.models import Account, Address
 import uuid
 from django.core.exceptions import ValidationError
@@ -36,17 +35,14 @@ class Donor(models.Model):
     Donor_id =  models.UUIDField(default=uuid.uuid4, unique=True,
                           primary_key=True, editable=False)
     Account_id = models.OneToOneField(Account , on_delete=models.CASCADE ,null=True , blank=True)
-    Donorname = models.CharField(max_length=20 , null=True , blank=True)
-    DateOfBirth = models.DateTimeField(max_length=6, null=True , blank=True)
-    Bloodgroup= models.CharField(max_length=10, null=True , blank=True , choices=blood_group)
+    Donorname = models.CharField(max_length=20 , null=True , blank=False)
+    DateOfBirth = models.DateTimeField(max_length=6, null=True , blank=False)
+    Bloodgroup= models.CharField(max_length=10, null=True , blank=False , choices=blood_group)
     Address_id = models.OneToOneField(Address, on_delete=models.CASCADE , null=True , blank=True)
-    Gender = models.CharField(max_length=10, null=True , blank=True , choices= gender_choice)
-    Age = models.PositiveIntegerField()
+    Gender = models.CharField(max_length=10, null=True , blank=False , choices= gender_choice)
     Nationality = models.CharField(max_length=10, null=True , blank=True)
     Height = models.CharField(max_length=10, null=True , blank=True)
-    Weight = models.CharField(max_length=10, null=True , blank=True)
-    BMS = models.FloatField(max_length=10 , null=True , blank=True , validators=[validate_interval])
-    
+    Weight = models.CharField(max_length=10, null=True , blank=False)    
     BloodPressure = models.CharField(max_length=10 ,  null=True , blank=True)
     ProfilePic= models.FileField(null=True, blank=True, upload_to='profilepic/', default="profilepic/defaultprofile.jpeg")
     def __str__(self):

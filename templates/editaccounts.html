@@ -1,42 +1,66 @@
 {% load widget_tweaks %}
 <br>
-<section class="h-100">
-<div class="container h-100">
-        <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
-<div class="card shadow-lg">
-    <div class="card-body p-5">
-        <h1 class="fs-4 card-title fw-bold mb-4">Update Account </h1>
-        {% if sender == 'username' %}
-        <a href="{% url 'editpassword'  %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">ChangePassword</button></a>&nbsp;
-        <a href="{% url 'editprofielpicture'  %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">ChangeProfilePic</button></a>
-        {% elif sender == 'password'  %}
-        <a href="{% url 'editusername'  %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">ChangeUserName</button></a>&nbsp;
-        <a href="{% url 'editprofielpicture'  %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">ChangeProfilePic</button></a>
-        {% else %}
-        <a href="{% url 'editpassword'  %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">ChangePassword</button></a>&nbsp;
-        <a href="{% url 'editusername'  %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">ChangeUserName</button></a>
-        {% endif %}
-        <br><br>
-        <form  method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            
-            {% for field in form %}
-            <div class="mb-3">
-                <label for="formInput#text">{{field.label}}</label>
-                {% render_field field  id="formInput#text"  class="form-control"  %} 
-                <span > <h style="color: red;">{{field.errors}}</h></span>	
-            </div>
-            {% endfor %}
-            <div style="align-self:auto; margin-left: 130px;">  
-                <button type="submit" class="btn btn-primary ms-auto">
-                    update
-                </button>
-            </div>
+<div class="row justify-content-center">
+    <div class="col-xl-5 col-lg-5 col-md-7 col-sm-9">
+        <div class="card border-primary mb-3"> 
+            <div class="card-body p-5">
+                <h1 class="fs-4 card-title fw-bold mb-4">Update Account</h1>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                  
+                    {% for field in form %}
+                    <div class="mb-3">
+                    {% if sender != 'profile'  %}
+                    <div class="form-floating">
+                        {% render_field field id=field.id_for_label class="form-control" placeholder=field.label  %}
+                        <label for="floatingPassword">{{field.label}}{% if field.field.required %}<span style="color: red;">*</span>{% endif %}</label>
+                        <span style="color: red;">{{field.errors}}</span> 	
+                    </div>
+                    {% else %}
+                    <div class="mb-3">
+                        {% render_field field id=field.id_for_label class="form-control" %}
+                        <label for="{{field.id_for_label}}">{{field.label}}{% if field.field.required %}<span style="color: red;">*</span>{% endif %}</label>
 
-        </form>
+                        <span style="color: red;">{{field.errors}}</span> 	
+                    </div>
+                    {% endif %}
+                    </div>
+                  
+                    {% endfor %}
+                    <div class="mb-3 d-md-flex">
+                        <button type="submit" class="btn btn-primary w-100 max-width-300">
+                            Update
+                        </button>
+                    </div>
+                    {% if sender == 'username' %}
+                    <a href="{% url 'editpassword'  %}">
+                            Change Password
+                        </a>
+                    
+                        &nbsp;or
+                        <a href="{% url 'editprofilepicture'  %}">
+                            Change Profile Pic
+                        </a>
+                    {% elif sender == 'password'  %}
+                  
+                        <a href="{% url 'editusername'  %}">
+                           Change User Name
+                        </a>
+                        &nbsp;or
+                        <a href="{% url 'editprofilepicture'  %}">
+                           Change Profile Pic
+                        </a>
+                    {% else %}
+                        <a href="{% url 'editpassword'  %}">
+                            Change Password
+                        </a>  &nbsp;or
+                        <a href="{% url 'editusername'  %}">
+                           Change User Name
+                        </a>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
     </div>
 </div>
-</div>
-</div>
-</section>
 <br>

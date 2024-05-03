@@ -11,17 +11,17 @@
         <a href="{% url 'hospitaldashbord' 'notall' %}"  class="nav-link h3 text-white my-2">
           Hospital
         </a>
-        <li class="nav-link">
+        <li class="nav-link {% if active_page == 'home' %}active{% endif %}">
           <i class="bx bxs-dashboard"></i>
           <span class="mx-2" ><a class="inner-anchor"  href="{% url 'hospitaldashbord' 'notall' %}"> Home</a></span>
         </li>
-        <li class="nav-link">
+        <li class="nav-link {% if active_page == 'request' %}active{% endif %}">
           <i class="bx bxs-home"></i>
           <span class="mx-2" ><a class="inner-anchor" href="{% url 'bloodrequest' 'notall' %}"> Request</a></span>
         </li>
-        <li class="nav-link">
-          <i class="bx bxs-store"></i>
-          <span class="mx-2" ><a class="inner-anchor" href="{% url 'edithospitalaccount'%}"> EditAccount </a></span>
+        <li class="nav-link {% if active_page == 'editaccount' %}active{% endif %}">
+          <i class="bx bx-edit"></i>
+          <span class="mx-2"><a class="inner-anchor" href="{% url 'editpassword'  %}"> Edit Account</a></span>
         </li>
         <li class="nav-link">
           <i class="bx bx-log-out"></i>
@@ -39,15 +39,19 @@
           <img src="/static/images/{{ hospital.ProfilePic }}" style="height: 80px; 
           width: 80px;
           border-radius: 50%; " >
-          <figcaption style="text-align: center;"><b>{{hospital.Username}}</b></figcaption>
+          <figcaption style="text-align: center;"><b>{{hospital.Account_id.username}}</b></figcaption>
         </figure>
               </nav>
 
 
-      {% block content %}
-
-
-      {% endblock %}
+              <br>
+              <div class="container-fluid">
+                <div class="row justify-content-center">
+                    {% block content %}
+                    {% endblock %}
+                
+                </div>
+              </div>
 
 
 

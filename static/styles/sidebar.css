@@ -80,7 +80,6 @@ body {
 
 .selected{
   border: 1px solid #888;
-  background-color:blue;
   }
   .styled-table thead tr {
     background-color: #009879;
@@ -108,3 +107,17 @@ body {
 .styled-table tbody{
   background-color: white;
 }
+.nav-link.active {
+  position: relative;
+}
+
+.nav-link.active:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  width: 70%;  /* Set the width to 100% to cover the entire width of the .nav-link */
+  height: 2px;  /* Set the height of the underline */
+  background-color: rgb(226, 94, 94);  /* Set the color of the underline */
+}
+

@@ -47,7 +47,7 @@ def BBDashbord(request , type):
         bloodrequest= None
     try:
         for bl in Blood.objects.all():
-            totalbloodcout+=int(bl.QuantityOfBlood[:-2])
+            totalbloodcout+=int(bl.QuantityOfBlood)
     except:
         totalbloodcout=0
     context={'donors_count': Donor.objects.count() ,
@@ -63,5 +63,6 @@ def BBDashbord(request , type):
                    'account':Userstate(request)['account'],
                    'sender':'dashbord',
                    'type':type,
+                   'active_page':'dashbord'
     }
     return render(request, 'bbmanager/dashbord.html' ,context)

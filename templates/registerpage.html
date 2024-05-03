@@ -3,105 +3,105 @@
 {% load widget_tweaks %}
 {% block content %}
 
-<title>Registeration Page</title>
+<title>Registration Page</title>
 
 <section class="h-100">
-  {% if not  request.user %}
+  {% if not request.user %}
   <div class="text-center my-5">
     <img src="{% static 'images/logo/nbb.jpeg' %}" alt="logo" width="100">
   </div>
   {% endif %}
-    <div class="container py-5 h-100">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-12">
-          <div class="card card-registration card-registration-2" style="border-radius: 15px;">
-            <div class="card-body p-0">
-              <div class="row g-0">
-                <div class="col-lg-6">
-                  <div class="p-5">
-                    {% if sender == 'donor' %}
-                    <h3 class="fw-normal mb-5" style="color:red"><b>Donor Registeration</b> </h3> 
-                    {% endif %}
-                    <h3 class="fw-normal mb-5" style="color: #4835d4;">General Infomation</h3> 
-                   
-                        <form  method="POST"  enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="row">
-                        {% for field in form1 %}
-                       <div class="col-md-6 mb-4 pb-2">
-                        <div class="form-outline">
-                        <label class="form-label" for="formInput#text">{{field.label}}</label>
-                        {% render_field field  id="name"  class="form-control form-control-lg" %} 
-                        {% if field.label == 'Age' %}
-                        {% for msg in messages %}
-                        {% if msg|stringformat:"s" == 'You must be 18 or above to register' %}
-                         <span style="color: red;" >{{msg}}</span>
-	                      {% endif %}
-                        {% endfor %}
-                        {% endif %}    
-                       <span > <h style="color: red;">{{field.errors}}</h></span>
-                      </div>
-                       </div>
-                        {% endfor %}
-                        {% if type != 'update' %}
-                        {% for field in form3 %}
-                        {% if field.label != 'Role' %}
-                       <div class="col-md-6 mb-4 pb-2">
-                        <div class="form-outline">
-                        <label class="form-label" for="formInput#text">{{field.label}}</label>
-                        {% render_field field  id="form-label"  class="form-control form-control-lg" %} 
-                        {% if field.errors != None %}
-                        <span > <h style="color:red;">{{field.errors}}</h></span>                      </div>
-                        {% endif %}
-                      </div>
-                       {% endif %}
-                        {% endfor %}
-                        {% endif %}
-                      </div>
 
-
-                  </div>
-                </div>
-
-                <div class="col-lg-6 bg-indigo text-white">
-                  <div class="p-5">
-                    {% if not request.user %}
-                    <h3 class="fw-normal mb-5" style="color: black"></h3><br>
-                    {% endif %}
-                    <h3 class="fw-normal mb-5">Contact Details</h3>
+  <div class="container py-5 h-100">
+    <div class="text-center"><h3 class="fw-normal mb-5" style="color:red"><b>Donor Registration</b> </h3></div>
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-12">
+        <div class="card card-registration card-registration-2" style="border-radius: 15px;">
+          <div class="card-body p-0">
+            <div class="row g-0">
+              <div class="col-lg-6">
+                <div class="p-5">
+                  {% if sender == 'donor' %}
+                  <h3 class="fw-normal mb-5" style="color:red">General Information</h3>
+                  {% endif %}
+                  <form method="POST" enctype="multipart/form-data" id="registration-form">
+                    {% csrf_token %}
                     <div class="row">
-
-                      {% for field in form2 %}
+                      {% for field in form1 %}
                       <div class="col-md-6 mb-4 pb-2">
-                       <div class="form-outline">
-                       <label class="form-label" for="formInput#text">{{field.label}}</label>
-                       {% render_field field  id="form-label"  class="form-control form-control-lg" %} 
-                       {% if field.errors != None %}
-                       <span > <h style="color:yellow;">{{field.errors}}</h></span>                      </div>
-                       {% endif %}
+                        <div class="form-floating">
+                          {% render_field field id="name" class="form-control" placeholder=field.label %}
+                          <label for="floatingPassword">{{ field.label }}{% if field.field.required %}<span style="color: red;">*</span>{% endif %}</label>
+                          {% if field.field.required %}
+                          <span class="required-message" style="color: red;"></span>
+                          {% endif %}
+                          {% if field.errors %}
+                          <span><h style="color: red;">{{ field.errors }}</h></span>
+                          {% endif %}
+                          {% if field.label == 'DateOfBirth' %}
+                          {% for msg in messages %}
+                                {% if msg|stringformat:"s" == 'You must be 18 or above to register' %}
+                                <span style="color: red;">{{msg}}</span>
+                          {% endif %}
+                          {% endfor %}
+                          {% endif %}
+                        </div>
                       </div>
-                       {% endfor %}
-                     </div>
-                     
-                     <button type="submit" class="btn btn-light btn-lg" data-mdb-ripple-color="dark" style="float: le;margin-left: 50px;" onmouseenter="this.style.backgroundColor='red';this.style.color = 'white';" onmouseleave="this.style.backgroundColor='white';this.style.color = 'black';"> 
-                       {% if type == 'update' %}  Update {% else %} Register {% endif %} </button>
-
-                       <a href="{% url 'homepage' %}"><button type="button" class="btn btn-light btn-lg" data-mdb-ripple-color="dark" style="float: le;margin-left: 50px;" onmouseenter="this.style.backgroundColor='red';this.style.color = 'white';" onmouseleave="this.style.backgroundColor='white';this.style.color = 'black';">
-                       Return Home
-                      </button> </a>
-                   </div> 
-
-
-                  </form>
-                  </div>
+                      {% endfor %}
+                      {% if type != 'update' %}
+                      {% for field in form3 %}
+                      {% if field.label != 'Role' %}
+                      <div class="col-md-6 mb-4 pb-2">
+                        <div class="form-floating">
+                          {% render_field field id="form-label" class="form-control form-control-lg" placeholder=field.label %}
+                          <label for="floatingPassword">{{ field.label }}{% if field.field.required %}<span style="color: red;">*</span>{% endif %}</label>
+                          {% if field.errors %}
+                          <span><h style="color:red;">{{ field.errors }}</h></span>
+                          {% endif %}
+                        </div>
+                      </div>
+                      {% endif %}
+                      {% endfor %}
+                      {% endif %}
+                    </div>
                 </div>
+              </div>
+
+              <div class="col-lg-6 bg-indigo text-white">
+                <div class="p-5">
+                  {% if not request.user %}
+                  <h3 class="fw-normal mb-5" style="color: black"></h3><br>
+                  {% endif %}
+                  <h3 class="fw-normal mb-5">Contact Details</h3>
+                  <div class="row">
+                    {% for field in form2 %}
+                    <div class="col-md-6 mb-4 pb-2">
+                      <div class="form-floating">
+                        {% render_field field id="form-label" class="form-control form-control-lg " placeholder=field.label %}
+                        <label for="floatingPassword" style="color: black;">{{ field.label }}{% if field.field.required %}<span style="color: red;">*</span>{% endif %}</label>
+                        {% if field.errors %}
+                        <span><h style="color:yellow;">{{ field.errors }}</h></span>
+                        {% endif %}
+                      </div>
+                    </div>
+                    {% endfor %}
+                  </div>
+
+                  <button type="submit" class="btn btn-light btn-lg" data-mdb-ripple-color="dark" style="float: le;margin-left: 50px;" onclick="validateForm()">                    {% if type == 'update' %}  Update {% else %} Register {% endif %} </button>
+
+                  <a href="{% url 'homepage' %}" id="return-home-btn"><button type="button" class="btn btn-light btn-lg" data-mdb-ripple-color="dark" style="float: le;margin-left: 50px;">
+                      Return Home
+                    </button></a>
+                </div>
+                </div></form>
               </div>
             </div>
           </div>
         </div>
       </div>
-    	
     </div>
-
-  </section>
+  </div>
+</section>
+<script src="{% static 'js/requiredfield.js' %}">
+</script>
 {% endblock %}

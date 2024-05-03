@@ -3,30 +3,32 @@
 {% block content %}
 
 <br>
-<section class="h-100">
-<div class="container h-100">
-        <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
-<div class="card shadow-lg">
-    <div class="card-body p-5">
-        <h1 class="fs-4 card-title fw-bold mb-4">Add Event</h1>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-xl-5 col-lg-5 col-md-7 col-sm-9">
+            <div class="card border-primary mb-3"> 
+                <div class="card-body p-5">
+                    <h1 class="fs-4 card-title fw-bold mb-4">Add Event</h1>
         <form  method="POST" enctype="multipart/form-data" >
             {% csrf_token %}
 
             {% for field in form %}
                 <div class="mb-3">
-                    <label for="formInput#text">{{field.label}}</label>
-                    {% render_field field  id="formInput#text"  class="form-control"  %}
+                    <div class="form-floating">
+                    {% render_field field  id="formInput#text"  class="form-control"  placeholder=field.label %}
+                    <label for="floatingPassword" >{{field.label}}{% if field.field.required %}<span style="color: red;">*</span>{% endif %}</label>
                     <span > <h style="color: red;">{{field.errors}}</h></span>	 	
                 </div>
-                {% endfor %}
+                </div>
+                {% endfor %} 
             <br>
-            <div style="align-self:auto; margin-left: 130px;">
+            <div class="mb-3 d-flex">
                 {% if type == 'add' %}
-                <button type="submit" class="btn btn-primary ms-auto">
+                <button type="submit" class="btn btn-primary w-100">
                     Add
                 </button>
                 {% else %}
-                <button type="submit" class="btn btn-primary ms-auto">
+                <button type="submit" class="btn btn-primary w-100">
                     update
                 </button>
                 {% endif %}

@@ -3,8 +3,8 @@
 
 <br>
 <section class="h-100">
-    <div class="container py-5 h-100">
-      <div class="row d-flex justify-content-center align-items-center h-100">
+  <div class="container-fluid">
+    <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-9">
           <div class="card card-registration card-registration-2" style="border-radius: 15px;">
             <div class="card-body p-0">
@@ -98,7 +98,7 @@
 
 
                 <br>
-                <div style="align-self:auto; margin-left: 130px;">
+                <div style="align-self:auto;">
                     {% if status == 'Good' %}
                     <h style="color: green"> Donor is legitimate! </h>
                     <a href="{% url 'confirmrequest' answers.Result_id 'accept' %}"><button type="button" class="btn btn-info" style="background-color: green;color: white;">Accept</button></a>&nbsp;                   

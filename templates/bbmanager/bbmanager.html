@@ -11,32 +11,28 @@
         <a href="{% url 'bbdashbord' 'notall' %}" class="nav-link h3 text-white my-2">
           BLOOD BANK
         </a>
-        <li class="nav-link">
+        <li class="nav-link {% if active_page == 'dashbord' %}active{% endif %}">
           <i class="bx bxs-dashboard"></i>
-          <span class="mx-2" ><a class="inner-anchor"  href="{% url 'bbdashbord' 'notall' %}"> Dashbord</a></span>
+          <span class="mx-2" ><a class="inner-anchor"  href="{% url 'bbdashbord' 'notall' %}"> Dashboard</a></span>
         </li>
-        <li class="nav-link">
+        <li class="nav-link {% if active_page == 'camp' %}active{% endif %}">
           <i class="bx bxs-home"></i>
           <span class="mx-2" ><a class="inner-anchor" href="{% url 'camps' 'notall' %}"> Camps</a></span>
         </li>
-        <li class="nav-link">
+        <li class="nav-link  {% if active_page == 'blood' %}active{% endif %}">
           <i class="bx bxs-store"></i>
           <span class="mx-2" ><a class="inner-anchor" href="{% url 'bloodstock' %}"> Blood Stock</a></span>
         </li>
 
-        <li class="nav-link">
+        <li class="nav-link {% if active_page == 'hospitalrequest' %}active{% endif %}">
           <i class="bx bx-git-pull-request"></i>
           <span class="mx-2" ><a class="inner-anchor" href="{% url 'hospitalrequest' 'notall' %}"> Request</a></span>
         </li>
-        <li  class="nav-link">
-          <i class="bx bx-clinic"></i>
-          <span class="mx-2" ><a class="inner-anchor" href="{% url 'hospitals' 'notall' %}"> Hospitals</a></span>
-        </li>
-        <li class="nav-link">
+        <li class="nav-link {% if active_page == 'events' %}active{% endif %}">
           <i class="bx bx-calendar-event"></i>
           <span class="mx-2" ><a class="inner-anchor" href="{% url 'events' 'notall' %}"> Events</a></span>
         </li>
-        <li class="nav-link">
+        <li class="nav-link {% if active_page == 'editaccount' %}active{% endif %}">
           <i class="bx bx-edit"></i>
           <span class="mx-2" ><a class="inner-anchor" href="{% url 'editpassword'  %}"> Edit Account</a></span>
         </li>
@@ -72,11 +68,15 @@
           <figcaption style="text-align: center;"><b>{{user.username}}</b></figcaption>
         </figure>
               </nav>
-      {% block content %}
+              <br>
+              <div class="container-fluid">
+                <div class="row justify-content-center">
+     
+                  {% block content %}
 
 
       {% endblock %}
-
+                </div></div>
 
     <!-- bootstrap js -->
     

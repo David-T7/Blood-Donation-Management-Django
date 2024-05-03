@@ -12,7 +12,7 @@ class DateTimeInput(forms.DateTimeInput):
 class DonorCreationForm(ModelForm):
     class Meta:
         model = Donor
-        fields = ['Donorname','DateOfBirth','Bloodgroup','Gender','Age','Nationality','Height','Weight','BMS','BloodPressure']
+        fields = ['Donorname','DateOfBirth','Bloodgroup','Gender','Nationality','Height','Weight','BloodPressure']
         widgets = {
             'DateOfBirth': DateInput(),
         } 

@@ -1,8 +1,6 @@
 from logging import PlaceHolder
 from django.db import models
 import uuid
-
-from pyrsistent import field
 from Blood.models import Blood
 from UserAccount.models import Address , Account
 
@@ -21,14 +19,14 @@ blood_type = [
 class Hospital(models.Model):
     Hospital_id = models.UUIDField(default=uuid.uuid4, unique=True,
                           primary_key=True, editable=False)
-    Username = models.CharField(max_length=20, null=True , blank=True)
     HospitalName = models.CharField(max_length=60, null=True , blank=True)
     Address_id = models.OneToOneField(Address, on_delete=models.CASCADE , null=True , blank=True)
+    Account_id = models.OneToOneField(Account , on_delete=models.CASCADE ,null=True , blank=True)
     BranchNo= models.CharField(max_length=10)
     HospitalRepresentative = models.CharField(max_length=10)
     ProfilePic= models.FileField(null=True, blank=True, upload_to='profilepic/', default="profilepic/defaultprofile.jpeg")
     def __str__(self):
-        return str(self.Hospital_id)
+        return str(self.HospitalName)
     class Meta:
         db_table = "Hospital"
     

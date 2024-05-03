@@ -17,37 +17,63 @@ from django.contrib.auth.forms import PasswordChangeForm
 from LabTechnician.models import DeferringList
 from django.utils.dateparse import parse_date , parse_time
 from .forms import AppointmentCreationForm
+from datetime import datetime, timedelta
+
 
 def Register(request):
     form1 = DonorCreationForm()   # using the donor creation form created in forms.py
     form2= AddressCreationForm()
     form3= CustomUserCreationForm()
+    
     if request.method == 'POST':
         form1= DonorCreationForm(request.POST , request.FILES)  # getting values send from the page
         form2= AddressCreationForm(request.POST)
         form3 = CustomUserCreationForm(request.POST)
-        if (form1.is_valid() and form2.is_valid() and form3.is_valid()):  # checking  values send from the page are valid  
+        
+        if (form1.is_valid() and form2.is_valid() and form3.is_valid()):  # checking  values sent from the page are valid  
             try:
-                if(int(request.POST['Age']) >=18):
+                print("in try")
+                dob_string = request.POST['DateOfBirth'] 
+                print (dob_string)
+                dob_datetime = datetime.strptime(dob_string, '%Y-%m-%d')
+                print(dob_datetime)
+                year_of_birth = dob_datetime.year
+                print(year_of_birth)
+                current_year = datetime.now().year
+                
+                if current_year - year_of_birth >= 18:
                     account = form3.save(commit=False) # saving the values but not in the table
                     account.Role='Donor'
                     account.email = request.POST['Email']
                     account.save() # saving the user account
                     address = form2.save(commit=False)
-                    address.save()
-                    donor = form1.save(commit=False)
-                    phone = request.POST['Phone']
-                    donor.Address_id= Address.objects.get(Phone=phone)  # assingnin donor_id field in donor form adress table using phone
-                    donor.Account_id = account
-                    donor.save()
-                    messages.success(request, 'Successfully Registered')
-                    return redirect('/login/Donor')
+                    try:
+                        address.save()
+                    except:
+                        messages.error(request, 'Please fill the address form completely')
+                        del account    
+                    try:
+                        donor = form1.save(commit=False)
+                        phone = request.POST['Phone']
+                        donor.Address_id= Address.objects.get(Phone=phone)  # assigning donor_id field in donor form address table using phone
+                        donor.Account_id = account
+                        donor.save()
+                        messages.success(request, 'Successfully Registered')
+                        print("successfully registered")
+                        return redirect('login/Donor')
+                        
+                    except:
+                        messages.error(request, 'Please fill the donor form completely')
+                        del account
                 else:
                     messages.error(request , 'You must be 18 or above to register')
+                    print("age is less than 18")
             except:
                 True
+        else:
+            print("form is not valid")
     context = {'form1': form1,'form2':form2,'form3':form3 , 'sender':'donor'}  # forms that are passed to the page rendered
-    return render(request, 'registerpage.html',context)
+    return render(request, 'registerpage.html', context)
 
 
 def DonorState(request):
@@ -59,56 +85,56 @@ def Donors(request):
     context = {'user':request.user , 'donor':DonorState(request)['donor']}
     return render(request , 'donor/donor.html' , context)
 
-def EditProfile(request):
-    state = request.user
-    useraccount = Account.objects.get(id=state.id)
-    donor= Donor.objects.get(Account_id = useraccount.id)
-    form= DonorAccountEditForm (instance=donor)
-    if request.method == 'POST':
-        form = DonorAccountEditForm(request.POST, request.FILES, instance=donor)
-        if (form.is_valid()):
-            try:
-                form.save()
-            except:
-                messages.error(request,'Error occured during updating profile pic')
-        request.user.save()
-    context = {'form': form , 'donor':donor , 'sender':'profile'}
-    return render(request, 'donor/editprofile.html', context)
+# def EditProfile(request):
+#     state = request.user
+#     useraccount = Account.objects.get(id=state.id)
+#     donor= Donor.objects.get(Account_id = useraccount.id)
+#     form= DonorAccountEditForm (instance=donor)
+#     if request.method == 'POST':
+#         form = DonorAccountEditForm(request.POST, request.FILES, instance=donor)
+#         if (form.is_valid()):
+#             try:
+#                 form.save()
+#             except:
+#                 messages.error(request,'Error occured during updating profile pic')
+#         request.user.save()
+#     context = {'form': form , 'donor':donor , 'sender':'profile' , 'active_page':'editaccount'}
+#     return render(request, 'donor/editprofile.html', context)
 
-def EditUserName(request):
-    state = request.user
-    donor = DonorState(request)['donor']
-    form= CustomUserChangeForm (instance=state)
-    if request.method == 'POST':
-        form = CustomUserChangeForm(request.POST, instance=state)
-        if (form.is_valid()):
-            try:
-                form.save()
-            except:
-                messages.error(request,'Error occured during updating username')
-        request.user.save()
-    context = {'form': form , 'donor':donor , 'sender':'username'}
-    return render(request, 'donor/editusername.html', context)
-
-
+# def EditUserName(request):
+#     state = request.user
+#     donor = DonorState(request)['donor']
+#     form= CustomUserChangeForm (instance=state)
+#     if request.method == 'POST':
+#         form = CustomUserChangeForm(request.POST, instance=state)
+#         if (form.is_valid()):
+#             try:
+#                 form.save()
+#             except:
+#                 messages.error(request,'Error occured during updating username')
+#         request.user.save()
+#     context = {'form': form , 'donor':donor , 'sender':'username' , 'active_page':'editaccount'}
+#     return render(request, 'donor/editusername.html', context)
 
 
-def EditPassword(request):
-    donor = DonorState(request)['donor']
-    form = PasswordChangeForm(request.user)
-    if request.method == 'POST':
-        form = PasswordChangeForm(request.user, request.POST)
 
-        if (form.is_valid()):
-            try:
-                user = form.save()
-                update_session_auth_hash(request, user)
-                messages.success(request , 'Successfuly updated password')
-            except:
-                messages.error(request,'Error occured during updating password')
-        request.user.save()
-    context = {'form': form ,'donor':donor , 'sender':'password' }
-    return render(request, 'donor/editpassword.html', context)
+
+# def EditPassword(request):
+#     donor = DonorState(request)['donor']
+#     form = PasswordChangeForm(request.user)
+#     if request.method == 'POST':
+#         form = PasswordChangeForm(request.user, request.POST)
+
+#         if (form.is_valid()):
+#             try:
+#                 user = form.save()
+#                 update_session_auth_hash(request, user)
+#                 messages.success(request , 'Successfuly updated password')
+#             except:
+#                 messages.error(request,'Error occured during updating password')
+#         request.user.save()
+#     context = {'form': form ,'donor':donor , 'sender':'password' , 'active_page':'editaccount' }
+#     return render(request, 'donor/editpassword.html', context)
 
 
 
@@ -164,6 +190,7 @@ def DonorDashbord(request , type):
             'list':my_list,
             'type':type,
             'sender':'dashbord',
+            'active_page':'home'
     }
     return render(request, 'donor/dashbord.html' ,context)
 
@@ -223,7 +250,7 @@ def DonationRequest(request , type):
     except:
         my_list = []
         print('list not set')
-    context = {'list':my_list , 'donation':donation ,'type':type, 'donor':donor , 'searchtype':type}
+    context = {'list':my_list , 'donation':donation ,'type':type, 'donor':donor , 'searchtype':type , 'active_page':'donationrequest'}
     return render (request , 'donor/donationrequest.html' , context  )
 
 def MakeDonationRequest(request):
@@ -267,22 +294,23 @@ def MakeDonationRequest(request):
         elif(todays_req > request_limit_daily):
             messages.error(request , 'You have reached request limit for today')
             return redirect('/donationrequest/notall')
-    context = { 'form':form , 'questions':questions , 'donor':donor , 'type':'add'}
+    context = { 'form':form , 'questions':questions , 'donor':donor , 'type':'add' ,  'active_page':'donationrequest'}
     return render(request, 'donor/createdonationrequest.html',context)    
 
 
 def CancelRequest(request , pk):
     donor = DonorState(request)['donor']
     donreq = None
+    context = { 'active_page':'donationrequest'}
     try:
         donreq = DonationRequestFormResult.objects.get(Result_id = pk)
         donreq.delete()
         messages.success(request , 'You have successfuly canceled the request')
-        return redirect('/donationrequest/notall')
+        return redirect('/donationrequest/notall' , context)
 
     except:
         messages.success(request , 'Error during canceling the request')
-        return redirect('/donationrequest/notall')
+        return redirect('/donationrequest/notall' , context)
 
 
 def UpdateRequest(request , pk):
@@ -306,7 +334,7 @@ def UpdateRequest(request , pk):
             return redirect('/donationrequest/notall') 
         else:
             messages.success(request, 'event was not updated successfully!')
-    context = { 'form':form  , 'donor':donor , 'questions':questions ,  'type':'update' }
+    context = { 'form':form  , 'donor':donor , 'questions':questions ,  'type':'update' ,  'active_page':'donationrequest'}
     return render(request, 'donor/createdonationrequest.html', context)    
 
 
@@ -352,7 +380,7 @@ def MakeAppointment(request ):
                 return redirect('/getappointments/notall')
             except:
                 messages.error(request , 'Error during appointment request')
-    context = {'donor':donor ,'type':'add', 'form':form}
+    context = {'donor':donor ,'type':'add', 'form':form , 'active_page':'appointment'}
     return  render(request , 'donor/chooseappointment.html', context)
 
 def UpdateAppointment(request , pk):
@@ -372,7 +400,7 @@ def UpdateAppointment(request , pk):
             return redirect('/getappointments/notall')
         else:
             messages.success(request, 'Appointment was not updated successfully!')
-    context = {'form': form , 'type':'update' , 'donor':donor}
+    context = {'form': form , 'type':'update' , 'donor':donor , 'active_page':'appointment'}
     return render(request, 'donor/chooseappointment.html', context)
 
             
@@ -380,13 +408,14 @@ def UpdateAppointment(request , pk):
 def CancelAppointment(request , pk):
     donor = DonorState(request)['donor']
     app = None
+    context = {'active_page':'appointment'}
     try:
         app = Appointment.objects.get(App_id = pk)
         app.delete()
-        messages.success(request , 'Appointment Canceled successfuly')
+        messages.success(request , 'Appointment Canceled successfuly' , context)
         return redirect('/getappointments/notall')
     except:
-        messages.error(request , 'Error during canceling appointment')
+        messages.error(request , 'Error during canceling appointment' , context)
         return redirect('/getappointments/notall')
 
 def GetAppointments(request , type):
@@ -408,7 +437,7 @@ def GetAppointments(request , type):
                     appointment = Appointment.objects.filter(status =  searched.lower())
     except:
         appointment = None
-    context= {'appointments':appointment , 'donor':donor}
+    context= {'appointments':appointment , 'donor':donor ,  'active_page':'appointment'}
     return render(request , 'donor/appointment.html' , context)
 
     
@@ -438,7 +467,7 @@ def GetEvent(request , type):
                     events = Event.objects.filter(EventDate = date)  
     except:
         events=None
-    context= {'events':events , 'donor':donor , 'type':type}
+    context= {'events':events , 'donor':donor , 'type':type , 'active_page':'event'}
     return render(request , 'donor/events.html' , context)
 
 
@@ -465,7 +494,7 @@ def Camps(request , type):
                     camps = Camp.objects.filter(CampsKebele = searched) 
     except:
         camps=None
-    context={'camps':camps , 'donor': donor , 'type':type}
+    context={'camps':camps , 'donor': donor , 'type':type , 'active_page':'camp'}
     return render(request ,'donor/camps.html' , context)
 
 def SeeCamp(request , pk):
@@ -475,7 +504,7 @@ def SeeCamp(request , pk):
         camp = Camp.objects.get(Camps_id=pk)
     except:
         camp = None
-    context={'camp':camp , 'donor':donor}
+    context={'camp':camp , 'donor':donor , 'active_page':'camp'}
     return render(request ,'donor/seecamp.html' , context)
 
 

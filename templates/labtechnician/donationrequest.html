@@ -12,17 +12,23 @@
     </div>
 {% endfor %}
 
-<table class="styled-table">
+<div class="table-responsive">
+  <table class="table table-striped">
     <thead>
          <tr>
            <th>Donation Request History</th>
            <th><a href="{% url 'labdonationrequest' 'all' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">See All</button></a>
             </th>
             <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+         </tr>
+         <tr>
             <form method="post" action="{% url 'labdonationrequest' 'searched' %}">
               {% csrf_token %}
-            <th>
-              <select class="form-select form-select-sm" name='searchby' aria-label=".form-select-sm example">
+              <th colspan="2">
+                <select class="form-select form-select-sm" name='searchby' aria-label=".form-select-sm example">
               <option selected>searchby</option>
               <option value="DonorName">DonorName</option>
               <option value="Phone">Phone</option>
@@ -30,20 +36,19 @@
               <option value="AppointmentStatus">AppointStatus</option>
             </select>
             </th>
-            <th></th>   
             <th>
               <div class="input-group">
-                <input class="form-control border-end-0 border rounded-pill" name='searched' placeholder="search" id="example-search-input">
-                <span class="input-group-append">
-                    <button type="submit" class="btn btn-outline-secondary bg-white border-start-0 border rounded-pill ms-n3">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-                      </svg>
-                    </button>
-                </span>
-              </div>
+                <input type="search" id="form1" name='searched' placeholder="Search" class="form-control" />
+               
             </th>
-            </form>     
+            <th> <button type="submit" class="btn btn-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+              </svg>
+            </button></th>
+            </form>
+            <th></th>
+            <th></th>     
           </tr>
 
           <tr >
@@ -66,25 +71,16 @@
        <td>_______________</td>
        {% endif %}
        {% if don.Status == 'in progress' %}
-       <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color: yellow;" class="bi bi-circle"  viewBox="0 0 16 16">
-         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-       </svg>
+       <td> <span class="badge bg-warning">In Progress</span>
        {% elif  don.Status == 'accepted' %}
-       <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color: green;" class="bi bi-circle"  viewBox="0 0 16 16">
-         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-       </svg>
+       <td> <span class="badge bg-success">Accepted</span>
        {% elif  don.Status == 'rejected' %}
-       <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color:red;" class="bi bi-circle"  viewBox="0 0 16 16">
-         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-       </svg>
+       <td> <span class="badge bg-danger">Rejected</span>
        {% endif %}
-       &nbsp;{{ don.Status}} </td>
+       </td>
        {% if don.Status == 'accepted' %}
        {% if app.status == 'accepted'  and  app.App_id|slugify not in finished %}
-       <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color:green;" class="bi bi-circle"  viewBox="0 0 16 16">
-         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-       </svg>
-       &nbsp;{{ app.status}}</td>
+       <td> <span class="badge bg-success">Accepted</span> </td>
        <td><a href="{% url 'labdonorinfo' don.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Check Donor</button></a>
        </td>
        <td><a href="{% url 'addblood' don.Donor_id app.App_id  %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">AddBlood</button></a></td>  
@@ -96,9 +92,7 @@
        </td>
        {% endif %}
        {% elif app.status == 'accepted'  and  app.App_id|slugify in finished  %}
-       <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color:green;" class="bi bi-circle"  viewBox="0 0 16 16">
-        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-      </svg>&nbsp;Finished</td>
+       <td> <span class="badge bg-success">Finished</span></td>
       <td><a href="{% url 'labdonorinfo' don.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Check Donor</button></a>
          
         <td><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;" disabled>AddBlood</button></td> 
@@ -110,10 +104,8 @@
         </td>
         {% endif %}
         {% elif app.status == 'rejected' %}
-       <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color:red;" class="bi bi-circle"  viewBox="0 0 16 16">
-         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-       </svg>
-       &nbsp;{{ app.status}}</td>
+       <td>  <span class="badge bg-danger">Rejected</span>
+       </td>
        <td><a href="{% url 'labdonorinfo' don.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Check Donor</button></a>
        </td>
        <td><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;" disabled>AddBlood</button></a></td> 
@@ -125,10 +117,8 @@
        </td>
        {% endif %}
        {% elif app.status == 'in progress' %}
-       <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color:yellow;" class="bi bi-circle"  viewBox="0 0 16 16">
-         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-       </svg>
-       &nbsp;{{ app.status}}</td> 
+       <td> <span class="badge bg-warning">In Progress</span>
+       </td> 
        <td><a href="{% url 'labdonorinfo' don.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Check Donor</button></a>
        </td>
        <td><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;" disabled>AddBlood</button></a></td> 
@@ -140,9 +130,7 @@
        </td>
        {% endif %}
        {% else %}
-       <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color:white;" class="bi bi-circle"  viewBox="0 0 16 16">
-        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-      </svg>&nbsp;NotMade</td>
+       <td><span class="badge bg-light">Not Made</span></td>
       <td><a href="{% url 'labdonorinfo' don.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Check Donor</button></a>
       </td>
          <td><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;" disabled>AddBlood</button></td> 
@@ -156,9 +144,7 @@
          {% endif %}
     
        {% else %}
-       <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color:white;" class="bi bi-circle"  viewBox="0 0 16 16">
-        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-      </svg>&nbsp;NotMade</td>
+       <td><span class="badge bg-light">Not Made</span></td>
       <td><a href="{% url 'labdonorinfo' don.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Check Donor</button></a>
       </td>
          <td><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;" disabled>AddBlood</button></td> 
@@ -175,7 +161,7 @@
       {% endfor %}
 
       <tr>{% if type == 'all' %}
-        <td><a href="{% url 'labdonationrequest' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Shrink</button></a>
+        <td><a href="{% url 'labdonationrequest' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">less</button></a>
         </td>
         <td></td>
         <td></td>

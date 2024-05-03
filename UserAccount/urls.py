@@ -11,5 +11,5 @@ path('reset/<role>',views.ResetPassword , name='reset'),
 path('forgot/<role>',views.ForgotPassword , name='forgot'),
 path('editusername' , views.EditUserName , name='editusername'  ),
 path('editpassword' , views.EditPassword , name='editpassword'),
-path('eidtprofilepicture' , views.EditProfilePicture , name='editprofielpicture'),
+path('editprofilepicture' , views.EditProfilePicture , name='editprofilepicture'),
 ]

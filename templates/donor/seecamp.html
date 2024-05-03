@@ -1,15 +1,16 @@
 {% extends 'donor/donor.html' %}
 {% block content %}
 <br>
-
-<section class="h-50" style="margin-left: 200px;">
-
-{% if camp %}
-{% autoescape off %}
-{{ camp.Location }}
-{% endautoescape %}
-
-{% endif %}
-</section>
+<div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+                {% if camp %}
+                {% autoescape off %}
+                {{ camp.Location }}
+                {% endautoescape %}
+                {% endif %}
+            </tr>
+        </div>
 <br>
 {% endblock %}

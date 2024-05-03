@@ -25,31 +25,32 @@
         {% endif %}
     </form>
 
-<div class="container h-100">
-        <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
-<div class="card shadow-lg">
-    <div class="card-body p-5">
-        <h1 class="fs-4 card-title fw-bold mb-4">Make Blood Request </h1>
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-xl-5 col-lg-5 col-md-7 col-sm-9">
+                <div class="card border-primary mb-3"> 
+                    <div class="card-body p-5">
+                        <h1 class="fs-4 card-title fw-bold mb-4">Blood Request</h1>
         <form  method="POST" >
             {% csrf_token %}
-            <div class="row">
                 {% for field in form %}
-               <div class="col-md-6 mb-4 pb-2">
                 <div class="mb-3">
-                    <label class="form-label" for="formInput#text">{{field.label}}</label>
+                    <div class="form-floating">
+                  
                 {% if  field.label == 'Quantity' %}
-                {% render_field field  id="name" placeholder="0ML"  class="form-control form-control-lg" %} 
+                {% render_field field  id="name"  class="form-control" placeholder="0ML" %} 
+                <label  for="floatingPassword">{{field.label}}(ML)</label>
                 {% else %}
-                {% render_field field  id="name"  class="form-control form-control-lg" %} 
+                {% render_field field  id="name" class="form-control" placeholder=field.label %} 
+                <label for="floatingPassword">{{field.label}}</label>
                 {% endif %}
+              
                 </div>
                </div>
                 {% endfor %}
-              </div>
-
             <br>
-            <div style="align-self:auto; margin-left: 130px;">
-                <button type="submit" class="btn btn-primary ms-auto">
+            <div class="mb-3 d-flex">
+                <button type="submit" class="btn btn-primary w-100">
                     Submit
                 </button>
             </div>

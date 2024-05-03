@@ -1,105 +1,79 @@
-       
-       <tr >
-           <th>Date</th>
-           <th>Time</th>
-           <th>Status</th>
-           <th>Appointment</th>
-           <th></th>
-           <th></th>
-       </tr>
-   </thead>
-   <tbody>
-     {% if list %}
-     {% for don,app in list %}
-     <tr>
-       {% if don %}
-      <td>{{ don.Request_Date }}</td> 
-      <td>{{ don.Request_time }}</td>
-      {% if don.Status == 'in progress' %}
-      <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color: yellow;" class="bi bi-circle"  viewBox="0 0 16 16">
-        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-      </svg>
-      {% elif  don.Status == 'accepted' %}
-      <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color: green;" class="bi bi-circle"  viewBox="0 0 16 16">
-        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-      </svg>
-      {% elif  don.Status == 'rejected' %}
-      <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color:red;" class="bi bi-circle"  viewBox="0 0 16 16">
-        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-      </svg>
-      {% endif %}
-      &nbsp;{{ don.Status}} </td>
-      {% if don.Status == 'accepted' %}
-      {% if app.status == 'accepted' %}
-      <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color:green;" class="bi bi-circle"  viewBox="0 0 16 16">
-        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-      </svg>
-
-      {% elif app.status == 'rejected' %}
-      <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color:red;" class="bi bi-circle"  viewBox="0 0 16 16">
-        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-      </svg>
-
-      {% elif app.status == 'in progress' %}
-      <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color:yellow;" class="bi bi-circle"  viewBox="0 0 16 16">
-        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-      </svg>
-      {% else %}
-      {% if sender != 'dashbord' %}
-      <td><a href="{% url 'makeappointment' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Make Appointment</button></a></td>
-      {% else %}
-      <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color:yellow;" class="bi bi-circle"  viewBox="0 0 16 16">
-        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>  </svg> not made </td>      {% endif %}
-      {% endif %}
-      &nbsp;{{ app.status}} </td>
-      {% else %}
-      {% if don %}
-      {% if sender != 'dashbord' %}
-      <td><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;" disabled>Make Appointment</button></td>
-      {% else %}
-      <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="background-color:yellow;" class="bi bi-circle"  viewBox="0 0 16 16">
-        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>  </svg> not made </td>
-      {% endif %}
-
-      {% endif %}
-      {% endif %}
-      {% if sender != 'dashbord' %} 
-      <td><a href="{% url 'cancelrequest' don.Result_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">CancelRequest</button></a>&nbsp;<a href="{% url 'updaterequest' don.Result_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">UpdateRequest</button></a></td>
-      {% else %}
-      <td></td>
-      {% endif %}
-
-      <td></td>
-    {% endif %}
-     {% endfor %}
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Time</th>
+      <th>Status</th>
+      <th>Appointment</th>
+      <th></th>
+      <th></th>
     </tr>
-    <tr>{% if type == 'all' %}
-      {% if sender != 'dashbord' %} 
-      <td><a href="{% url 'donationrequest' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Shrink</button></a>
-      {% else %}
-      <td><a href="{% url 'donordashbord' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Shrink</button></a>
-        
+  </thead>
+  <tbody>
+    {% if list %}
+    {% for don, app in list %}
+    <tr>
+      {% if don %}
+      <td>{{ don.Request_Date }}</td>
+      <td>{{ don.Request_time }}</td>
+      <td>
+        {% if don.Status == 'in progress' %}
+        <span class="badge bg-warning">In Progress</span>
+        {% elif don.Status == 'accepted' %}
+        <span class="badge bg-success">Accepted</span>
+        {% elif don.Status == 'rejected' %}
+        <span class="badge bg-danger">Rejected</span>
+        {% endif %}
+      </td>
+      <td>
+        {% if don.Status == 'accepted' %}
+          {% if app.status == 'accepted' %}
+          <span class="badge bg-success">Accepted</span>
+          {% elif app.status == 'rejected' %}
+          <span class="badge bg-danger">Rejected</span>
+          {% elif app.status == 'in progress' %}
+          <span class="badge bg-warning">In Progress</span>
+          {% else %}
+          <a href="{% url 'makeappointment' %}"><button type="button" class="btn btn-primary btn-sm">Make Appointment</button></a>
+          {% endif %}
+        {% else %}
+          {% if sender != 'dashboard' %}
+          <button type="button" class="btn btn-primary btn-sm disabled">Make Appointment</button>
+          {% else %}
+          <span class="badge bg-warning">Not Made</span>
+          {% endif %}
+        {% endif %}
+      </td>
+      <td>
+        {% if sender != 'dashboard' %}
+        <a href="{% url 'cancelrequest' don.Result_id %}"><button type="button" class="btn btn-danger btn-sm">Cancel Request</button></a>
+        &nbsp;
+        <a href="{% url 'updaterequest' don.Result_id %}"><button type="button" class="btn btn-warning btn-sm">Update Request</button></a>
+        {% endif %}
+      </td>
+      <td></td>
       {% endif %}
+    </tr>
+    {% endfor %}
+    <tr>
+      {% if type == 'all' %}
+      <td>
+        {% if sender != 'dashboard' %}
+        <a href="{% url 'donationrequest' 'notall' %}"><button type="button" class="btn btn-primary btn-sm">less</button></a>
+        {% else %}
+        <a href="{% url 'donordashboard' 'notall' %}"><button type="button" class="btn btn-primary btn-sm">less</button></a>
+        {% endif %}
       </td>
       <td></td>
       <td></td>
       <td></td>
       <td></td>
       <td></td>
-      {% endif %}</tr>
-
-     {% else %}
-     <tr> 
-      <td>No Donation Request </td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
+      {% endif %}
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="6">No Donation Request</td>
     </tr>
     {% endif %}
-
-       
-     </tbody>
- </table>
- <br>
+  </tbody>
+</table>

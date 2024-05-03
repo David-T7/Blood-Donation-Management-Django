@@ -1,66 +1,74 @@
 {% extends 'donor/donor.html' %}
-
+{% load static %}
 {% block content %}
 
 <br>
-<table class="styled-table">
+<div class="table-responsive">
+  <table class="table table-striped">
     <thead>
-         <tr>
-             <th></th>
-             <th></th>
-             <th></th>
-             <th></th>
-           <th><a href="{% url 'getevent' 'all' %}"> <button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">SeeAll</button></a>
-            </th>
-            <form method="post" action="{% url 'getevent' 'searched' %}">
-              {% csrf_token %}
-             <th>
-              <select class="form-select form-select-sm" name='searchby' aria-label=".form-select-sm example">
-              <option selected>searchby</option>
-              <option value="EventName">EventName</option>
-              <option value="EventDate">EventDate</option>
-              <option value="EventType">EventType</option>
+      <tr>
+        <th>Events</th>
+        <th>
+          <a href="{% url 'getevent' 'all' %}">
+            <button type="button" class="btn btn-primary btn-sm" style="background-color: red;">See All</button>
+          </a>
+        </th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+      <tr>
+        <form method="post" action="{% url 'getevent' 'searched' %}">
+          {% csrf_token %}
+          <th colspan="2">
+            <select class="form-select form-select-sm" name='searchby' aria-label=".form-select-sm example">
+              <option selected>Search by</option>
+              <option value="EventName">Event Name</option>
+              <option value="EventDate">Event Date</option>
+              <option value="EventType">Event Type</option>
             </select>
-            </th>
-            <th>
-              <div class="input-group">
-                <input class="form-control border-end-0 border rounded-pill" name='searched' placeholder="search" id="example-search-input">
-                <span class="input-group-append">
-                    <button type="submit" class="btn btn-outline-secondary bg-white border-start-0 border rounded-pill ms-n3">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-                      </svg>
-                    </button>
-                </span>
-              </div>
-            </th>
-             </form>
-          </tr>
-        <tr>
-            <th>Event</th>
-            <th>Place</th>
-            <th>Date</th>
-            <th>Type</th>
-            <th>Picture</th>
-            <th></th>
-            <th></th>
-        </tr>
+          </th>
+          <th>
+            <div class="input-group">
+              <input class="form-control" name='searched' placeholder="Search" style="width: 200px;">
+              
+          </th>
+          <th>  <button type="submit" class="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+            </svg>
+          </button>
+      </div></th>
+
+        </form>
+      </tr>
+      <tr>
+        <th>Event</th>
+        <th>Place</th>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Picture</th>
+        <th></th>
+        <th></th>
+      </tr>
     </thead>
     <tbody>
       {% if events %}
       {% for ev in events %}
-        <tr>
-          <td>{{ ev.EventName }}</td>
-          <td>{{ ev.EventPlace }}</td>
-          <td>{{ ev.EventDate }}</td>
-          <td>{{ ev.EventType }}</td>
-          <td><img src="/static/images/{{ ev.EventPic }}" style="height: 150px;width: 150px;"></td> 
-          <td></td>
-          <td></td>
-        </tr> 
+      <tr>
+        <td>{{ ev.EventName }}</td>
+        <td>{{ ev.EventPlace }}</td>
+        <td>{{ ev.EventDate }}</td>
+        <td>{{ ev.EventType }}</td>
+        <td><img src="/static/images/{{ ev.EventPic }}" style="max-height: 150px; max-width: 150px;" class="img-fluid"></td>
+        <td></td>
+        <td></td>
+      </tr>
       {% endfor %}
-      <tr>{% if type == 'all' %}
-        <td><a href="{% url 'getevent' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Shrink</button></a></td>
+      <tr>
+        {% if type == 'all' %}
+        <td><a href="{% url 'getevent' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style="background-color: red;">less</button></a></td>
         <td></td>
         <td></td>
         <td></td>
@@ -70,19 +78,12 @@
       </tr>
       {% else %}
       <tr>
-        <td>No Events For Now</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td colspan="7">No Events For Now</td>
       </tr>
-      {% endif %}  
+      {% endif %}
     </tbody>
   </table>
-  <br>
-
-
+</div>
+<br>
 
 {% endblock %}

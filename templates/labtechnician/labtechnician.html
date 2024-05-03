@@ -10,17 +10,17 @@
         <a href="{% url 'labdonationrequest' 'notall' %}" class="nav-link h3 text-white my-2">
           Lab Technician
         </a>
-        <li class="nav-link">
+        <li class="nav-link {% if active_page == 'donationrequest' %}active{% endif %}">
           <i class="bx bxs-dashboard"></i>
           <span class="mx-2" ><a class="inner-anchor"  href="{% url 'labdonationrequest' 'notall' %}">Request Result</a></span>
         </li>
 
-        <li class="nav-link">
+        <li class="nav-link {% if active_page == 'blood' %}active{% endif %}">
           <i class="bx bx-edit"></i>
           <span class="mx-2" ><a class="inner-anchor" href="{% url 'getlabbloods' 'notall'  %}">Bloods</a></span>
         </li>
 
-        <li class="nav-link">
+        <li class="nav-link {% if active_page == 'editaccount' %}active{% endif %}">
             <i class="bx bx-edit"></i>
             <span class="mx-2" ><a class="inner-anchor" href="{% url 'editpassword'  %}"> Edit Account</a></span>
           </li>
@@ -57,15 +57,17 @@
           border-radius: 50%; " >
           <figcaption style="text-align: center;"><b>{{user.username}}</b></figcaption>
         </figure>
-              </nav>
-    
-
+        </nav>
+    <br>
+        <div class="container-fluid">
+          <div class="row justify-content-center">
 
       {% block content %}
 
 
       {% endblock %}
-
+          </div>
+        </div>
 
 {% endblock  %}
 

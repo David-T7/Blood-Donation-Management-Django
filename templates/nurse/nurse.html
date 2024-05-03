@@ -10,19 +10,19 @@
         <a href="{% url 'donorrequest' 'notall' %}" class="nav-link h3 text-white my-2">
           Nurse
         </a>
-        <li class="nav-link">
+        <li class="nav-link {% if active_page == 'request' %}active{% endif %}">
           <i class="bx bxs-dashboard"></i>
           <span class="mx-2" ><a class="inner-anchor"  href="{% url 'donorrequest' 'notall' %}"> Request</a></span>
         </li>
-        <li class="nav-link">
+        <li class="nav-link {% if active_page == 'appointment' %}active{% endif %}">
           <i class="bx bxs-home"></i>
           <span class="mx-2" ><a class="inner-anchor" href="{% url 'checkappointment' 'notall' %}"> Appointment</a></span>
         </li>
-        <li class="nav-link">
+        <li class="nav-link {% if active_page == 'question' %}active{% endif %}">
           <i class="bx bxs-store"></i>
           <span class="mx-2" ><a class="inner-anchor" href="{% url 'donorquestions' 'notall' %}"> Questions </a></span>
         </li>
-        <li class="nav-link">
+        <li class="nav-link {% if active_page == 'editaccount' %}active{% endif %}">
           <i class="bx bx-edit"></i>
           <span class="mx-2" ><a class="inner-anchor" href="{% url 'editpassword' %}"> Edit Account</a></span>
         </li>
@@ -59,12 +59,15 @@
           border-radius: 50%; " >
           <figcaption  style="text-align: center;"><b>{{user.username}}</b></figcaption>
         </figure>
-              </nav>
-
+      </nav>
+    <br>
+    <div class="container-fluid">
+    <div class="row justify-content-center">
       {% block content %}
 
 
       {% endblock %}
-
+    </div>
+    </div>
 
 {% endblock %}

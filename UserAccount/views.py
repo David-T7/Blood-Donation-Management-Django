@@ -2,6 +2,8 @@ from django.contrib import  messages
 from django.shortcuts import redirect, render
 from django.views.generic import ListView
 from django.contrib.auth import login, authenticate, logout
+from Hospital.models import Hospital
+from Donor.models import Donor
 from UserAccount.models import Account ,  UserRegistration
 from UserAccount.forms import  CustomUserChangeForm, CustomUserCreationForm, ProfilePictureUpdateForm
 from django.contrib import messages
@@ -23,18 +25,18 @@ def Login(request , role):          # function based view for handling user logi
         username = request.POST['username'].lower()      # making sure the user name is in lowercase 
         password = request.POST['password1']
         try:
-            user = authenticate(request=request, username=username, password=password , Role  =role)   # full user authenticaton including role
+            user = authenticate(request=request, username=username, password=password)   # full user authenticaton including role
             if user is not None:
                 login(request, user) 
-                if(role.lower() =='bbmanager' ):    
+                if(user.Role.lower() =='bbmanager' ):    
                     return redirect('/bbdashbord/notall')  # redircting to other page after login
-                elif(role.lower() =='donor'):
+                elif(user.Role.lower() =='donor'):
                     return redirect('/donordashbord/notall')
-                elif(role.lower()=='nurse'):
+                elif(user.Role.lower()=='nurse'):
                     return redirect('/donorrequest/notall')
-                elif(role.lower()=='labtechnician'):
+                elif(user.Role.lower()=='labtechnician'):
                     return redirect('/labdonationrequest/notall')
-                elif(role =='HospitalRepresentative'):
+                elif(user.Role =='HospitalRepresentative'):
                     return redirect('/hospitaldashbord/notall')
             else:
                 login(request, user , backend='django.contrib.auth.backends.ModelBackend')
@@ -61,7 +63,14 @@ def ResetPassword(request,role): # not implemtented
 
 def Userstate(request):  # for getting the state of the user 
     state = request.user
-    account = UserRegistration.objects.get(Account_id=state.id) 
+    try:
+        account = UserRegistration.objects.get(Account_id=state.id) 
+    except:
+        print("in exception")
+        try:
+            account = Donor.objects.get(Account_id = state.id)
+        except:
+            account = Hospital.objects.get(Account_id = state)
     context={'account':account}
     return context
     
@@ -80,13 +89,17 @@ def EditUserName(request):
             except:
                 None
         request.user.save() # saving the state of the user after it is updated 
-    context = {'form': form , 'account':account , 'sender':'username'}
+    context = {'form': form , 'account':account , 'sender':'username' , 'active_page':'editaccount'}
     if(request.user.Role.lower() == 'bbmanager'):
         return render(request, 'bbmanager/editusername.html', context)
     elif(request.user.Role.lower() == 'nurse'):
         return render(request, 'nurse/editusername.html', context)
     elif(request.user.Role.lower() == 'labtechnician'):
         return render(request, 'labtechnician/editusername.html', context)
+    elif(request.user.Role.lower() == 'donor'):
+        return render(request, 'donor/editusername.html', context)
+    elif(request.user.Role.lower() == 'hospitalrepresentative'):
+        return render(request, 'hospitalrep/editusername.html', context)
 
 def EditProfilePicture(request):
     account = Userstate(request)['account']
@@ -99,13 +112,17 @@ def EditProfilePicture(request):
             except:
                 messages.error(request,'Error occured during updating profile pic')
         request.user.save()
-    context= {'form':form , 'account':account , 'sender':'profilepic'}
+    context= {'form':form , 'account':account , 'sender':'profile' , 'active_page':'editaccount'}
     if(request.user.Role.lower() == 'bbmanager'):
         return render(request, 'bbmanager/editprofile.html', context)
     elif(request.user.Role.lower() == 'nurse'):
         return render(request, 'nurse/editprofile.html', context)
     elif(request.user.Role.lower() == 'labtechnician'):
         return render(request, 'labtechnician/editprofile.html', context)
+    elif(request.user.Role.lower() == 'donor'):
+           return render(request, 'donor/editprofile.html', context)
+    elif(request.user.Role.lower() == 'hospitalrepresentative'):
+        return render(request, 'hospitalrep/editprofile.html', context)
 
 def EditPassword(request):
     account = Userstate(request)['account']
@@ -123,13 +140,18 @@ def EditPassword(request):
         else:
                 messages.error(request,'please input correct information')
         request.user.save()
-    context= {'form':form , 'account':account , 'sender':'password'}
+    context= {'form':form , 'account':account , 'sender':'password' , 'active_page':'editaccount'}
     if(request.user.Role.lower() == 'bbmanager'):
         return render(request, 'bbmanager/editpassword.html', context)
     elif(request.user.Role.lower() == 'nurse'):
         return render(request, 'nurse/editpassword.html', context)
     elif(request.user.Role.lower() == 'labtechnician'):
         return render(request, 'labtechnician/editpassword.html', context)
+    elif(request.user.Role.lower() == 'donor'):
+        return render(request, 'donor/editpassword.html', context)
+    elif(request.user.Role.lower() == 'hospitalrepresentative'):
+        return render(request, 'hospitalrep/editpassword.html', context)
+
     
 
 

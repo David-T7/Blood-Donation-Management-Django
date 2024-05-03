@@ -20,15 +20,15 @@ class Account(AbstractUser):
         unique=True,
     )
     def __str__(self):
-        return str(self.id)
+        return str(self.username)
     class Meta:
         db_table = "Account"
 
 class Address(models.Model):
     Address_id = models.UUIDField(default=uuid.uuid4, unique=True,
                           primary_key=True, editable=False)
-    Phone = models.IntegerField(null=True , blank=True , unique=True)
-    Email = models.EmailField(null=True , blank=True , unique=True)
+    Phone = models.IntegerField(null=True , blank=False , unique=True)
+    Email = models.EmailField(null=True , blank=False , unique=True)
     City= models.CharField(max_length=20 , null=True , blank=True)
     Subcity = models.CharField(max_length=20 , null=True , blank=True )
     Woreda = models.CharField(max_length=20 , null=True , blank=True)

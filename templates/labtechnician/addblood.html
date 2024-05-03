@@ -23,8 +23,8 @@
             {% endfor %}
         {% endfor %}
         {% endif %}
-<div class="container h-100">
-        <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
+<div class="container-fluid">
+            <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
 <div class="card shadow-lg">
     <div class="card-body p-5">
         <h1 class="fs-4 card-title fw-bold mb-4">Add Blood</h1>
@@ -32,25 +32,26 @@
             {% csrf_token %}
 
             {% for field in form %}
-                <div class="mb-3">
-                    <label for="formInput#text">{{field.label}}</label>
-                    {% render_field field  id="formInput#text"  class="form-control"  %} 	
-                </div>
+            <div class="mb-3">
+            <div class="form-floating">
+                {% if field.label == 'QuantityOfBlood' %}
+                {% render_field field  id="formInput#text"  class="form-control" placeholder=field.label value=blood_type %} 	
+                <label for="floatingPassword">{{field.label}}( ML )</label>
+                {% else %}
+                {% render_field field  id="formInput#text"  class="form-control" placeholder=field.label %} 	
+                <label for="floatingPassword">{{field.label}}</label>
+                {% endif %}         
+               
+            </div>
+            </div>
                 {% endfor %}
             <br>
-            {% if type == 'update' %}
-            <div style="align-self:auto; margin-left: 130px;">
-                <button type="submit" class="btn btn-primary ms-auto">
-                    Update
+           
+            <div class="mb-3 d-flex">
+                <button type="submit" class="btn btn-primary w-100">
+                    {% if type == 'update' %} Update {% else %}      Add {% endif %}
                 </button>
             </div>
-            {% else %}
-            <div style="align-self:auto; margin-left: 130px;">
-                <button type="submit" class="btn btn-primary ms-auto">
-                    Add
-                </button>
-            </div>
-            {% endif %}
         </form>
     </div>
 </div>

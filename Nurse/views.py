@@ -51,7 +51,7 @@ def DonationRequest(request , type):
         donor_account = Address.objects.filter(Address_id =donor.Address_id)
     except:
         donor_account=None
-    context = {'account':Userstate(request)['account'] ,'donor_account':donor_account,'type':type ,'donationrequest': donreq}
+    context = {'account':Userstate(request)['account'] ,'donor_account':donor_account,'type':type ,'donationrequest': donreq , 'active_page':'request'}
     return render (request , 'nurse/donationrequest.html' , context)
 
 def CheckRequest(request , pk):
@@ -91,7 +91,7 @@ def CheckRequest(request , pk):
     except:
         status=None
     print(status)
-    context = {'account':Userstate(request)['account'] , 'questions':questions , 'answers':answer , 'status':status , 'gender':gender}
+    context = {'account':Userstate(request)['account'] , 'questions':questions , 'answers':answer , 'status':status , 'gender':gender , 'active_page':'request'}
     return render(request , 'nurse/checkrequest.html',context)
 
 def CheckAppointments(request , type):
@@ -120,7 +120,7 @@ def CheckAppointments(request , type):
 
     except:
         appointment = None
-    context = {'account': Userstate(request)['account'] ,'type':type ,  'appointments':appointment}
+    context = {'account': Userstate(request)['account'] ,'type':type ,  'appointments':appointment , 'active_page':'appointment'}
     return render (request , 'nurse/appointment.html' , context)
 
 def Confirmrequest(request ,  pk , type):
@@ -154,7 +154,7 @@ def confirmappointment(request , pk , type):
         return redirect('/checkappointment/all')
      except:
             messages.error(request,'Error occured during confirmation')
-     context = {'account': Userstate(request)['account']}
+     context = {'account': Userstate(request)['account'] , 'active_page':'appointment'}
      return render(request , 'nurse/appointment.html' , context)
         
 
@@ -171,7 +171,7 @@ def GetDonorAddress(request , pk , sender ):
         address = Address.objects.get(Address_id = str(acc.Address_id))
     except:
         address= None
-    context = {'account': Userstate(request)['account'] , 'sender':sender ,'address':address , 'donor':acc }
+    context = {'account': Userstate(request)['account'] , 'sender':sender ,'address':address , 'donor':acc , 'active_page':'request' }
     return render(request , 'nurse/checkdonoraddress.html' , context)
 
 def DonorQuestions(request , type):
@@ -183,7 +183,7 @@ def DonorQuestions(request , type):
             questions = DonationRequestFormQuesitons.objects.all()[0:3]
     except:
         question = None
-    context = {'account':Userstate(request)['account'] , 'type':type ,'questions':questions }
+    context = {'account':Userstate(request)['account'] , 'type':type ,'questions':questions , 'active_page':'question'}
     return render (request , 'nurse/donorquestions.html' , context)
 
 def AddQuestions(request , type):
@@ -198,7 +198,7 @@ def AddQuestions(request , type):
                 messages.error(request, 'Error during adding question')
         else:
             messages.error(request, 'Error during adding question')
-    context = {'account':Userstate(request)['account'] , 'form':form , 'type':type}
+    context = {'account':Userstate(request)['account'] , 'form':form , 'type':type , 'active_page':'question'}
     return render(request , 'nurse/addquestions.html' , context)
 
 # def AddAppointmentDate(request , type):
@@ -279,7 +279,7 @@ def UpdateQuestion(request , pk ):
         else:
             messages.success(request, 'Question was not updated successfully!')
 
-    context = {'form': form , 'type':'update' , 'account':Userstate(request)['account']}
+    context = {'form': form , 'type':'update' , 'account':Userstate(request)['account'] , 'active_page':'question'}
     return render(request, 'nurse/addquestions.html', context)
 
 def DeleteQuestion(request , pk):
@@ -290,6 +290,6 @@ def DeleteQuestion(request , pk):
         return redirect('/donorquestions/notall')
     except:
         messages.success(request, 'question was not deleted successfully!')
-    return render(request, 'nurse/donorquestions.html' , context)
+    return render(request, 'nurse/donorquestions.html' , {'active_page':'question'})
 
 

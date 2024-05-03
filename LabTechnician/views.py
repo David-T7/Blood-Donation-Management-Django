@@ -19,7 +19,7 @@ def UserState(request):
 
 def LabTechnician(request):
     account = UserState(request)['account']
-    context = {'user': request.user  , 'account':account}
+    context = {'user': request.user  , 'account':account , 'active_page':'home'}
     return render(request , 'labtechnician/labtechnician.html' , context)
 
 def DonationRequest(request ,  type):
@@ -94,30 +94,31 @@ def DonationRequest(request ,  type):
         my_list = list(itertools.zip_longest(donation,appointment))
     except:
         my_list = []
-    context = {'list':my_list , 'donation':donation ,'account':account ,'type':type , 'finished':finished_appointment , 'deferringlist':deferringlist }
+    context = {'list':my_list , 'donation':donation ,'account':account ,'type':type , 'finished':finished_appointment , 'deferringlist':deferringlist , 'active_page':'donationrequest' }
     return render (request , 'labtechnician/donationrequest.html' , context  )
 
 def BlockDonor(request , donor_id):
     donor = Donor.objects.get(Donor_id = donor_id)
+    context ={ 'active_page':'donationrequest'}
     try:
         DeferringList.objects.create(Donor_id = donor)
         messages.success(request,'Donor was Succesfuly Added to DeferingList')
-        return redirect('/labdonationrequest/notall')
+        return redirect('/labdonationrequest/notall' , context)
     except:
         messages.error(request,'Donor was not Successfuly Added to DeferingList')
-        return redirect('/labdonationrequest/notall')
+        return redirect('/labdonationrequest/notall' , context)
 
 def UnblockDonor(request , donor_id):
-    
+    context ={ 'active_page':'donationrequest'}
     donor = Donor.objects.get(Donor_id = donor_id)
     try:
         list = DeferringList.objects.get(Donor_id = donor)
         list.delete()
         messages.success(request,'Donor was Succesfuly removed from DefefringList')
-        return redirect('/labdonationrequest/notall')
+        return redirect('/labdonationrequest/notall' , context)
     except:
         messages.error(request,'Donor was not Successfuly removed form DefefringList ')
-        return redirect('/labdonationrequest/notall')
+        return redirect('/labdonationrequest/notall' , context)
 
 def GetDonorAddress(request , pk):
     account = UserState(request)['account']
@@ -131,7 +132,7 @@ def GetDonorAddress(request , pk):
         address = Address.objects.get(Address_id = str(acc.Address_id))
     except:
         address= None
-    context = {'account': account , 'address':address , 'donor':acc }
+    context = {'account': account , 'address':address , 'donor':acc , 'active_page':'donationrequest'}
     return render(request , 'labtechnician/checkdonor.html' , context)
 
 

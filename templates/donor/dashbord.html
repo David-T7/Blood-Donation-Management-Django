@@ -1,52 +1,48 @@
 {% extends 'donor/donor.html' %}
-
 {% block content %}
 
-<br>
-<div class="container">
-  <div class="row" style="column-gap: 70px;">
-    <div class="card" style="width: 10rem;">
-
-      <div class="card-body">
-        <p class="card-text"><b>{{ request_no }}</b> <br>Request</p>
+  <br>
+  <div class="row row-cols-1 row-cols-md-4 g-4">
+    <div class="col">
+      <div class="card text-center">
+        <div class="card-body">
+          <p class="card-text"><b>{{ request_no }}</b> <br>Request</p>
+        </div>
       </div>
     </div>
-    <div class="card" style="width: 10rem;">
-
-      <div class="card-body">
-        <p class="card-text"><b>{{ accepted_no }}</b> <br>Accepted</p>
+    <div class="col">
+      <div class="card text-center">
+        <div class="card-body">
+          <p class="card-text"><b>{{ accepted_no }}</b> <br>Accepted</p>
+        </div>
       </div>
     </div>
-
-    <div class="card" style="width: 10rem;">
-
+    <div class="col">
+      <div class="card text-center">
         <div class="card-body">
           <p class="card-text"><b>{{ pending_no }}</b> <br>Pending</p>
         </div>
       </div>
-
-    <div class="card" style="width: 10rem;">
-
+    </div>
+    <div class="col">
+      <div class="card text-center">
         <div class="card-body">
           <p class="card-text"><b>{{ rejected_no }}</b> <br>Rejected</p>
         </div>
       </div>
-   
+    </div>
   </div>
+</div>
 
 <br>
-</div>
-<table class="styled-table">
-    <thead>
-         <tr>
-           <th>Donation Request</th>
-           <th><a href="{% url 'donordashbord' 'all' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">See All</button></a>&nbsp;
-            <th></th>
-           <th></th>
-           <th></th>
-           <th></th>
-          </tr>
-
-{% include 'donor/donationrequestlist.html' %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col">
+      <div class="table-responsive">
+        <table class="table table-striped">
+        {% include 'donor/donationrequestlist.html' %}
+      </table>
+    </div>
+  </div>
 
 {% endblock %}

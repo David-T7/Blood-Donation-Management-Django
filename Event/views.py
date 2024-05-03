@@ -36,7 +36,7 @@ def Camps(request , type):
                     camps = Camp.objects.filter(CampsKebele = searched) 
     except:
         camps=None
-    context={'camps':camps , 'account':bbmanagerstate(request)['account']  , 'type':type}
+    context={'camps':camps , 'account':bbmanagerstate(request)['account']  , 'type':type , 'active_page':'camp'}
     return render(request ,'bbmanager/camps.html' , context)
 
 def SeeCamp(request , pk):
@@ -45,7 +45,7 @@ def SeeCamp(request , pk):
         camp = Camp.objects.get(Camps_id=pk)
     except:
         camp = None
-    context={'camp':camp , 'account':bbmanagerstate(request)['account']}
+    context={'camp':camp , 'account':bbmanagerstate(request)['account'] , 'active_page':'camp'}
     return render(request ,'bbmanager/seecamp.html' , context)
 
 def Events(request , type):
@@ -70,7 +70,7 @@ def Events(request , type):
                     events = Event.objects.filter(EventDate = date) 
     except:
         events=None
-    context={'events':events , 'account':bbmanagerstate(request)['account'] , 'type':type }
+    context={'events':events , 'account':bbmanagerstate(request)['account'] , 'type':type , 'active_page':'events' }
     return render(request ,'bbmanager/events.html' , context)
 def CreateEvent(request):
     form = EventCreationForm()
@@ -84,7 +84,7 @@ def CreateEvent(request):
                 return redirect('/events/notall')
             except:
                 events = None   
-    context = {'form': form , 'type':'add' , 'account':bbmanagerstate(request)['account']}
+    context = {'form': form , 'type':'add' , 'account':bbmanagerstate(request)['account'] ,  'active_page':'events'}
     return render(request, 'bbmanager/addevent.html',context)
 
 def CreateCamp(request):
@@ -99,7 +99,8 @@ def CreateCamp(request):
                 return redirect('/camps/notall')
             except:   
                 camp = None
-    context = {'form': form , 'type':'add' , 'account':bbmanagerstate(request)['account']}
+                messages.error(request, 'Error during Addition of camp')
+    context = {'form': form , 'type':'add' , 'account':bbmanagerstate(request)['account'] , 'active_page':'camp'}
     return render(request, 'bbmanager/addcamp.html',context)
 
 def UpdateCamp(request , pk ):
@@ -116,7 +117,7 @@ def UpdateCamp(request , pk ):
             form.save()
             messages.success(request, 'Camp was updated successfully!')
             return redirect('/camps/notall')
-    context = {'form': form , 'type':'update' , 'account':bbmanagerstate(request)['account']}
+    context = {'form': form , 'type':'update' , 'account':bbmanagerstate(request)['account'] , 'active_page':'camp'}
     return render(request, 'bbmanager/addcamp.html', context)
 
 
@@ -151,10 +152,10 @@ def DeleteEvent(request , pk):
     try:
         event.delete()
         messages.success(request, 'event was deleted successfully!')
-        return redirect('/events/notall')
+        return redirect('/events/notall' , { 'active_page':'events'})
     except:
         messages.success(request, 'event was not deleted successfully!')
-    return render(request, 'bbmanager/events.html')
+    return render(request, 'bbmanager/events.html' , { 'active_page':'events'})
 def DeleteCamp(request , pk):
     camp =None
     try:
@@ -163,7 +164,7 @@ def DeleteCamp(request , pk):
         camp =None
     try:
         camp.delete()
-        messages.success(request, 'Camp was deleted successfully!')
+        messages.success(request, 'Camp was deleted successfully!' )
         return redirect('/camps/notall')
     except:
         messages.success(request, 'Camp was not deleted successfully!')

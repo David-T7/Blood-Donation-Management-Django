@@ -1,13 +1,12 @@
 {% extends 'bbmanager/bbmanager.html' %}
 {% block content %}
-
 <br>
-<section class="h-100">
-    <div class="container h-100">
-        <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
-<div class="card shadow-lg">
-    <div class="card-body p-5">
-        <h1 class="fs-4 card-title fw-bold mb-4">Hospital Information </h1>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-xl-5 col-lg-5 col-md-7 col-sm-9">
+            <div class="card border-primary mb-3"> 
+                <div class="card-body p-5">
+                    <h1 class="fs-4 card-title fw-bold mb-4">Hospital Information</h1>
         <div class="mb-3">
             <label>Name:</label>
             <b>{{hospital.HospitalName}}</b>
@@ -36,8 +35,10 @@
             <label>PostOffice:</label>
             <b>{{address.PostOffice}}</b>
             <br>
-            <a href="{% url 'hospitalrequest' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Ok</button>
-
+            <div class="mb-3 d-flex">
+            <a href="{% url 'hospitalrequest' 'notall' %}"><button  class="btn btn-primary w-100">OK</button>
+            </a>
+            </div>
 
         </div>
     </div>

@@ -11,23 +11,25 @@
     </div>
 {% endfor %}
 
-
+<div class="container-fluid">
 <br>
-<table class="styled-table">
+<div class="table-responsive">
+  <table class="table table-striped">
     <thead>
          <tr>
+             <th>Camps</th>
+             <th><a href="{% url 'camps' 'all' %}"> <button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">SeeAll</button></a>
+             </th>
+             <th><a href="{% url 'addcamp' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">AddCamp</button></a></th>
              <th></th>
              <th></th>
              <th></th>
              <th></th>
-             <th></th>
-           <th><a href="{% url 'camps' 'all' %}"> <button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">SeeAll</button></a>
-            </th>
-            <th><a href="{% url 'addcamp' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">AddCamp</button></a>
-            </th>
-            <form method="post" action="{% url 'camps' 'searched' %}">
+         </tr>
+         <tr>
+              <form method="post" action="{% url 'camps' 'searched' %}">
               {% csrf_token %}
-             <th>
+              <th colspan="2">
               <select class="form-select form-select-sm" name='searchby' aria-label=".form-select-sm example">
               <option selected>searchby</option>
               <option value="Name">Name</option>
@@ -36,17 +38,18 @@
             </select>
             </th> 
 
+              <th colspan="2">
+                <div class="input-group">
+      <input type="search" id="form1" name='searched' placeholder="Search" class="form-control" />
+            </th>
             <th>
-              <div class="input-group">
-                <input class="form-control border-end-0 border rounded-pill" name='searched' placeholder="search" id="example-search-input">
-                <span class="input-group-append">
-                    <button type="submit" class="btn btn-outline-secondary bg-white border-start-0 border rounded-pill ms-n3">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-                      </svg>
-                    </button>
-                </span>
-              </div>
+              <button type="submit" class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                </svg>
+              </button>
+            </th>
+        </div>
             </th>
              </form>
           </tr>
@@ -79,7 +82,7 @@
         </tr> 
       {% endfor %}
       <tr>{% if type == 'all' %}
-        <td><a href="{% url 'camps' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Shrink</button></a></td>
+        <td><a href="{% url 'camps' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">less</button></a></td>
         <td></td>
         <td></td>
         <td></td>

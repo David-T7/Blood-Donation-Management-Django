@@ -1,42 +1,44 @@
 {% extends 'hospitalrep/hospitalrep.html' %}
 
 {% block content %}
-
-<br><br>
-<div class="container">
-  <div class="row" style="column-gap: 70px;">
-    <div class="card" style="width: 10rem;">
-
-      <div class="card-body">
+<br>
+<div class="container-fluid">
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+ 
+    <div class="col">
+      <div class="card text-center">
+        <div class="card-body">
         <p class="card-text"><b>{{ bloodrequest_no }}</b> <br>Request</p>
       </div>
     </div>
-    <div class="card" style="width: 10rem;">
+    </div>
 
-      <div class="card-body">
+    <div class="col">
+      <div class="card text-center">
+        <div class="card-body">
         <p class="card-text"><b>{{ accepted_no }}</b> <br>Accepted</p>
       </div>
     </div>
+    </div>
 
-    <div class="card" style="width: 10rem;">
-
+    <div class="col">
+      <div class="card text-center">
         <div class="card-body">
           <p class="card-text"><b>{{ pending_no }}</b> <br>Pending</p>
         </div>
       </div>
+    </div>
 
-    <div class="card" style="width: 10rem;">
-
+    <div class="col">
+      <div class="card text-center">
         <div class="card-body">
           <p class="card-text"><b>{{ rejected_no }}</b> <br>Rejected</p>
         </div>
       </div>
-   
   </div>
-
-<br>
 </div>
-<table class="styled-table">
+<div class="table-responsive">
+  <table class="table table-striped">
 
     <thead>
         <tr>
@@ -45,7 +47,7 @@
            </th>
            <th></th>
            <th></th>
-
+          </tr>
           {% include 'hospitalrep/bloodreqlist.html' %}
 
 {% endblock %}

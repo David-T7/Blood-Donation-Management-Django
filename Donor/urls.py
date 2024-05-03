@@ -16,7 +16,7 @@ path('updateappointment/<pk>/' , views.UpdateAppointment , name='updateappointme
 path('getevent/<type>' , views.GetEvent , name='getevent'),
 path('getcamps/<type>'  , views.Camps , name='getcamps' ),
 path('seecamp/<pk>' , views.SeeCamp , name='seecamp' ),
-path('donoreditusername' , views.EditUserName , name='donoreditusername'),
-path('donoreditpassword' , views.EditPassword , name='donoreditpassword'),
-path('donoreditprofilepicture' , views.EditProfile ,name= 'donoreditprofilepicture'),
+# path('donoreditusername' , views.EditUserName , name='donoreditusername'),
+# path('donoreditpassword' , views.EditPassword , name='donoreditpassword'),
+# path('donoreditprofilepicture' , views.EditProfile ,name= 'donoreditprofilepicture'),
 ]
