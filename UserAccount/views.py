@@ -19,7 +19,7 @@ class AboutUs(ListView):
     template_name = 'aboutus.html' 
 
 
-def Login(request , role):          # function based view for handling user login
+def Login(request):          # function based view for handling user login
     form = CustomUserCreationForm()
     if request.method == 'POST':
         username = request.POST['username'].lower()      # making sure the user name is in lowercase 
@@ -46,7 +46,7 @@ def Login(request , role):          # function based view for handling user logi
                 messages.error(request, 'Incorrect Password')
             except:
                 messages.error(request, 'Username doestnot exist')
-    return render(request, 'login.html',{'Role':role,'form':form})  
+    return render(request, 'login.html',{'form':form})  
 
 def Logout(request):
     logred = '/login/' + request.user.Role  # getting the redirection path for every role

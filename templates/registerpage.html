@@ -13,7 +13,7 @@
   {% endif %}
 
   <div class="container py-5 h-100">
-    <div class="text-center"><h3 class="fw-normal mb-5" style="color:red"><b>Donor Registration</b> </h3></div>
+    <div class="text-center"><h3 class="fw-normal mb-5" style="color:red"><b>Create Donor Account</b> </h3></div>
     <div class="row d-flex justify-content-center align-items-center h-100">
       <div class="col-12">
         <div class="card card-registration card-registration-2" style="border-radius: 15px;">
@@ -67,7 +67,7 @@
                 </div>
               </div>
 
-              <div class="col-lg-6 bg-indigo text-white">
+              <div class="col-lg-6 bg-danger text-white">
                 <div class="p-5">
                   {% if not request.user %}
                   <h3 class="fw-normal mb-5" style="color: black"></h3><br>
@@ -79,6 +79,9 @@
                       <div class="form-floating">
                         {% render_field field id="form-label" class="form-control form-control-lg " placeholder=field.label %}
                         <label for="floatingPassword" style="color: black;">{{ field.label }}{% if field.field.required %}<span style="color: red;">*</span>{% endif %}</label>
+                          {% if field.field.required %}
+                          <span class="required-message" style="color: yellow;"></span>
+                          {% endif %}
                         {% if field.errors %}
                         <span><h style="color:yellow;">{{ field.errors }}</h></span>
                         {% endif %}
@@ -87,11 +90,8 @@
                     {% endfor %}
                   </div>
 
-                  <button type="submit" class="btn btn-light btn-lg" data-mdb-ripple-color="dark" style="float: le;margin-left: 50px;" onclick="validateForm()">                    {% if type == 'update' %}  Update {% else %} Register {% endif %} </button>
+                  <button type="submit" class="btn btn-success btn-lg w-100" data-mdb-ripple-color="dark" onclick="validateForm()">                    {% if type == 'update' %}  Update {% else %} Register {% endif %} </button>
 
-                  <a href="{% url 'homepage' %}" id="return-home-btn"><button type="button" class="btn btn-light btn-lg" data-mdb-ripple-color="dark" style="float: le;margin-left: 50px;">
-                      Return Home
-                    </button></a>
                 </div>
                 </div></form>
               </div>

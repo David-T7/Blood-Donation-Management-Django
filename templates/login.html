@@ -54,13 +54,11 @@
                                     Login
                                 </button>
                             </div>
-							{% if Role == 'Donor' %}
-						<div class="card-footer py-3 border-0">
+							<div class="card-footer py-3 border-0">
 							<div class="text-center">
-								Don't have an account? <a href="{% url 'register' %}" class="text-dark">Create One</a>
+								Don't have a donor account? <a href="{% url 'register' %}" class="text-dark">Create One</a>
 							</div>
 						</div>
-						{% endif %}
                             
                             <!-- 
                             <div class="card-footer py-3 border-1">
@@ -70,9 +68,6 @@
                             </div>
                             -->
 							<br>
-                            <div class="text-center">
-                                <a href="{% url 'homepage' %}">Return Home</a>
-                            </div>
                             </form>
                         </div>
                     </div>

@@ -30,11 +30,6 @@ class AddressCreationForm(ModelForm):
         fields = '__all__'
 
 
-
-
-
-
-
 class ResetPasswordForm(PasswordResetForm):
     def __init__(self, *args, **kwargs):
         super(ResetPasswordForm, self).__init__(*args, **kwargs)

@@ -1,10 +1,16 @@
 #bg{
     background-image: url('/static/images/background/bg2.jpg');
     background-repeat: no-repeat;
-    background-size: 450px 450px;
+    background-size: 300px 300px;
     background-position: center;
     background-attachment: fixed;
-    background-color: white
+    background-color: white;
+}
+
+@media (max-width: 991.98px) { /* Applies to screens smaller than 'lg' breakpoint */
+    #navmenu {
+        margin-top: 10px; /* Adjusted as needed */
+    }
 }
 
 .nav-item:hover{
@@ -17,4 +23,8 @@
 
 .navbar-brand {
     color: black;  
+}
+
+.navbar-toggler {
+  margin-left: auto;
 }

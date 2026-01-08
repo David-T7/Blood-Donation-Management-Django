@@ -24,26 +24,5 @@
     background: linear-gradient(to right, rgba(161, 196, 253, 1), rgba(194, 233, 251, 1))
   }
   
-  .bg-indigo {
-    background-color:red;
-  }
-  @media (min-width: 992px) {
-    .card-registration-2 .bg-indigo {
-      border-top-right-radius: 15px;
-      border-bottom-right-radius: 15px;
-    }
-  }
-  @media (max-width: 991px) {
-    .card-registration-2 .bg-indigo {
-      border-bottom-left-radius: 15px;
-      border-bottom-right-radius: 15px;
-    }
-  }
-.btn.btn-light.btn-lg {
-    transition: background-color 0.3s, color 0.3s;
-}
+  
 
-.btn.btn-light.btn-lg:hover {
-    background-color: rgb(158, 29, 29);
-    color: white;
-}
