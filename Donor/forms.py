@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import DonationRequestFormQuesitons, Donor , Appointment , DonationRequestFormResult
+from .models import Donor , Appointment , DonationRequestFormResult, DonationRequestQuestion, DonationRequestAnswer
 
 class DateInput(forms.DateInput):
     input_type = 'date'
@@ -15,7 +15,7 @@ class DonorCreationForm(ModelForm):
         fields = ['Donorname','DateOfBirth','Bloodgroup','Gender','Nationality','Height','Weight','BloodPressure']
         widgets = {
             'DateOfBirth': DateInput(),
-        } 
+        }
 class DonorAccountEditForm(ModelForm):
     class Meta:
         model = Donor
@@ -33,13 +33,31 @@ class AppointmentCreationForm(ModelForm):
         }
 
 class RequestAnswerCreationForm(ModelForm):
-        class Meta:
-            model = DonationRequestFormResult
-            fields = ['HeartDisease','Kidney_Lung_Bloodpressure_Diabetes_Epilepsy',
-            'Liverproblems','STD','Tattoo_Ear_skin_pierced_lastmonth','Slpet_Unsafely_OtherThanPartner',
-            'SeriousSkinRepair','Preagnant','Abortion','BreastFeeding','BloodHealthfulnessInfo']
+    class Meta:
+        model = DonationRequestFormResult
+        fields = []
+
+class DynamicDonationRequestForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        self.donor = kwargs.pop('donor', None)
+        super().__init__(*args, **kwargs)
+
+        # Get all active questions
+        questions = DonationRequestQuestion.objects.all()
+
+        # Add fields for each question
+        for question in questions:
+            # Skip gender-specific questions if donor is not of required gender
+            if question.is_gender_specific and self.donor and self.donor.Gender != question.gender_required:
+                continue
+
+            self.fields[f'question_{question.question_id}'] = forms.ChoiceField(
+                choices=[('', 'Select an option'), ('yes', 'Yes'), ('no', 'No')],
+                label=question.question_text,
+                widget=forms.Select(attrs={'class': 'form-select'})
+            )
 
 class DonationRequestQuestionForm(ModelForm):
     class Meta:
-        model = DonationRequestFormQuesitons
+        model = DonationRequestQuestion
         fields = '__all__'

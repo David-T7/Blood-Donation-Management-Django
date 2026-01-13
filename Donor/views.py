@@ -6,7 +6,7 @@ from sqlite3 import Date
 from time import time
 from django.contrib import  messages
 from django.shortcuts import redirect, render
-from Donor.forms import AppointmentCreationForm, DonationRequestQuestionForm, DonorCreationForm , DonationRequestFormQuesitons, DonorAccountEditForm , RequestAnswerCreationForm
+from Donor.forms import AppointmentCreationForm, DonorCreationForm , DonationRequestQuestionForm ,DonorAccountEditForm , RequestAnswerCreationForm
 from Donor.models import Appointment, Donor
 from UserAccount.models import Account , Address
 from UserAccount.forms import AddressCreationForm, CustomUserCreationForm , CustomUserChangeForm
@@ -60,7 +60,7 @@ def Register(request):
                         donor.save()
                         messages.success(request, 'Successfully Registered')
                         print("successfully registered")
-                        return redirect('login/Donor')
+                        return redirect('login/')
                         
                     except:
                         messages.error(request, 'Please fill the donor form completely')
@@ -255,15 +255,10 @@ def DonationRequest(request , type):
 
 def MakeDonationRequest(request):
     donor = DonorState(request)['donor']
-    form = RequestAnswerCreationForm()
+    form = DynamicDonationRequestForm(donor=donor)
     todays_req = 0
     request_limit_daily = 3
-    questions = None
     deferringList = None
-    try:
-        questions = DonationRequestFormQuesitons.objects.all()[0]
-    except:
-        questions = None
     try:
         deferringList =  DeferringList.objects.get(Donor_id = donor)
     except:
@@ -275,18 +270,35 @@ def MakeDonationRequest(request):
         todays_req = 0
     if (not deferringList and todays_req <= request_limit_daily):
         if request.method == 'POST':
-            form= RequestAnswerCreationForm(request.POST)
-            if (form.is_valid()):
+            form = DynamicDonationRequestForm(request.POST, donor=donor)
+            if form.is_valid():
                 try:
-                    req = form.save(commit=False)
-                    req.Donor_id = donor   
-                    req.save()
-                    messages.success(request , 'request sent successfuly')
+                    # Create the main request result
+                    request_result = DonationRequestFormResult.objects.create(Donor_id=donor)
+
+                    # Save answers for each question
+                    for field_name, answer_value in form.cleaned_data.items():
+                        if field_name.startswith('question_'):
+                            # Extract question ID from field name
+                            question_id = field_name.replace('question_', '')
+                            try:
+                                question = DonationRequestQuestion.objects.get(question_id=question_id)
+
+                                # Create answer record
+                                DonationRequestAnswer.objects.create(
+                                    request_result=request_result,
+                                    question=question,
+                                    answer=answer_value
+                                )
+                            except DonationRequestQuestion.DoesNotExist:
+                                continue
+
+                    messages.success(request, 'request sent successfully')
                     return redirect('/donationrequest/notall')
-                except:
-                    messages.success(request , 'error during request')
+                except Exception as e:
+                    messages.error(request, f'error during request: {str(e)}')
             else:
-                messages.success(request , 'request was not successful')
+                messages.error(request, 'request was not successful')
     else:
         if(deferringList):
             messages.error(request , 'Sorry you cant make a donation because of health issues')
@@ -294,8 +306,8 @@ def MakeDonationRequest(request):
         elif(todays_req > request_limit_daily):
             messages.error(request , 'You have reached request limit for today')
             return redirect('/donationrequest/notall')
-    context = { 'form':form , 'questions':questions , 'donor':donor , 'type':'add' ,  'active_page':'donationrequest'}
-    return render(request, 'donor/createdonationrequest.html',context)    
+    context = { 'form':form , 'donor':donor , 'type':'add' ,  'active_page':'donationrequest'}
+    return render(request, 'donor/createdonationrequest.html',context)
 
 
 def CancelRequest(request , pk):
@@ -315,27 +327,52 @@ def CancelRequest(request , pk):
 
 def UpdateRequest(request , pk):
     donor = DonorState(request)['donor']
-    questions = None
     donreq = None
     try:
         donreq = DonationRequestFormResult.objects.get(Result_id=pk)
     except:
         donreq = None
-    try:
-        questions = DonationRequestFormQuesitons.objects.all()[0]
-    except:
-        questions = None
-    form = RequestAnswerCreationForm(instance= donreq)
+
+    # Get existing answers for the request
+    existing_answers = {}
+    if donreq:
+        for answer in donreq.answers.all():
+            field_name = f'question_{answer.question.question_id}'
+            existing_answers[field_name] = answer.answer
+
+    form = DynamicDonationRequestForm(donor=donor, initial=existing_answers)
+
     if request.method == 'POST':
-        form = RequestAnswerCreationForm(request.POST, instance=donreq)
+        form = DynamicDonationRequestForm(request.POST, donor=donor)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Request was updated successfully!')
-            return redirect('/donationrequest/notall') 
+            # Update the main request result if needed
+            if donreq:
+                # Delete existing answers
+                donreq.answers.all().delete()
+
+                # Save new answers
+                for field_name, answer_value in form.cleaned_data.items():
+                    if field_name.startswith('question_'):
+                        # Extract question ID from field name
+                        question_id = field_name.replace('question_', '')
+                        try:
+                            question = DonationRequestQuestion.objects.get(question_id=question_id)
+
+                            # Create answer record
+                            DonationRequestAnswer.objects.create(
+                                request_result=donreq,
+                                question=question,
+                                answer=answer_value
+                            )
+                        except DonationRequestQuestion.DoesNotExist:
+                            continue
+
+                messages.success(request, 'Request was updated successfully!')
+                return redirect('/donationrequest/notall')
         else:
-            messages.success(request, 'event was not updated successfully!')
-    context = { 'form':form  , 'donor':donor , 'questions':questions ,  'type':'update' ,  'active_page':'donationrequest'}
-    return render(request, 'donor/createdonationrequest.html', context)    
+            messages.error(request, 'Request was not updated successfully!')
+    context = { 'form':form  , 'donor':donor , 'type':'update' ,  'active_page':'donationrequest'}
+    return render(request, 'donor/createdonationrequest.html', context)
 
 
 

@@ -27,44 +27,44 @@
         {% endif %}
     </form>
 <div class="container h-100">
-        <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
+        <div class="col-xxl-8 col-xl-9 col-lg-10 col-md-11 col-sm-12">
 <div class="card shadow-lg">
-    <div class="card-body p-5">
+    <div class="card-body p-4">
         <h1 class="fs-4 card-title fw-bold mb-4">Make Request </h1>
         <form  method="POST" >
             {% csrf_token %}
-            {% if questions %}
-            {{questions.HeartDisease}}                 {% render_field form.HeartDisease  id="formInput#text"  class="form-control"  %} <br>
-            {{questions.Kidney_Lung_Bloodpressure_Diabetes_Epilepsy}}                 {% render_field form.Kidney_Lung_Bloodpressure_Diabetes_Epilepsy  id="formInput#text"  class="form-control"  %}<br>
-            {{questions.Liverproblems}}                 {% render_field form.Liverproblems  id="formInput#text"  class="form-control"  %}<br>
-            {{questions.STD}}                 {% render_field form.STD  id="formInput#text"  class="form-control"  %} 	<br>
-            {{questions.Tattoo_Ear_skin_pierced_lastmonth}}                 {% render_field form.Tattoo_Ear_skin_pierced_lastmonth  id="formInput#text"  class="form-control"  %} <br>
-            {{questions.Slpet_Unsafely_OtherThanPartner}}                 {% render_field form.Slpet_Unsafely_OtherThanPartner  id="formInput#text"  class="form-control"  %} <br>
-            {{questions.SeriousSkinRepair}}                 {% render_field form.SeriousSkinRepair  id="formInput#text"  class="form-control"  %} <br>
-            {% if donor.Gender == Femle %}
-            {{questions.Preagnant}}                 {% render_field form.Preagnant  id="formInput#text"  class="form-control"  %} <br>
-            {{questions.Abortion}}                 {% render_field form.Abortion  id="formInput#text"  class="form-control"  %} <br>
-            {{questions.BreastFeeding}}                 {% render_field form.BreastFeeding  id="formInput#text"  class="form-control"  %} <br>
-            {% endif %}
-            {{questions.BloodHealthfulnessInfo}}                 {% render_field form.BloodHealthfulnessInfo  id="formInput#text"  class="form-control"  %}  <br>	
- 	 	
-            <br>
-            <div class="mb-3 d-flex">
-                    <button type="submit" class="btn btn-primary w-100">
-                        {% if type == 'add'%}
-                        Submit
-                        {% else %}
-                        Update
-                        {% endif %}
-                    </button>
-                </div>
-            {% else %}
-            <div class="mb-3">
-                <h>No quesitons to fill for now</h>	
-            </div>
-            {% endif %}
 
-          
+            <!-- Render dynamic questions -->
+            {% for field in form %}
+                <div class="mb-3">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="text-danger">
+                            {% for error in field.errors %}
+                                <small>{{ error }}</small>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% empty %}
+                <div class="mb-3">
+                    <p>No questions available at the moment.</p>
+                </div>
+            {% endfor %}
+
+            <br>
+            <div class="mb-3 d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary" style="min-width: 200px;">
+                    {% if type == 'add'%}
+                    Submit
+                    {% else %}
+                    Update
+                    {% endif %}
+                </button>
+            </div>
+
+
 
         </form>
     </div>

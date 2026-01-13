@@ -14,23 +14,24 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>Donation Request</th>
-        <th>
+        <th scope="col">Donation Request</th>
+        <th scope="col">
           <a href="{% url 'makerequest' %}">
             <button type="button" class="btn btn-primary btn-sm" style="background-color: red;">Make Request</button>
           </a>
         </th>
-        <th><a href="{% url 'donationrequest' 'all' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">See All</button></a>&nbsp;
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-
+        <th scope="col"><a href="{% url 'donationrequest' 'all' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">See All</button></a></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
       </tr>
+    </thead>
+    <tbody>
       <tr>
         <form method="post" action="{% url 'donationrequest' 'searched' %}">
           {% csrf_token %}
-          <th colspan="2">
+          <td colspan="2">
             <select class="form-select form-select-sm" name='searchby' aria-label=".form-select-sm example">
               <option selected>Search by</option>
               <option value="RequestDate">Request Date</option>
@@ -38,25 +39,23 @@
               <option value="RequestStatus">Request Status</option>
               <option value="AppointmentStatus">Appointment Status</option>
             </select>
-          </th>
-          <th colspan="2">
-                        <div class="input-group">
+          </td>
+          <td colspan="2">
+            <div class="input-group">
               <input type="search" id="form1" name='searched' placeholder="Search" class="form-control" />
-             
-          </th>
-          <th> <button type="submit" class="btn btn-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-            </svg>
-          </button></th> <!-- Empty cells to align with table headers -->
-        </div>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
+              <button type="submit" class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                </svg>
+              </button>
+            </div>
+          </td>
+          <td></td>
+          <td></td>
+          <td></td>
         </form>
       </tr>
-    </thead>
+    </tbody>
 
     {% include 'donor/donationrequestlist.html' %}
 

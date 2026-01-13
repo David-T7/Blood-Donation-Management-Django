@@ -1,45 +1,152 @@
 {% extends 'nurse/nurse.html' %}
 {% load widget_tweaks %}
 {% block content %}
-<div class="container-fluid">
-    <br>
-    {% for msg in messages %}
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <strong>{{ msg }}</strong>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'styles/addquestions.css' %}">
+
+<div class="container-fluid py-4">
+    <div class="notification-container">
+        {% for msg in messages %}
+        <div class="alert alert-success alert-dismissible fade show shadow-sm rounded-3 custom-alert" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            <strong>{{ msg }}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-    <br>
-    <div class="row justify-content-center align-items-center">
-        <div class="col-lg-8">
-            <div class="card card-registration card-registration-2" style="border-radius: 15px;">
-                <div class="card-body p-4">
-                    <h3 class="fw-normal mb-4" style="color: #4835d4;">Health Questions</h3>
+
+    <div class="row justify-content-center">
+        <div class="col-xl-8 col-lg-9 col-md-10">
+            <div class="card form-card">
+                <div class="form-header">
+                    <h3 class="fw-bold mb-0">
+                        <i class="fas fa-question-circle me-2"></i>
+                        Health Questions Management
+                    </h3>
+                    <p class="mb-0 opacity-75">Add or update donation eligibility questions</p>
+                </div>
+
+                <div class="form-body">
                     <form method="POST">
                         {% csrf_token %}
-                        <div class="row g-3">
+
+                        <div class="form-section-title">
+                            <i class="fas fa-edit me-2"></i>Question Details
+                        </div>
+
+                        <div class="row g-4">
+                            <!-- Render question_field_name first -->
                             {% for field in form %}
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label" for="formInput#text">{{ field.label }}</label>
-                                    {% render_field field id="name" class="form-control form-control-lg" %}
+                                {% if field.name == 'question_field_name' %}
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="form-label" for="{{ field.id_for_label }}">
+                                            {{ field.label }}
+                                            {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+                                        </label>
+                                        <div class="input-icon">
+                                            <i class="fas fa-tag"></i>
+                                            {% render_field field class="form-control" placeholder="Enter a unique field name..." %}
+                                        </div>
+
+                                        {% if field.errors %}
+                                            <div class="text-danger mt-1">
+                                                {% for error in field.errors %}
+                                                    <small><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</small>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+
+                                        {% if field.help_text %}
+                                            <div class="form-text mt-1">
+                                                <i class="fas fa-info-circle me-1"></i>{{ field.help_text }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
                                 </div>
-                            </div>
+                                {% endif %}
+                            {% endfor %}
+
+                            <!-- Render question_text second -->
+                            {% for field in form %}
+                                {% if field.name == 'question_text' %}
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="form-label" for="{{ field.id_for_label }}">
+                                            {{ field.label }}
+                                            {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+                                        </label>
+                                        <div class="input-icon">
+                                            <i class="fas fa-question"></i>
+                                            {% render_field field class="form-control" placeholder="Enter the question text..." %}
+                                        </div>
+
+                                        {% if field.errors %}
+                                            <div class="text-danger mt-1">
+                                                {% for error in field.errors %}
+                                                    <small><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</small>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+
+                                        {% if field.help_text %}
+                                            <div class="form-text mt-1">
+                                                <i class="fas fa-info-circle me-1"></i>{{ field.help_text }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+
+                            <!-- Render all other fields -->
+                            {% for field in form %}
+                                {% if field.name != 'question_field_name' and field.name != 'question_text' %}
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="form-label" for="{{ field.id_for_label }}">
+                                            {{ field.label }}
+                                            {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+                                        </label>
+                                        {% if field.name == 'is_gender_specific' %}
+                                        <div class="form-check form-switch">
+                                            {% render_field field class="form-check-input" role="switch" id="flexSwitchCheckDefault" %}
+                                            <label class="form-check-label" for="{{ field.id_for_label }}">Gender Specific Question?</label>
+                                        </div>
+                                        {% else %}
+                                        {% render_field field class="form-control" %}
+                                        {% endif %}
+
+                                        {% if field.errors %}
+                                            <div class="text-danger mt-1">
+                                                {% for error in field.errors %}
+                                                    <small><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</small>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+
+                                        {% if field.help_text %}
+                                            <div class="form-text mt-1">
+                                                <i class="fas fa-info-circle me-1"></i>{{ field.help_text }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% endif %}
                             {% endfor %}
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3 d-flex">
-                                    {% if type == 'add' %}
-                                    <button type="submit" class="btn btn-danger w-100">
-                                        Add
-                                    </button>
-                                    {% else %}
-                                    <button type="submit" class="btn btn-danger w-100">
-                                        Update
-                                    </button>
-                                    {% endif %}
-                                </div>
+
+                        <div class="mt-4 pt-3 border-top">
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                {% if type == 'add' %}
+                                <button type="submit" class="btn btn-add action-btn shadow-sm">
+                                    <i class="fas fa-plus me-2"></i>Add Question
+                                </button>
+                                {% else %}
+                                <button type="submit" class="btn btn-update action-btn shadow-sm">
+                                    <i class="fas fa-sync-alt me-2"></i>Update Question
+                                </button>
+                                {% endif %}
                             </div>
                         </div>
                     </form>

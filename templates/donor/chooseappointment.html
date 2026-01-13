@@ -5,19 +5,19 @@
 <br><br>
 <section class="h-100">
     <div class="container-fluid">
-        <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
+        <div class="col-xxl-5 col-xl-6 col-lg-7 col-md-9 col-sm-10">
   <div class="card shadow-lg">
       <div class="card-body p-5">
-        <h1 class="fs-4 card-title fw-bold mb-4">Choose Appointment </h1>
+        <h1 class="fs-4 card-title fw-bold mb-4">Choose Appointment Date </h1>
 
           <form  method="POST" enctype="multipart/form-data">
               {% csrf_token %}
-              
+
               {% for field in form %}
               <div class="mb-3">
                   <label for="formInput#text">{{field.label}}</label>
-                  {% render_field field  id="formInput#text"  class="form-control"  %} 
-                  <span > <h style="color: red;">{{field.errors}}</h></span>	
+                  {% render_field field  id="formInput#text"  class="form-control"  %}
+                  <span > <h style="color: red;">{{field.errors}}</h></span>
               </div>
               {% endfor %}
               <div class="mb-3 d-flex">
@@ -29,7 +29,7 @@
                       {% endif %}
                   </button>
               </div>
-  
+
           </form>
       </div>
   </div>

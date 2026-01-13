@@ -14,30 +14,30 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Appointment Request</th>
-                    <th><a href="{% url 'checkappointment' 'all' %}" class="btn btn-primary btn-sm"
+                    <th scope="col">Appointment Request</th>
+                    <th scope="col"><a href="{% url 'checkappointment' 'all' %}" class="btn btn-primary btn-sm"
                             style="background-color: red;">See All</a></th>
                 </tr>
+                <form method="post" action="{% url 'checkappointment' 'searched' %}">
                 <tr>
-                    <th colspan="1">
-                        <form method="post" action="{% url 'checkappointment' 'searched' %}">
-                            {% csrf_token %}
-                            <select class="form-select form-select-sm" name='searchby'
-                                aria-label=".form-select-sm example">
-                                <option selected>Search by</option>
-                                <option value="DonorName">Donor Name</option>
-                                <option value="Phone">Phone</option>
-                                <option value="Date">Date</option>
-                                <option value="Status">Status</option>
-                            </select>
+                    {% csrf_token %}
+                    <th scope="col" colspan="1">
+                        <select class="form-select form-select-sm" name='searchby'
+                            aria-label=".form-select-sm example">
+                            <option selected>Search by</option>
+                            <option value="DonorName">Donor Name</option>
+                            <option value="Phone">Phone</option>
+                            <option value="Date">Date</option>
+                            <option value="Status">Status</option>
+                        </select>
                     </th>
-                    <th colspan="2">
+                    <th scope="col" colspan="2">
                         <div class="input-group">
                             <input type="search" id="form1" name='searched' placeholder="Search"
                                 class="form-control" />
-                           
+                        </div>
                     </th>
-                    <th>
+                    <th scope="col">
                         <button type="submit" class="btn btn-primary">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-search" viewBox="0 0 16 16">
@@ -48,12 +48,13 @@
                     </div>
                     </th>
                 </tr>
+                </form>
 
                 <tr>
-                    <th>Donor Info</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Status</th>
+                    <th scope="col">Donor Info</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Time</th>
+                    <th scope="col">Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -97,11 +98,7 @@
 
                 {% else %}
                 <tr>
-                    <td>No Appointment Request Now</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-
+                    <td colspan="4">No Appointment Request Now</td>
                 </tr>
                 {% endif %}
 

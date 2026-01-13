@@ -2,17 +2,21 @@ from django.shortcuts import render
 from multiprocessing import context
 from django.contrib import  messages
 from django.shortcuts import redirect, render
-from Donor.forms import DonationRequestQuestionForm, DonationRequestFormQuesitons
+from Donor.forms import DonationRequestQuestionForm
 from Donor.models import  Appointment
 
 from UserAccount.models import  Address, UserRegistration
 from Donor.models import DonationRequestFormResult , DonationRequestFormQuesitons , Appointment , Donor
 from django.utils.dateparse import parse_date  , parse_time
 
-def Userstate(request):  # for getting the state of the user 
+def Userstate(request):  # for getting the state of the user
     state = request.user
-    account = UserRegistration.objects.get(Account_id=state.id) 
-    context={'account':account}
+    try:
+        account = UserRegistration.objects.get(Account_id=state.id)
+        context={'account':account}
+    except UserRegistration.DoesNotExist:
+        # If user doesn't have a UserRegistration entry, return user object instead
+        context={'account':state}
     return context
     
 def Nurse(request):

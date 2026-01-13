@@ -2,14 +2,69 @@
     background-image: url('/static/images/background/bg2.jpg');
     background-repeat: no-repeat;
     background-size: 300px 300px;
-    background-position: center;
+    background-position: center top 100px; /* Position background lower to account for navbar */
     background-attachment: fixed;
     background-color: white;
 }
 
+/* Ensure navbar has a background to cover the background image underneath */
+.navbar {
+    background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+    backdrop-filter: blur(10px); /* Optional blur effect for modern browsers */
+}
+
 @media (max-width: 991.98px) { /* Applies to screens smaller than 'lg' breakpoint */
+    #bg {
+        background-position: center top 150px; /* Adjust for taller collapsed navbar */
+    }
+
     #navmenu {
-        margin-top: 10px; /* Adjusted as needed */
+        background-color: rgba(255, 255, 255, 0.95); /* Solid background for dropdown menu */
+        border-radius: 8px;
+        padding: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+}
+
+/* For even smaller screens */
+@media (max-width: 767.98px) {
+    #bg {
+        background-position: center top 180px; /* More adjustment for extra-small devices */
+    }
+}
+
+/* Responsive adjustments for navbar elements */
+@media (max-width: 991.98px) {
+    .navbar-brand {
+        font-size: 1.1rem; /* Slightly larger font size on medium screens */
+    }
+
+    .logoimage {
+        width: 75px !important;
+        height: 75px !important;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .navbar-brand {
+        font-size: 1rem; /* Normal font size on small screens */
+    }
+
+    .logoimage {
+        width: 70px !important;
+        height: 70px !important;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .navbar-brand {
+        font-size: 0.9rem; /* Slightly smaller font size on extra small screens */
+        max-width: 85%; /* Limit width to prevent overflow */
+    }
+
+    .logoimage {
+        width: 60px !important;
+        height: 60px !important;
     }
 }
 
@@ -22,7 +77,7 @@
 }
 
 .navbar-brand {
-    color: black;  
+    color: black;
 }
 
 .navbar-toggler {

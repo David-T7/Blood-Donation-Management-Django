@@ -13,51 +13,51 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>Appointments</th>
-        <th>
+        <th scope="col">Appointments</th>
+        <th scope="col">
           <a href="{% url 'getappointments' 'all' %}">
             <button type="button" class="btn btn-primary btn-sm" style="background-color: red;">See All</button>
           </a>
         </th>
-        <th colspan="2"></th> <!-- Empty cells to align with search form -->
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
       </tr>
       <tr>
-        <form method="post" action="{% url 'donationrequest' 'searched' %}">
+        <form method="post" action="{% url 'getappointments' 'searched' %}">
           {% csrf_token %}
-          <th colspan="2">
+          <th scope="col" colspan="2">
             <select class="form-select form-select-sm" name='searchby' aria-label=".form-select-sm example">
               <option selected>Search by</option>
               <option value="Date">Date</option>
               <option value="Status">Status</option>
             </select>
           </th>
-          <th>
+          <th scope="col" colspan="2">
             <div class="input-group">
-              <input class="form-control" name='searched' placeholder="Search" style="width: 200px;">
+              <input class="form-control" name='searched' placeholder="Search">
+              <button type="submit" class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                </svg>
+              </button>
+            </div>
           </th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+          <th scope="col"></th>
         </form>
-        <th>
-          <button type="submit" class="btn btn-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-            </svg>
-          </button>
-      </div>
-        </th> 
-        
-        <th></th> <!-- Empty cell to align with table headers -->
-        <th></th> <!-- Empty cell to align with table headers -->
-        <th></th> <!-- Empty cell to align with table headers -->
-        <th></th> <!-- Empty cell to align with table headers -->
       </tr>
       <tr>
-        <th>Date</th>
-        <th>Time</th>
-        <th>Status</th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
+        <th scope="col">Date</th>
+        <th scope="col">Time</th>
+        <th scope="col">Status</th>
+        <th scope="col">Actions</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
       </tr>
     </thead>
     <tbody>
@@ -94,7 +94,7 @@
       <tr>
         {% if type == 'all' %}
         <td>
-          <a href="{% url 'getappointmetns' 'notall' %}">
+          <a href="{% url 'getappointments' 'notall' %}">
             <button type="button" class="btn btn-primary btn-sm" style="background-color: red;">less</button>
           </a>
         </td>

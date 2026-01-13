@@ -49,7 +49,7 @@ def Login(request):          # function based view for handling user login
     return render(request, 'login.html',{'form':form})  
 
 def Logout(request):
-    logred = '/login/' + request.user.Role  # getting the redirection path for every role
+    logred = '/login/'
     logout(request)
     messages.info(request, 'Successfuly Logged out!')    
     return redirect(logred)
@@ -61,22 +61,29 @@ def ResetPassword(request,role): # not implemtented
     return render(request,'reset.html',{'Role':role})
 
 
-def Userstate(request):  # for getting the state of the user 
+def Userstate(request):  # for getting the state of the user
     state = request.user
+    account = None
+
+    # Try to find the user in different models, in order of priority
     try:
-        account = UserRegistration.objects.get(Account_id=state.id) 
-    except:
-        print("in exception")
+        account = UserRegistration.objects.get(Account_id=state.id)
+    except UserRegistration.DoesNotExist:
         try:
-            account = Donor.objects.get(Account_id = state.id)
-        except:
-            account = Hospital.objects.get(Account_id = state)
+            account = Donor.objects.get(Account_id=state.id)
+        except Donor.DoesNotExist:
+            try:
+                account = Hospital.objects.get(Account_id=state.id)
+            except Hospital.DoesNotExist:
+                # If user doesn't exist in any of these tables, return the user object
+                account = state
+
     context={'account':account}
     return context
     
 
 def EditUserName(request):
-    state = request.user # hodling the state of the user
+    state = request.user # holding the state of the user
     account = Userstate(request)['account']
     form= CustomUserChangeForm(instance=state)  # using form created in forms.py
 
@@ -85,10 +92,10 @@ def EditUserName(request):
         if (form.is_valid()):
             try:
                 form.save()
-                messages.success(request,'Account updated successfuly')
+                messages.success(request,'Account updated successfully')
             except:
                 None
-        request.user.save() # saving the state of the user after it is updated 
+        request.user.save() # saving the state of the user after it is updated
     context = {'form': form , 'account':account , 'sender':'username' , 'active_page':'editaccount'}
     if(request.user.Role.lower() == 'bbmanager'):
         return render(request, 'bbmanager/editusername.html', context)
@@ -102,15 +109,16 @@ def EditUserName(request):
         return render(request, 'hospitalrep/editusername.html', context)
 
 def EditProfilePicture(request):
-    account = Userstate(request)['account']
+    user_data = Userstate(request)
+    account = user_data['account']
     form  = ProfilePictureUpdateForm (instance=account)
     if request.method == 'POST':
-        form = ProfilePictureUpdateForm(request.POST, request.FILES, instance=account)  # recieving all files from the page including the new profile pic 
+        form = ProfilePictureUpdateForm(request.POST, request.FILES, instance=account)  # receiving all files from the page including the new profile pic
         if (form.is_valid()):
             try:
                 form.save()
             except:
-                messages.error(request,'Error occured during updating profile pic')
+                messages.error(request,'Error occurred during updating profile pic')
         request.user.save()
     context= {'form':form , 'account':account , 'sender':'profile' , 'active_page':'editaccount'}
     if(request.user.Role.lower() == 'bbmanager'):
@@ -125,7 +133,8 @@ def EditProfilePicture(request):
         return render(request, 'hospitalrep/editprofile.html', context)
 
 def EditPassword(request):
-    account = Userstate(request)['account']
+    user_data = Userstate(request)
+    account = user_data['account']
     form = PasswordChangeForm(request.user)
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
@@ -133,10 +142,10 @@ def EditPassword(request):
             try:
                 user = form.save()
                 update_session_auth_hash(request, user)
-                messages.error(request,'Password Was  Updated Successfuly')
+                messages.success(request,'Password Was Updated Successfully')
 
             except:
-                messages.error(request,'Error occured during updating password')
+                messages.error(request,'Error occurred during updating password')
         else:
                 messages.error(request,'please input correct information')
         request.user.save()

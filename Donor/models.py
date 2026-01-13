@@ -66,6 +66,21 @@ class Appointment(models.Model):
 
 
 
+class DonationRequestQuestion(models.Model):
+    question_id = models.UUIDField(default=uuid.uuid4, unique=True,
+                          primary_key=True, editable=False)
+    question_text = models.TextField(null=True, blank=True)
+    question_field_name = models.CharField(max_length=100, unique=True, null=True, blank=True)
+    is_gender_specific = models.BooleanField(default=False)  # For female-specific questions
+    gender_required = models.CharField(max_length=10, choices=gender_choice, null=True, blank=True)
+
+    def __str__(self):
+        return self.question_text or f"Question {self.question_id}"
+
+    class Meta:
+        db_table = "DonationRequestQuestion"
+
+
 class DonationRequestFormQuesitons(models.Model):
    Question_id = models.UUIDField( default=uuid.uuid4, unique=True,
                           primary_key=True, editable=False)
@@ -81,7 +96,7 @@ class DonationRequestFormQuesitons(models.Model):
    BreastFeeding = models.TextField( null=True , blank=True  )
    BloodHealthfulnessInfo = models.TextField( null=True , blank=True)
    def __str__(self):
-        return str(self.Type)
+        return str(self.Question_id)
    class Meta:
        db_table = "DonationRequestFormQuesitons"
     
@@ -94,24 +109,31 @@ Answer_choices = [
     ('yes', 'yes'),
     ('no', 'no'),
     ]
+class DonationRequestAnswer(models.Model):
+    answer_id = models.UUIDField(default=uuid.uuid4, unique=True,
+                          primary_key=True, editable=False)
+    request_result = models.ForeignKey('DonationRequestFormResult', on_delete=models.CASCADE, related_name='answers')
+    question = models.ForeignKey(DonationRequestQuestion, on_delete=models.CASCADE)
+    answer = models.CharField(max_length=3, null=True, blank=True, choices=Answer_choices)
+
+    def __str__(self):
+        return f"{self.question.question_text}: {self.answer}"
+
+    class Meta:
+        db_table = "DonationRequestAnswer"
+
+
 class DonationRequestFormResult(models.Model):
     Result_id = models.UUIDField(default=uuid.uuid4, unique=True,
                           primary_key=True, editable=False)
     Donor_id = models.ForeignKey(Donor , null=True , on_delete=models.SET_NULL,blank=True , unique=False)
-    HeartDisease = models.CharField(max_length=3, null=True , blank=True ,choices=Answer_choices)
-    Kidney_Lung_Bloodpressure_Diabetes_Epilepsy = models.CharField(max_length=3, null=True , blank=True ,  choices=Answer_choices)
-    Liverproblems = models.CharField(max_length=3, null=True , blank=True ,choices=Answer_choices)
-    STD = models.CharField(max_length=3, null=True , blank=True ,choices=Answer_choices)
-    Tattoo_Ear_skin_pierced_lastmonth= models.CharField(max_length=3, null=True , blank=True ,choices=Answer_choices)
-    Slpet_Unsafely_OtherThanPartner = models.CharField(max_length=3, null=True , blank=True ,choices=Answer_choices)
-    SeriousSkinRepair = models.CharField(max_length=3, null=True , blank=True ,choices=Answer_choices)
-    Preagnant = models.CharField(max_length=3, null=True , blank=True,choices=Answer_choices)
-    Abortion = models.CharField(max_length=3, null=True , blank=True,choices=Answer_choices)
-    BreastFeeding = models.CharField(max_length=3, null=True , blank=True,choices=Answer_choices)
-    BloodHealthfulnessInfo = models.CharField(max_length=10, null=True , blank=True,choices=Answer_choices)
     Status = models.CharField(null=True , max_length=11 , blank=True , default='in progress')
     Request_time = models.TimeField(auto_now_add=True , null=True , blank=True)
     Request_Date = models.DateField(auto_now_add=True  , null=True , blank=True)
+
+    def __str__(self):
+        return f"Request {self.Result_id} - {self.Status}"
+
     class Meta:
         db_table = "DonationRequestFormResult"
 
