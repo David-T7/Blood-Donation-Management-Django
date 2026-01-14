@@ -75,6 +75,7 @@ class DonationRequestQuestion(models.Model):
     gender_required = models.CharField(max_length=10, choices=gender_choice, null=True, blank=True)
 
     def __str__(self):
+
         return self.question_text or f"Question {self.question_id}"
 
     class Meta:

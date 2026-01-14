@@ -3,7 +3,7 @@ from multiprocessing import context
 from django.contrib import  messages
 from django.shortcuts import redirect, render
 from Donor.forms import DonationRequestQuestionForm
-from Donor.models import  Appointment
+from Donor.models import  Appointment, DonationRequestQuestion
 
 from UserAccount.models import  Address, UserRegistration
 from Donor.models import DonationRequestFormResult , DonationRequestFormQuesitons , Appointment , Donor
@@ -182,11 +182,11 @@ def DonorQuestions(request , type):
     questions = None
     try:
         if(type == 'all'):
-            questions = DonationRequestFormQuesitons.objects.all()
+            questions = DonationRequestQuestion.objects.all()
         else:
-            questions = DonationRequestFormQuesitons.objects.all()[0:3]
+            questions = DonationRequestQuestion.objects.all()[0:3]
     except:
-        question = None
+        questions = None
     context = {'account':Userstate(request)['account'] , 'type':type ,'questions':questions , 'active_page':'question'}
     return render (request , 'nurse/donorquestions.html' , context)
 
@@ -272,14 +272,14 @@ def AddQuestions(request , type):
 
 
 def UpdateQuestion(request , pk ):
-    questions = DonationRequestFormQuesitons.objects.get(Question_id=pk)
-    form = DonationRequestQuestionForm(instance=questions)
+    question = DonationRequestQuestion.objects.get(question_id=pk)
+    form = DonationRequestQuestionForm(instance=question)
     if request.method == 'POST':
-        form = DonationRequestQuestionForm(request.POST, instance=questions)
+        form = DonationRequestQuestionForm(request.POST, instance=question)
         if form.is_valid():
             form.save()
             messages.success(request, 'Question was updated successfully!')
-            return redirect('/donorquestions/notall')
+            return redirect('/donorquestions/all')
         else:
             messages.success(request, 'Question was not updated successfully!')
 
@@ -287,11 +287,11 @@ def UpdateQuestion(request , pk ):
     return render(request, 'nurse/addquestions.html', context)
 
 def DeleteQuestion(request , pk):
-    question = DonationRequestFormQuesitons.objects.get(Question_id=pk)
+    question = DonationRequestQuestion.objects.get(question_id=pk)
     try:
         question.delete()
         messages.success(request, 'question was deleted successfully!')
-        return redirect('/donorquestions/notall')
+        return redirect('/donorquestions/all')
     except:
         messages.success(request, 'question was not deleted successfully!')
     return render(request, 'nurse/donorquestions.html' , {'active_page':'question'})

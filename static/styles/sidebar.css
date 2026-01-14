@@ -118,6 +118,6 @@ body {
   left: 10%;
   width: 70%;  /* Set the width to 100% to cover the entire width of the .nav-link */
   height: 2px;  /* Set the height of the underline */
-  background-color: rgb(226, 94, 94);  /* Set the color of the underline */
+  background-color: rgb(240, 230, 230);  /* Set the color of the underline */
 }
 

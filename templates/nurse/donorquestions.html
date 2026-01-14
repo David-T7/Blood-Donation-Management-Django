@@ -11,6 +11,7 @@
     {% endfor %}
     <br>
     <div class="table-responsive">
+        <h4>Pre-Donation Screening Questions</h4>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -21,7 +22,7 @@
                     </th>
                 </tr>
                 <tr>
-                    <th>Number</th>
+                    <th>Question Name</th>
                     <th></th>
                 </tr>
             </thead>
@@ -29,10 +30,10 @@
                 {% if questions %}
                 {% for question in questions %}
                 <tr>
-                    <td>{{ forloop.counter }}</td> <!-- Display question number -->
+                    <td>{{ question.question_field_name }}</td> <!-- Display question number -->
                     <td>
-                        <a href="{% url 'updatequestion' question.Question_id %}" class="btn btn-info">Update</a>&nbsp;
-                        <a href="{% url 'deletequestion' question.Question_id %}" class="btn btn-danger">Delete</a>
+                        <a href="{% url 'updatequestion' question.question_id %}" class="btn btn-info">Update</a>&nbsp;
+                        <a href="{% url 'deletequestion' question.question_id %}" class="btn btn-danger">Delete</a>
                     </td>
                 </tr>
                 {% endfor %}

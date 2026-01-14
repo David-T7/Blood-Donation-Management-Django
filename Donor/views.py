@@ -7,7 +7,7 @@ from time import time
 from django.contrib import  messages
 from django.shortcuts import redirect, render
 from Donor.forms import AppointmentCreationForm, DonorCreationForm , DonationRequestQuestionForm ,DonorAccountEditForm , RequestAnswerCreationForm
-from Donor.models import Appointment, Donor
+from Donor.models import Appointment, DonationRequestAnswer, DonationRequestQuestion, Donor
 from UserAccount.models import Account , Address
 from UserAccount.forms import AddressCreationForm, CustomUserCreationForm , CustomUserChangeForm
 from Donor.models import DonationRequestFormResult , DonationRequestFormQuesitons 
@@ -16,7 +16,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from LabTechnician.models import DeferringList
 from django.utils.dateparse import parse_date , parse_time
-from .forms import AppointmentCreationForm
+from .forms import AppointmentCreationForm, DynamicDonationRequestForm
 from datetime import datetime, timedelta
 
 
