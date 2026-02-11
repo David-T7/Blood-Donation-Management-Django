@@ -1,6 +1,6 @@
 # 🩸 Blood Donation Management System (BDMS)
 
-A comprehensive, **Django-based web portal** designed to connect **donors, hospitals, blood bank staff, and nurses** to efficiently streamline the entire blood donation and distribution process.
+A comprehensive, **Django-based web portal** designed to connect **donors, hospitals, blood bank staffs** to efficiently streamline the entire blood donation and distribution process.
 
 ---
 
