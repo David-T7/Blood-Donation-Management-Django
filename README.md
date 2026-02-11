@@ -81,3 +81,26 @@ python manage.py createsuperuser
 
 # 6. Run the development server
 python manage.py runserver
+```
+## 📸 Project Preview
+All screenshots are stored in the `screenshots` folder at the root of this repository.
+
+![Home Page](<screenshots//global%20home%20page.png>)
+![Login Page](<screenshots/login%20page.png>)
+![Donor Registeration Page](<screenshots//registration%20page%20for%20donor.png>)
+![Donor Registeration Page2](<screenshots//registration%20page%20for%20donor%202.png>)
+![Donor Home page](<screenshots//donor%20home.png>)
+![Donor Donation Request Page 1](<screenshots//donor%20donation%20request%20page1.png>)
+![Donor Donation Request Page 2](<screenshots//donor%20donation%20request%20page2.png>)
+![Donor Appointments Page](<screenshots//donor%20appointments%20page.png>)
+![Donor Appointment Selection Page](<screenshots//donor%20appointment%20data%20selection.png>)
+![Donor Donation Camps Page](<screenshots//donor%20camps%20page.png>)
+![Donor Donation Camp Map](<screenshots//donor%20seecamp%20map%20page.png>)
+![Nurse Donation Requests Page](<screenshots//nurse%20requests%20page.png>)
+![Nurse Donation Request Page1](<screenshots//nurse%20request%20check%20page%201.png>)
+![Nurse Donation Request Page2](<screenshots//nurse%20request%20check%20page%202.png>)
+![Nurse Add Health Questions Page 1](<screenshots//nurse%20add%20health%20questions%20page.png>)
+![Nurse Add Health Questions Page 2](<screenshots//nurse%20add%20health%20questions%20page2.png>)
+
+
+
