@@ -2,16 +2,21 @@
 {% block content %}
 
 <br>
+<link rel="stylesheet" type="text/css" href="/static/styles/checkrequest.css">
+
 <section class="h-100">
   <div class="container-fluid">
     <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-9">
-          <div class="card card-registration card-registration-2" style="border-radius: 15px;">
-            <div class="card-body p-0">
-              <div class="row g-0">
-                <div class="col-lg-30">
-                  <div class="p-5">
-                    <h3 class="fw-normal mb-5" style="color: #4835d4;">Request Result</h3>
+          <div class="card card-registration card-registration-2 red-black-theme" style="border-radius: 15px;">
+            <div class="row g-0">
+              <div class="col-lg-30">
+                <div class="red-header">
+                  <h3 class="fw-bold mb-0 text-center">Donation Request Review</h3>
+                </div>
+                <div class="card-body p-4">
+                  <div class="p-3">
+                    <h4 class="fw-semibold mb-4 black-text" style="border-bottom: 2px solid #dc3545; padding-bottom: 10px;">Request Details</h4>
 
 
                     {% for msg in messages%}
@@ -20,74 +25,24 @@
 				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 			</div>
 			{% endfor %}
-            {% if answers and questions %}
-                <div class="mb-3">
-                    {{questions.HeartDisease}} 
-                    <br>
-                <label for="formInput#text"><b>Answer</b></label>
-                {{answers.HeartDisease}}
-                    <br><br>
-                    {{questions.Kidney_Lung_Bloodpressure_Diabetes_Epilepsy}} 
-                    <br>
-                    <label for="formInput#text"><b>Answer</b></label>
-                    {{answers.Kidney_Lung_Bloodpressure_Diabetes_Epilepsy}}
-
-                    <br><br>
-                    {{questions.Liverproblems}} 
-                    <br>
-                    <label for="formInput#text"><b>Answer</b></label>
-                    {{answers.Liverproblems}}
-
-                    <br> <br>
-                    {{questions.STD}} 
-                    <br>
-                    <label for="formInput#text"><b>Answer</b></label>
-                    {{answers.STD}}
-
-                    <br> <br>
-                    {{questions.Tattoo_Ear_skin_pierced_lastmonth}} 
-                    <br>
-                    <label for="formInput#text"><b>Answer</b></label>
-                    {{answers.Tattoo_Ear_skin_pierced_lastmonth}}
-
-                    <br> <br>
-                    {{questions.Slpet_Unsafely_OtherThanPartner}} 
-                    <br>
-                    <label for="formInput#text"><b>Answer</b></label>
-                    {{answers.Slpet_Unsafely_OtherThanPartner}}
-
-                    <br> <br>
-                    {{questions.SeriousSkinRepair}} 
-                    <br>
-                    <label for="formInput#text"><b>Answer</b></label>
-                    {{answers.SeriousSkinRepair}}
-
-                    <br> <br>
-                    {% if gender != 'Male' %}
-                    {{questions.Preagnant}} 
-                    <br>
-                    
-                    <label for="formInput#text"><b>Answer</b></label>
-                    {{answers.Preagnant}}
-
-                    <br> <br>
-                    {{questions.Abortion}} 
-                    <br>
-                    <label for="formInput#text"><b>Answer</b></label>
-                    {{answers.Abortion}}
-
-                    <br> <br>
-                    {{questions.BreastFeeding}} 
-                    <br>
-                    <label for="formInput#text"><b>Answer</b></label>
-                    {{answers.BreastFeeding}}
-                    <br> <br>
-                    {% endif %}
-                    
-                    {{questions.BloodHealthfulnessInfo}} 
-                    <br>
-                    <label for="formInput#text"><b>Answer</b></label>
-                    {{answers.BloodHealthfulnessInfo}}
+            {% if answers and question_answer_pairs %}
+                <div class="mt-4">
+                    <h5 class="fw-semibold mb-3 black-text" style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">Questionnaire Responses:</h5>
+                    {% for question, answer_text in question_answer_pairs %}
+                        <div class="question-item">
+                            <p class="mb-1 black-text"><strong>{{ question.question_text }}</strong></p>
+                            <p class="mb-0"><span class="badge bg-secondary">Answer:</span>
+                            {% if answer_text == 'yes' %}
+                                <span class="red-text fw-bold">{{ answer_text|default:"No answer provided" }}</span>
+                            {% elif answer_text == 'no' %}
+                                <span class="text-success fw-bold">{{ answer_text|default:"No answer provided" }}</span>
+                            {% else %}
+                                <span class="text-muted">{{ answer_text|default:"No answer provided" }}</span>
+                            {% endif %}
+                            </p>
+                        </div>
+                    {% endfor %}
+                </div>
 
 
                     
@@ -97,21 +52,69 @@
                 </div>
 
 
-                <br>
-                <div style="align-self:auto;">
-                    {% if status == 'Good' %}
-                    <h style="color: green"> Donor is legitimate! </h>
-                    <a href="{% url 'confirmrequest' answers.Result_id 'accept' %}"><button type="button" class="btn btn-info" style="background-color: green;color: white;">Accept</button></a>&nbsp;                   
-                    <button type="button" disabled class="btn btn-info" style="background-color: red; color: white;">Reject</button>&nbsp;
-                    {% else %}
-                    <h style="color: red"> Donor is  not legitimate!</h>
-                    <button type="button"  class="btn btn-info" style="background-color: green;color: white;" disabled>Accept</button>&nbsp;                   
-                    <a href="{% url 'confirmrequest' answers.Result_id 'reject' %}"><button type="button"  class="btn btn-info" style="background-color: red; color: white;">Reject</button></a>&nbsp;
-                    {% endif %}
-                </div>
+                <hr class="my-4" style="border-top: 1px solid #dc3545;">
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <div class="status-display">
+                        <!-- Display eligibility status -->
+                        {% if status == 'Good' %}
+                            <h5 class="status-good">Donor is eligible for donation</h5>
+                        {% else %}
+                            <h5 class="status-notgood">Donor is not eligible for donation</h5>
+                        {% endif %}
 
+                        <!-- Display current request status from database -->
+                        <p class="mt-2">
+                            Current Request Status:
+                            {% if answers.Status == 'accepted' %}
+                                <span class="status-good">Accepted</span>
+                            {% elif answers.Status == 'rejected' %}
+                                <span class="status-notgood">Rejected</span>
+                            {% else %}
+                                <span>In Progress</span>
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <div class="action-buttons">
+                        <!-- Disable button corresponding to current status -->
+                        {% if answers.Status == 'accepted' %}
+                            <button type="button" class="btn btn-success me-2 px-4 py-2" disabled>
+                                Accept
+                            </button>
+                            <a href="{% url 'confirmrequest' answers.Result_id 'reject' %}">
+                                <button type="button" class="btn btn-danger px-4 py-2">
+                                    Reject
+                                </button>
+                            </a>
+                        {% elif answers.Status == 'rejected' %}
+                            <a href="{% url 'confirmrequest' answers.Result_id 'accept' %}">
+                                <button type="button" class="btn btn-success me-2 px-4 py-2">
+                                    Accept
+                                </button>
+                            </a>
+                            <button type="button" class="btn btn-danger px-4 py-2" disabled>
+                                Reject
+                            </button>
+                        {% else %}
+                            <!-- If status is 'in progress' or other, allow both -->
+                            <a href="{% url 'confirmrequest' answers.Result_id 'accept' %}">
+                                <button type="button" class="btn btn-success me-2 px-4 py-2">
+                                    Accept
+                                </button>
+                            </a>
+                            <a href="{% url 'confirmrequest' answers.Result_id 'reject' %}">
+                                <button type="button" class="btn btn-danger px-4 py-2">
+                                    Reject
+                                </button>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
             {% else %}
-            <h>Can't load results</h>
+                <div class="alert alert-danger mt-3" role="alert">
+                    <h5 class="alert-heading">Error!</h5>
+                    <p>Unable to load request results. Please try again later.</p>
+                </div>
             {% endif %}
         </div>
     </div>

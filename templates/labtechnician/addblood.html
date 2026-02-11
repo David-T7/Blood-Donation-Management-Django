@@ -35,9 +35,12 @@
             <div class="mb-3">
             <div class="form-floating">
                 {% if field.label == 'QuantityOfBlood' %}
-                {% render_field field  id="formInput#text"  class="form-control" placeholder=field.label value=blood_type %} 	
+                {% render_field field  id="formInput#text"  class="form-control" placeholder=field.label %} 	
                 <label for="floatingPassword">{{field.label}}( ML )</label>
-                {% else %}
+                {% elif field.label == 'BloodGroup' %}
+                    {% render_field field  id="formInput#text"  class="form-control" placeholder=field.label %}
+                <label for="floatingPassword">{{field.label}}</label>
+                 {% else %}
                 {% render_field field  id="formInput#text"  class="form-control" placeholder=field.label %} 	
                 <label for="floatingPassword">{{field.label}}</label>
                 {% endif %}         

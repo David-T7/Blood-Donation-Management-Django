@@ -17,8 +17,7 @@
     <thead>
          <tr>
            <th>Donation Request History</th>
-           <th><a href="{% url 'labdonationrequest' 'all' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">See All</button></a>
-            </th>
+           <th></th>
             <th></th>
             <th></th>
             <th></th>
@@ -130,7 +129,7 @@
        </td>
        {% endif %}
        {% else %}
-       <td><span class="badge bg-light">Not Made</span></td>
+       <td><span class="badge bg-info">Not Made</span></td>
       <td><a href="{% url 'labdonorinfo' don.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Check Donor</button></a>
       </td>
          <td><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;" disabled>AddBlood</button></td> 
@@ -144,7 +143,7 @@
          {% endif %}
     
        {% else %}
-       <td><span class="badge bg-light">Not Made</span></td>
+       <td><span class="badge bg-info">Not Made</span></td>
       <td><a href="{% url 'labdonorinfo' don.Donor_id %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Check Donor</button></a>
       </td>
          <td><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;" disabled>AddBlood</button></td> 
@@ -160,15 +159,25 @@
      {% endif %}
       {% endfor %}
 
-      <tr>{% if type == 'all' %}
-        <td><a href="{% url 'labdonationrequest' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">less</button></a>
+      <tr>
+        {% if type == 'all' %}
+        <td><a href="{% url 'labdonationrequest' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Less</button></a>
         </td>
         <td></td>
         <td></td>
         <td></td>
         <td></td>
         <td></td>
-        {% endif %}</tr>
+        {% elif type == 'notall' %}
+        <td><a href="{% url 'labdonationrequest' 'all' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">More</button></a>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        {% endif %}
+      </tr>
 
 
       {% else %}

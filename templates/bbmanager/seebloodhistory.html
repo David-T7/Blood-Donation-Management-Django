@@ -6,12 +6,12 @@
   <thead>
        <tr>
          <th>Blood History</th>
-         <th><a href="{% url 'bloodhistory' 'all' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Seeall</button></a></th>
+         <th></th>
          <th></th>
           <th></th>
        </tr>
        <tr>
-          <form method="post" action="{% url 'bloodhistory' 'searched' %}">
+          <form method="post" action="{% url 'seebloodhistory' 'searched' %}">
             {% csrf_token %}
             <th colspan="2">
             <select class="form-select form-select-sm" name='searchby' aria-label=".form-select-sm example">
@@ -19,7 +19,7 @@
             <option value="BloodGroup">BloodType</option>
             <option value="Action">Action</option>
             <option value="Volume">Volume</option>
-            <option value="RegestrationDate">RegDate</option>
+            <option value="RegistrationDate">RegDate</option>
             <option value="ExpirationDate">ExpDate</option>
           </select>
           </th>
@@ -49,18 +49,40 @@
     </thead>
     <tbody>
       {% if bloods %}
-      {% for blood in bloods %}
-       <tr> 
-         <td>{{ blood.BloodGroup }}</td>
-         <td>{{ blood.QuantityOfBlood }}</td>
-         <td>{{ blood.RegDate }}</td>
-         <td>{{ blood.ExpDate }}</td>
-         <td>{{ blood.Action }}</td>
+      {% for history in bloods %}
+       <tr>
+         <td>{{ history.Blood_id.BloodGroup }}</td>
+         <td>{{ history.Blood_id.QuantityOfBlood }}</td>
+         <td>{{ history.Blood_id.RegDate }}</td>
+         <td>
+           {% if history.expiry_status == 'expired' %}
+             <span title="EXPIRED" style="color: red;">
+               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle" viewBox="0 0 16 16">
+                 <path d="M7.938 2.016A.146.146 0 0 1 8.002 2a.147.147 0 0 1 .063.016.13.13 0 0 1 .04.053c.02.023.03.056.026.092a7.97 7.97 0 0 1-.216 1.213.147.147 0 0 1-.04.054.13.13 0 0 1-.053.03.146.146 0 0 1-.092.01.13.13 0 0 1-.053-.026.146.146 0 0 1-.053-.04.13.13 0 0 1-.03-.053.146.146 0 0 1 .01-.092.13.13 0 0 1 .026-.053.147.147 0 0 1 .04-.054.13.13 0 0 1 .053-.03.146.146 0 0 1 .092-.01.13.13 0 0 1 .053.026.146.146 0 0 1 .053.04.13.13 0 0 1 .03.053.146.146 0 0 1-.01.092.13.13 0 0 1-.026.053.146.146 0 0 1-.04.054.13.13 0 0 1-.053.03.146.146 0 0 1-.092.01zm.165 3.615a.146.146 0 0 1 .092.053.13.13 0 0 1 .01.092.146.146 0 0 1-.026.053.13.13 0 0 1-.053.03.146.146 0 0 1-.092-.01.13.13 0 0 1-.053-.026.146.146 0 0 1-.03-.053.13.13 0 0 1 .01-.092.146.146 0 0 1 .026-.053.13.13 0 0 1 .053-.03.146.146 0 0 1 .092.01zm.002 4.19a.146.146 0 0 1 .092.053.13.13 0 0 1 .01.092.146.146 0 0 1-.026.053.13.13 0 0 1-.053.03.146.146 0 0 1-.092-.01.13.13 0 0 1-.053-.026.146.146 0 0 1-.03-.053.13.13 0 0 1 .01-.092.146.146 0 0 1 .026-.053.13.13 0 0 1 .053-.03.146.146 0 0 1 .092.01z"/>
+               </svg>
+             </span>
+           {% elif history.expiry_status == 'critical' %}
+             <span title="CRITICAL - Expires Soon" style="color: orange;">
+               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+               </svg>
+             </span>
+           {% else %}
+             <span title="Safe" style="color: green;">
+               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
+                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                 <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+               </svg>
+             </span>
+           {% endif %}
+           {{ history.Blood_id.ExpDate }}
+         </td>
+         <td>{{ history.Action }}</td>
          <td></td>
        </tr>
        {% endfor %}
       {% else %}
-      <tr> 
+      <tr>
        <td>No Blood History For Now </td>
        <td></td>
        <td></td>
@@ -70,6 +92,27 @@
      </tr>
      {% endif %}
       </tbody>
+      <tfoot>
+        <tr>
+          {% if bloods %}
+            {% if type == 'all' %}
+              <td><a href="{% url 'seebloodhistory' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Less</button></a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            {% else %}
+              <td><a href="{% url 'seebloodhistory' 'all' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">More</button></a></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            {% endif %}
+          {% endif %}
+        </tr>
+      </tfoot>
   </table>
   <br>
 

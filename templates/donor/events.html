@@ -8,11 +8,7 @@
     <thead>
       <tr>
         <th>Events</th>
-        <th>
-          <a href="{% url 'getevent' 'all' %}">
-            <button type="button" class="btn btn-primary btn-sm" style="background-color: red;">See All</button>
-          </a>
-        </th>
+        <th></th>
         <th></th>
         <th></th>
         <th></th>
@@ -58,7 +54,13 @@
       {% for ev in events %}
       <tr>
         <td>{{ ev.EventName }}</td>
-        <td>{{ ev.EventPlace }}</td>
+        <td>
+          {% if ev.EventMap %}
+            <a href="{% url 'donorseeeventlocationmap' ev.Event_id %}"><button type="button" class="btn btn-info">Seemap</button></a>
+          {% else %}
+            {{ ev.EventPlace }}
+          {% endif %}
+        </td>
         <td>{{ ev.EventDate }}</td>
         <td>{{ ev.EventType }}</td>
         <td><img src="/static/images/{{ ev.EventPic }}" style="max-height: 150px; max-width: 150px;" class="img-fluid"></td>
@@ -68,7 +70,14 @@
       {% endfor %}
       <tr>
         {% if type == 'all' %}
-        <td><a href="{% url 'getevent' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style="background-color: red;">less</button></a></td>
+        <td><a href="{% url 'getevent' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style="background-color: red;">Less</button></a></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        {% elif type == 'notall' %}
+        <td><a href="{% url 'getevent' 'all' %}"><button type="button" class="btn btn-primary btn-sm" style="background-color: red;">More</button></a></td>
         <td></td>
         <td></td>
         <td></td>

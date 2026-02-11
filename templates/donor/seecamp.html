@@ -1,16 +1,35 @@
 {% extends 'donor/donor.html' %}
 {% block content %}
 <br>
-<div class="table-responsive">
-    <table class="table table-striped">
-      <thead>
-        <tr>
-                {% if camp %}
-                {% autoescape off %}
-                {{ camp.Location }}
-                {% endautoescape %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Camp Information</h2>
+            {% if camp %}
+                <div class="camp-details" style="margin-bottom: 20px;">
+                    <h4>{{ camp.CampsName }}</h4>
+                    {% if camp.Place %}
+                        <p><strong>Address:</strong> {{ camp.Place }}</p>
+                    {% endif %}
+                </div>
+                
+                {% if camp.Location %}
+                    <div class="map-container" style="margin-top: 20px;">
+                        <h5>Map View:</h5>
+                        {% autoescape off %}
+                        {{ camp.Location }}
+                        {% endautoescape %}
+                    </div>
+                {% elif camp.Place %}
+                    <p>Map not available. Address: {{ camp.Place }}</p>
+                {% else %}
+                    <p>No location information available for this camp.</p>
                 {% endif %}
-            </tr>
+            {% else %}
+                <p>No camp information available.</p>
+            {% endif %}
         </div>
+    </div>
+</div>
 <br>
 {% endblock %}

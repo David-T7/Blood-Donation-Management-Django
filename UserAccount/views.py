@@ -77,7 +77,7 @@ def Userstate(request):  # for getting the state of the user
             except Hospital.DoesNotExist:
                 # If user doesn't exist in any of these tables, return the user object
                 account = state
-
+    print("account from edit account is ",account)
     context={'account':account}
     return context
     

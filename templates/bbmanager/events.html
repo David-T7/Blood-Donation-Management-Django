@@ -19,7 +19,7 @@
     <thead>
          <tr>
              <th>Events</th>
-             <th><a href="{% url 'events' 'all' %}"> <button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">SeeAll</button></a> </th>
+             <th></th>
              <th><a href="{% url 'addevent' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">AddEvent</button></a></th>
              <th></th>
              <th></th>
@@ -74,24 +74,46 @@
         <tr>
           <td>{{ ev.EventName }}</td>
           <td>{{ ev.EventPlace }}</td>
-          <td>{{ ev.EventPlace }}</td>
+          <td>
+            {% if ev.EventMap %}
+              <a href="{% url 'seeeventlocationmap' ev.Event_id %}"><button type="button" class="btn btn-info">Seemap</button></a>
+            {% else %}
+              {{ ev.EventPlace }}
+            {% endif %}
+          </td>
           <td>{{ ev.EventDate }}</td>
           <td>{{ ev.EventType }}</td>
           <td>
           {% now "Y-m-d" as todays_date %}
           {% if todays_date  > ev.EventDate|date:"Y-m-d" %}
-          <img src="{% static 'images/events/passedevent.png' %}" alt="error" width="100">          
+          <span class="badge bg-danger">
+            <i class="bx bx-x-circle"></i> Passed
+          </span>
           {% else %}
-          <img src="{% static 'images/events/timecounting.png' %}" alt="error" width="100">      
+          <span class="badge bg-success">
+            <i class="bx bx-time-five"></i> Upcoming
+          </span>
           {% endif %}
           </td>
-          <td><img src="/static/images/{{ ev.EventPic }}" style="height: 150px;width: 150px;"></td> 
+          <td><img src="/static/images/{{ ev.EventPic }}" style="height: 150px;width: 150px;"></td>
           <td><a href="{% url 'updateevent' ev.Event_id %}"><button type="button" class="btn btn-info">Update</button></a>
            <br><br><a href="{% url 'deleteevent' ev.Event_id %}"><button type="button" class="btn btn-danger">Delete</button></a></td>
-        </tr> 
+        </tr>
       {% endfor %}
-      <tr>{% if type == 'all' %}
-        <td><a href="{% url 'events' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">less</button></a></td>
+      <tr>
+      {% if type == 'all' %}
+        <td><a href="{% url 'events' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Less</button></a></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      {% else %}
+        <td><a href="{% url 'events' 'all' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">More</button></a></td>
         <td></td>
         <td></td>
         <td></td>

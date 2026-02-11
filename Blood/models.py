@@ -23,19 +23,13 @@ class Blood(models.Model):
     PackNo = models.CharField(max_length=20)
     RegDate = models.DateField(auto_now_add=True)
     ExpDate = models.DateField(max_length=10)
-    QuantityOfBlood = models.CharField(max_length=100)
+    QuantityOfBlood = models.FloatField()
     class Meta:
         db_table = "Blood"
 
 
 class BloodHistory(models.Model):
-    Blood_id = models.UUIDField(blank=True , null=True)
-    Donor_id = models.UUIDField(null=True , blank=True )
-    BloodGroup = models.CharField(max_length=20 ,  choices=blood_type)
-    PackNo = models.CharField(max_length=20)
-    RegDate = models.DateField(max_length=10)
-    ExpDate = models.DateField(max_length=10)
-    QuantityOfBlood = models.CharField(max_length=4)
+    Blood_id = models.ForeignKey(Blood , on_delete=models.SET_NULL,blank=True , null=True)
     Action = models.CharField(max_length=20 , null=True , blank=True)
     class Meta:
         db_table = "BloodHistory"

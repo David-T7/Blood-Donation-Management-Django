@@ -54,7 +54,11 @@
   <nav class="navbar top-navbar navbar-light bg-light px-5">
     <a class="btn border-0" id="menu-btn"><i class="bx bx-menu"></i></a>
     <figure id="image">
+      {% if sender == 'password' or sender == 'profilepic' or sender == 'username' %}
+      <img src="/static/images/{{ account.ProfilePic }}" style="height: 80px; width: 80px; border-radius: 50%;">
+      {% else %}
       <img src="/static/images/{{ donor.ProfilePic }}" style="height: 80px; width: 80px; border-radius: 50%;">
+      {% endif %}
       <figcaption style="text-align: center;"><b>{{user.username}}</b></figcaption>
     </figure>
   </nav>

@@ -6,7 +6,7 @@ path('bloodstock/',  views.BloodStock, name='bloodstock'),
 path('addblood/<pk>/<pk2>' , views.AddBlood , name = 'addblood'),
 path('updateblood/<pk>' , views.UpdateBlood , name = 'updateblood'),
 path('deleteblood/<pk>' , views.DeleteBlood , name = 'deleteblood'),
-path('seebloodhistory<type>' , views.BloodsHistory , name='bloodhistory'),
+path('seebloodhistory/<type>' , views.BloodsHistory , name='seebloodhistory'),
 path('getlabbloods/<type>'  , views.GetBlood , name='getlabbloods' ),
 
 ]

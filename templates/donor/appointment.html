@@ -14,11 +14,7 @@
     <thead>
       <tr>
         <th scope="col">Appointments</th>
-        <th scope="col">
-          <a href="{% url 'getappointments' 'all' %}">
-            <button type="button" class="btn btn-primary btn-sm" style="background-color: red;">See All</button>
-          </a>
-        </th>
+        <th scope="col"></th>
         <th scope="col"></th>
         <th scope="col"></th>
         <th scope="col"></th>
@@ -95,7 +91,19 @@
         {% if type == 'all' %}
         <td>
           <a href="{% url 'getappointments' 'notall' %}">
-            <button type="button" class="btn btn-primary btn-sm" style="background-color: red;">less</button>
+            <button type="button" class="btn btn-primary btn-sm" style="background-color: red;">Less</button>
+          </a>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        {% elif type == 'notall' %}
+        <td>
+          <a href="{% url 'getappointments' 'all' %}">
+            <button type="button" class="btn btn-primary btn-sm" style="background-color: red;">More</button>
           </a>
         </td>
         <td></td>

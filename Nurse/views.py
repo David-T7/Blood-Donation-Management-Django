@@ -8,6 +8,7 @@ from Donor.models import  Appointment, DonationRequestQuestion
 from UserAccount.models import  Address, UserRegistration
 from Donor.models import DonationRequestFormResult , DonationRequestFormQuesitons , Appointment , Donor
 from django.utils.dateparse import parse_date  , parse_time
+import uuid
 
 def Userstate(request):  # for getting the state of the user
     state = request.user
@@ -59,44 +60,113 @@ def DonationRequest(request , type):
     return render (request , 'nurse/donationrequest.html' , context)
 
 def CheckRequest(request , pk):
-    questions = None 
+    questions = None
     answer = None
     status = 'Good'
+    gender = None
+
+    # Since URL pattern uses <uuid:pk>, pk is already a UUID object
+    # No need to validate again as Django has already validated it
+    # Just ensure it's a valid UUID object
+    if not isinstance(pk, uuid.UUID):
+        messages.error(request, 'Invalid request ID format.')
+        return redirect('/donorrequest/all')  # Redirect to a safe page
+
     try:
-        questions = DonationRequestFormQuesitons.objects.all()[0]
+        # Get all donation request questions
+        questions = DonationRequestQuestion.objects.all()
     except:
         questions = None
     try:
-        answer = DonationRequestFormResult.objects.get(Result_id = pk)
+        # Prefetch related answers to avoid multiple queries
+        answer = DonationRequestFormResult.objects.prefetch_related('answers__question').get(Result_id = pk)
     except:
         answer = None
+
     try:
-        male_excluded_list = ['Result_id' , 'Donor_id ' , 'BloodHealthfulnessInfo' ,'Status','Request_time','Request_Date','Preagnant', 
-        'Abortion','BreastFeeding']
-        female_excluded_list=['Result_id' , 'Donor_id ' , 'BloodHealthfulnessInfo' ,'Status','Request_time','Request_Date']
-        answerlist = list(DonationRequestFormResult.objects.filter(Result_id = pk))
-        donor = Donor.objects.get(Donor_id = str(answer.Donor_id))
+        # Get the donor to determine gender
+        # Donor_id is a foreign key to the Donor model, so we can access the donor directly
+        donor = answer.Donor_id
+        # If donor is None, it means the foreign key was set to NULL
+        if donor is None:
+            print("Donor record not found for this request")
+            status = 'Notgood'
+            raise Exception("Donor record not found")
+
         gender = donor.Gender
-        for ans in answerlist:
-            for field in ans._meta.fields: # field is a django field
-                fieldname = field.name
-                if(gender == 'Male'):
-                    if (fieldname not in male_excluded_list):
-                        object_field_value = getattr(answer, fieldname)
-                        if(str(object_field_value)  == 'yes' or object_field_value == None ):
-                            status = 'Notgood'
-                            break
-                else:
-                    if (fieldname not in female_excluded_list):
-                        object_field_value = getattr(answer, fieldname)
-                        if(str(object_field_value)  == 'yes' or object_field_value==None):
-                            status = 'Notgood'
-                            break
-    except:
-        status=None
+
+        # Get all answers for this request result
+        answers = answer.answers.all()  # Using the related manager from the foreign key
+
+        # Check if there are any answers at all
+        if not answers.exists():
+            # If there are no answers, donor is not eligible (form not properly filled)
+            status = 'Notgood'
+        else:
+            # Check if any answered question is 'yes', which indicates a health concern
+            for answer_obj in answers:
+                try:
+                    # Get the question associated with this answer
+                    question = answer_obj.question
+
+                    # Skip gender-specific questions if donor is not of required gender
+                    if question.is_gender_specific and gender != question.gender_required:
+                        continue
+
+                    # A 'yes' answer indicates a health concern that makes the donor not eligible
+                    # Only 'no' answers indicate eligibility
+                    if answer_obj.answer == 'yes':
+                        status = 'Notgood'
+                        break
+                    # If answer is null/empty, we should investigate further
+                    # For now, treat empty answers as a reason for ineligibility for safety
+                    elif answer_obj.answer is None or (hasattr(answer_obj.answer, 'strip') and answer_obj.answer.strip() == ''):
+                        status = 'Notgood'
+                        break
+                except Exception as e:
+                    print(f"Error processing answer {answer_obj.answer_id}: {e}")
+                    status = 'Notgood'  # Set to not eligible if there's an error processing an answer
+                    break
+
+    except Exception as e:
+        status = 'Notgood'  # Default to not eligible if there's an error getting donor info
+        print(f"Error determining status: {e}")
+
+    # Prepare a list of tuples (question, answer) for easier display in template
+    question_answer_pairs = []
+    if hasattr(answer, 'answers'):
+        # Create a mapping of question_id to answer for quick lookup
+        answer_map = {}
+        for answer_obj in answer.answers.all():
+            try:
+                answer_map[str(answer_obj.question.pk)] = answer_obj.answer
+            except Exception as e:
+                print(f"Error mapping answer {answer_obj.answer_id} to question: {e}")
+                continue
+
+        # Create pairs of questions and their answers
+        for question in questions:
+            # Skip gender-specific questions if donor is not of required gender
+            if question.is_gender_specific and gender != question.gender_required:
+                continue
+            try:
+                answer_text = answer_map.get(str(question.pk), "No answer provided")
+                question_answer_pairs.append((question, answer_text))
+            except Exception as e:
+                print(f"Error creating pair for question {question.question_id}: {e}")
+                continue
+
     print(status)
-    context = {'account':Userstate(request)['account'] , 'questions':questions , 'answers':answer , 'status':status , 'gender':gender , 'active_page':'request'}
-    return render(request , 'nurse/checkrequest.html',context)
+    context = {
+        'account': Userstate(request)['account'],
+        'questions': questions,
+        'answers': answer,
+        'question_answer_pairs': question_answer_pairs,  # Pass the question-answer pairs to the template
+        'status': status,
+        'gender': gender,
+        'active_page': 'request'
+    }
+    return render(request, 'nurse/checkrequest.html', context)
 
 def CheckAppointments(request , type):
     appointment = None
@@ -128,6 +198,13 @@ def CheckAppointments(request , type):
     return render (request , 'nurse/appointment.html' , context)
 
 def Confirmrequest(request ,  pk , type):
+    # Since URL pattern uses <uuid:pk>, pk is already a UUID object
+    # Just ensure it's a valid UUID object
+    if not isinstance(pk, uuid.UUID):
+        # If pk is not a valid UUID, return an error
+        messages.error(request, 'Invalid request ID format.')
+        return redirect('/donorrequest/all')
+
     try:
         req = DonationRequestFormResult.objects.get(Result_id = pk)
         if(type=='accept'):

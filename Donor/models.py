@@ -115,7 +115,7 @@ class DonationRequestAnswer(models.Model):
                           primary_key=True, editable=False)
     request_result = models.ForeignKey('DonationRequestFormResult', on_delete=models.CASCADE, related_name='answers')
     question = models.ForeignKey(DonationRequestQuestion, on_delete=models.CASCADE)
-    answer = models.CharField(max_length=3, null=True, blank=True, choices=Answer_choices)
+    answer = models.CharField(max_length=20, null=True, blank=True, choices=Answer_choices)
 
     def __str__(self):
         return f"{self.question.question_text}: {self.answer}"

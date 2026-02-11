@@ -363,51 +363,114 @@ def GetHopsitalAddress(request , pk):
             
 def AcceptBloodRequest(request , pk ,  type):
     account = bbmanagerstate(request)['account']
+    
+    # Get the blood request object first to ensure it exists
+    try:
+        breq = BloodRequest.objects.select_related('Blood_id').get(Blood_Req_Id = pk)
+    except BloodRequest.DoesNotExist:
+        messages.error(request, 'Blood request not found')
+        return redirect('/hospitalrequest/notall')
+    
     try:
         if(type=='accept'):
-            breq = BloodRequest.objects.get(Blood_Req_Id = pk)
             breq.Status = 'accepted'
             breq.save()
-            blood= Blood.objects.get(Blood_id = str(breq.Blood_id.Blood_id))
-            BloodHistory.objects.create(Blood_id=blood.Blood_id , Donor_id = blood.Donor_id.Donor_id ,BloodGroup = blood.BloodGroup , 
-            PackNo = blood.PackNo , RegDate = blood.RegDate , ExpDate = blood.ExpDate , QuantityOfBlood = breq.Quantity , Action='Removed')
+            
+            # Get the blood object - refresh from DB to ensure we have the latest version
+            try:
+                blood = Blood.objects.get(Blood_id = breq.Blood_id.Blood_id if breq.Blood_id else None)
+            except (Blood.DoesNotExist, AttributeError):
+                messages.error(request, 'Blood record not found')
+                return redirect('/hospitalrequest/notall')
+                
+            # Create blood history record
+            BloodHistory.objects.create(Blood_id=blood, Action='Transferred to Hospital')
+            
+            # Create hospital sent blood record
             HospitalSentBloods.objects.create(Blood_Req_Id = breq.Blood_Req_Id , Blood_id=blood.Blood_id)
-            if (breq.Quantity == blood.QuantityOfBlood):
+            
+            # Update or delete blood quantity
+            requested_qty = int(breq.Quantity)
+            available_qty = int(blood.QuantityOfBlood)
+            
+            if requested_qty == available_qty:
                 blood.delete()
-            else:
-                blood.QuantityOfBlood = str(int(blood.QuantityOfBlood) - int(breq.Quantity))
+            elif requested_qty < available_qty:
+                blood.QuantityOfBlood = str(available_qty - requested_qty)
                 blood.save()
+            else:
+                # This shouldn't happen if validation was done properly before, but just in case
+                messages.error(request, 'Requested quantity exceeds available quantity')
+                return redirect('/hospitalrequest/notall')
 
-            messages.success(request,'Request was Accepted Succesfuly')
+            messages.success(request,'Request was Accepted Successfully')
+            
         elif(type=='firstreject'):
-            breq = BloodRequest.objects.get(Blood_Req_Id = pk)
             breq.Status = 'rejected'
             breq.save()
             messages.success(request,'Request was Rejected Successfully')
+            
         elif(type=='secondreject'):
-            breq = BloodRequest.objects.get(Blood_Req_Id = pk)
             breq.Status = 'rejected'
             breq.save()
-            sentblood = HospitalSentBloods.objects.get(Blood_Req_Id = breq.Blood_Req_Id)
-            removedblood = BloodHistory.objects.filter(Blood_id = sentblood.Blood_id)[0]
-            donor = Donor.objects.get(Donor_id = removedblood.Donor_id)
-            blood = Blood.objects.create(Donor_id = donor , BloodGroup = removedblood.BloodGroup ,  
-            PackNo = removedblood.PackNo , RegDate= removedblood.RegDate ,ExpDate = removedblood.ExpDate ,QuantityOfBlood= removedblood.QuantityOfBlood)
-            BloodHistory.objects.create(Blood_id=blood.Blood_id , Donor_id = blood.Donor_id.Donor_id ,BloodGroup = blood.BloodGroup , 
-                PackNo = blood.PackNo , RegDate = blood.RegDate , ExpDate = blood.ExpDate , QuantityOfBlood = blood.QuantityOfBlood , Action='Added')
-            breq.Blood_id = blood
+            
+            try:
+                sentblood = HospitalSentBloods.objects.get(Blood_Req_Id = breq.Blood_Req_Id)
+            except HospitalSentBloods.DoesNotExist:
+                messages.error(request, 'Sent blood record not found')
+                return redirect('/hospitalrequest/notall')
+                
+            # Since HospitalSentBloods stores UUIDs, we need to get the Blood object first
+            try:
+                blood_obj = Blood.objects.get(Blood_id=sentblood.Blood_id)
+            except Blood.DoesNotExist:
+                messages.error(request, 'Blood record not found')
+                return redirect('/hospitalrequest/notall')
+                
+            removedblood = BloodHistory.objects.filter(Blood_id=blood_obj).first()
+            if not removedblood:
+                messages.error(request, 'Blood history record not found')
+                return redirect('/hospitalrequest/notall')
+                
+            try:
+                donor = Donor.objects.get(Donor_id = removedblood.Donor_id)
+            except Donor.DoesNotExist:
+                messages.error(request, 'Donor record not found')
+                return redirect('/hospitalrequest/notall')
+                
+            # Recreate the blood record
+            blood = Blood.objects.create(
+                Donor_id = donor, 
+                BloodGroup = removedblood.BloodGroup,
+                PackNo = removedblood.PackNo, 
+                RegDate = removedblood.RegDate,
+                ExpDate = removedblood.ExpDate,
+                QuantityOfBlood = removedblood.QuantityOfBlood
+            )
+            
+            # Create blood history record for the added blood
+            BloodHistory.objects.create(Blood_id=blood, Action='Added')
+            
+            # Refresh the blood request object to avoid any stale references
+            breq = BloodRequest.objects.get(Blood_Req_Id = pk)
+            
+            # Update the blood request with the new blood record
+            breq.Blood_id = blood  # Assign the Blood model instance (ForeignKey relationship)
             breq.save()
+            
+            # Delete the sent blood record
             sentblood.delete()
+            
             messages.success(request,'Request was Rejected Successfully')
+        
         return redirect('/hospitalrequest/notall')
-    except:
-        breq = BloodRequest.objects.get(Blood_Req_Id = pk)
-        breq.Status = 'in progress'
-        breq.save()
+        
+    except Exception as e:
+        # Log the actual error for debugging purposes
+        print(f"Error in AcceptBloodRequest: {str(e)}")
+        # Keep the original status if there was an error
         messages.error(request,'Error During confirming Request')
         return redirect('/hospitalrequest/notall')
-    context = {'account':account}
-    return render (request , 'bbmanager/hospitalrequest.html', context)
     
 
 

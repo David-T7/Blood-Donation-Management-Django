@@ -1,0 +1,20 @@
+{% extends 'donor/donor.html' %}
+{% block content %}
+<br>
+<h3>{{ event.EventName }}</h3>
+<br>
+<div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+                {% if event %}
+                {% autoescape off %}
+                {{ event.EventMap }}
+                {% endautoescape %}
+                {% endif %}
+            </tr>
+        </thead>
+    </table>
+</div>
+<br>
+{% endblock %}

@@ -17,7 +17,6 @@
                 <tr>
                     <th>Questions</th>
                     <th>
-                        <a href="{% url 'donorquestions' 'all' %}" class="btn btn-primary btn-sm" style="background-color: red;">See All</a>&nbsp;
                         <a href="{% url 'addquestions' 'add' %}" class="btn btn-primary btn-sm" style="background-color: red;">Add Question</a>
                     </th>
                 </tr>
@@ -37,12 +36,12 @@
                     </td>
                 </tr>
                 {% endfor %}
+                {% if type == 'all' %}
                 <tr>
-                    {% if type == 'all' %}
-                    <td><a href="{% url 'donorquestions' 'notall' %}" class="btn btn-primary btn-sm" style="background-color: red;">less</a></td>
+                    <td><a href="{% url 'donorquestions' 'notall' %}" class="btn btn-primary btn-sm" style="background-color: red;">Less</a></td>
                     <td></td>
-                    {% endif %}
                 </tr>
+                {% endif %}
                 {% else %}
                 <tr>
                     <td>No Donation Request For Now</td>
@@ -51,6 +50,11 @@
                 {% endif %}
             </tbody>
         </table>
+        {% if type == 'notall' %}
+            <div class="mt-3">
+                <a href="{% url 'donorquestions' 'all' %}" class="btn btn-primary btn-sm" style="background-color: red;">More</a>
+            </div>
+        {% endif %}
     </div>
 </div>
 <br>

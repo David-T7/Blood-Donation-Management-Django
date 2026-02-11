@@ -13,8 +13,7 @@
         <thead>
             <tr>
                 <th scope="col">Donation Request</th>
-                <th scope="col"><a href="{% url 'donorrequest' 'all' %}"><button type="button" class="btn btn-primary btn-sm"
-                            style="background-color: red;">See All</button></a></th>
+                <th scope="col"></th>
                 <th scope="col"></th>
             </tr>
             <form method="post" action="{% url 'donorrequest' 'searched' %}">
@@ -78,7 +77,14 @@
             <tr>
                 {% if type == 'all' %}
                 <td><a href="{% url 'donorrequest' 'notall' %}"><button type="button"
-                            class="btn btn-primary btn-sm" style="background-color: red;">less</button></a></td>
+                            class="btn btn-primary btn-sm" style="background-color: red;">Less</button></a></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                {% elif type == 'notall' %}
+                <td><a href="{% url 'donorrequest' 'all' %}"><button type="button"
+                            class="btn btn-primary btn-sm" style="background-color: red;">More</button></a></td>
                 <td></td>
                 <td></td>
                 <td></td>

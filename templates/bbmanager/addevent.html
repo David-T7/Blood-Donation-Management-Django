@@ -17,10 +17,19 @@
                     <div class="form-floating">
                     {% render_field field  id="formInput#text"  class="form-control"  placeholder=field.label %}
                     <label for="floatingPassword" >{{field.label}}{% if field.field.required %}<span style="color: red;">*</span>{% endif %}</label>
-                    <span > <h style="color: red;">{{field.errors}}</h></span>	 	
+                    <span > <h style="color: red;">{{field.errors}}</h></span>
+                    
+                    {% if field.name == 'EventMap' %}
+                    <div id="event-map-help" class="event-map-help-text" style="display: none; margin-top: 5px;">
+                        <small class="form-text text-muted">
+                            To add a map, go to Google Maps, find the location, click the menu button and then click Share or embed a map, 
+                            after that select Embed a map and finally copy the HTML code and paste it here.
+                        </small>
+                    </div>
+                    {% endif %}
                 </div>
                 </div>
-                {% endfor %} 
+                {% endfor %}
             <br>
             <div class="mb-3 d-flex">
                 {% if type == 'add' %}
@@ -41,4 +50,61 @@
 </div>
 </div>
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Find the EventMap input field
+    const eventMapInput = document.querySelector('input[name="EventMap"], textarea[name="EventMap"]');
+    const helpText = document.getElementById('event-map-help');
+    
+    if (eventMapInput && helpText) {
+        // Show help text on focus
+        eventMapInput.addEventListener('focus', function() {
+            helpText.style.display = 'block';
+        });
+        
+        // Hide help text when focus is lost (blur event)
+        eventMapInput.addEventListener('blur', function() {
+            // Use setTimeout to allow for click events on the help text
+            setTimeout(function() {
+                if (document.activeElement !== helpText && !helpText.contains(document.activeElement)) {
+                    helpText.style.display = 'none';
+                }
+            }, 100);
+        });
+        
+        // Also show help text on mouseover
+        eventMapInput.addEventListener('mouseover', function() {
+            helpText.style.display = 'block';
+        });
+        
+        // Hide help text on mouseout (with a delay to allow for movement to help text)
+        eventMapInput.addEventListener('mouseout', function() {
+            setTimeout(function() {
+                if (!eventMapInput.matches(':hover') && 
+                    document.activeElement !== helpText && 
+                    !helpText.contains(document.activeElement)) {
+                    helpText.style.display = 'none';
+                }
+            }, 100);
+        });
+        
+        // Handle clicks on the help text to keep it visible
+        helpText.addEventListener('mouseover', function() {
+            helpText.style.display = 'block';
+        });
+        
+        helpText.addEventListener('mouseout', function() {
+            setTimeout(function() {
+                if (!eventMapInput.matches(':hover') && 
+                    document.activeElement !== helpText && 
+                    !helpText.contains(document.activeElement)) {
+                    helpText.style.display = 'none';
+                }
+            }, 100);
+        });
+    }
+});
+</script>
+
 {% endblock %}

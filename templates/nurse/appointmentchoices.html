@@ -16,11 +16,10 @@
             <thead>
                 <tr>
                     <th>Appointment Choice</th>
-                    <th><a href="{% url 'appointmentchoices' 'all' %}" class="btn btn-primary btn-sm"
-                            style="background-color: red;">See All</a></th>
+                    <th></th>
                     <th><a href="{% url 'addappointmentchoice' 'add' %}" class="btn btn-primary btn-sm"
                             style="background-color: red;">Add</a></th>
-                  
+
                   <tr>
                     <tr>
                             <th>
@@ -83,7 +82,14 @@
                 <tr>
                     {% if type == 'all' %}
                     <td><a href="{% url 'appointmentchoices' 'notall' %}" class="btn btn-primary btn-sm"
-                            style="background-color: red;">less</a></td>
+                            style="background-color: red;">Less</a></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    {% elif type == 'notall' %}
+                    <td><a href="{% url 'appointmentchoices' 'all' %}" class="btn btn-primary btn-sm"
+                            style="background-color: red;">More</a></td>
                     <td></td>
                     <td></td>
                     <td></td>

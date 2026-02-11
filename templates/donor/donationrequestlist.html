@@ -58,9 +58,22 @@
       {% if type == 'all' %}
       <td>
         {% if sender != 'dashboard' %}
-        <a href="{% url 'donationrequest' 'notall' %}"><button type="button" class="btn btn-primary btn-sm">less</button></a>
+        <a href="{% url 'donationrequest' 'notall' %}"><button type="button" class="btn btn-primary btn-sm">Less</button></a>
         {% else %}
-        <a href="{% url 'donordashboard' 'notall' %}"><button type="button" class="btn btn-primary btn-sm">less</button></a>
+        <a href="{% url 'donordashboard' 'notall' %}"><button type="button" class="btn btn-primary btn-sm">Less</button></a>
+        {% endif %}
+      </td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      {% elif type == 'notall' %}
+      <td>
+        {% if sender != 'dashbord' %}
+        <a href="{% url 'donationrequest' 'all' %}"><button type="button" class="btn btn-primary btn-sm">More</button></a>
+        {% else %}
+        <a href="{% url 'donordashbord' 'all' %}"><button type="button" class="btn btn-primary btn-sm">More</button></a>
         {% endif %}
       </td>
       <td></td>

@@ -15,8 +15,7 @@
     <thead>
       <tr>
         <th>Bloods</th>
-        <th><a href="{% url 'getlabbloods' 'all' %}" ><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Seeall</button></a> </th>
-
+        <th></th>
       </tr>
       <tr>
         <form method="post" action="{% url 'getlabbloods' 'searched' %}">
@@ -85,8 +84,9 @@
           <td></td>
         </tr>
       {% endfor %}
-      <tr>{% if type == 'all' %}
-        <td><a href="{% url 'getlabbloods' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">less</button></a>
+      <tr>
+        {% if type == 'all' %}
+        <td><a href="{% url 'getlabbloods' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Less</button></a>
         </td>
         <td></td>
         <td></td>
@@ -96,7 +96,19 @@
         <td></td>
         <td></td>
         <td></td>
-        {% endif %}</tr>
+        {% elif type == 'notall' %}
+        <td><a href="{% url 'getlabbloods' 'all' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">More</button></a>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        {% endif %}
+      </tr>
       {% else %}
       <tr>
         <td>NO Blood </td>

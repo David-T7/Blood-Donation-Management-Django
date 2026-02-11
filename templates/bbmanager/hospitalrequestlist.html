@@ -38,23 +38,39 @@
         {% endif %}
         {% endif %}
      {% endfor %}
-     <tr>{% if type == 'all' %}
-      {% if sender != 'dashbord' %} 
-      <td><a href="{% url 'hospitalrequest' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">less</button></a></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      {% else %}
-      <td><a href="{% url 'bbdashbord' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">less</button></a>
-      </td>
-      <td></td>
-      <td></td>
-      <td></td>
+     <tr>
+      {% if type == 'all' %}
+        {% if sender != 'dashbord' %}
+        <td><a href="{% url 'hospitalrequest' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Less</button></a></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        {% else %}
+        <td><a href="{% url 'bbdashbord' 'notall' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">Less</button></a>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
         {% endif %}
-      
-      {% endif %}</tr>
+      {% elif type == 'notall' %}
+        {% if sender != 'dashbord' %}
+        <td><a href="{% url 'hospitalrequest' 'all' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">More</button></a></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        {% else %}
+        <td><a href="{% url 'bbdashbord' 'all' %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color: red;">More</button></a>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        {% endif %}
+      {% endif %}
+     </tr>
 
      {% else %}
      <tr> 

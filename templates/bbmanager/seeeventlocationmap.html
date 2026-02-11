@@ -1,0 +1,16 @@
+{% extends 'bbmanager/bbmanager.html' %}
+{% block content %}
+<br>
+<div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+                {% if event %}
+                {% autoescape off %}
+                {{ event.EventMap }}
+                {% endautoescape %}
+                {% endif %}
+            </tr>
+        </div>
+<br>
+{% endblock %}

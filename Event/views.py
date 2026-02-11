@@ -48,6 +48,15 @@ def SeeCamp(request , pk):
     context={'camp':camp , 'account':bbmanagerstate(request)['account'] , 'active_page':'camp'}
     return render(request ,'bbmanager/seecamp.html' , context)
 
+def SeeEventLocationMap(request, pk):
+    event = None
+    try:
+        event = Event.objects.get(Event_id=pk)
+    except:
+        event = None
+    context={'event':event , 'account':bbmanagerstate(request)['account'] , 'active_page':'events'}
+    return render(request ,'bbmanager/seeeventlocationmap.html' , context)
+
 def Events(request , type):
     events = None
     try:

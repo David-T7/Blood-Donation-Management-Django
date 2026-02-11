@@ -474,7 +474,7 @@ def GetAppointments(request , type):
                     appointment = Appointment.objects.filter(status =  searched.lower())
     except:
         appointment = None
-    context= {'appointments':appointment , 'donor':donor ,  'active_page':'appointment'}
+    context= {'appointments':appointment , 'donor':donor ,  'active_page':'appointment','type':type}
     return render(request , 'donor/appointment.html' , context)
 
     
@@ -543,6 +543,16 @@ def SeeCamp(request , pk):
         camp = None
     context={'camp':camp , 'donor':donor , 'active_page':'camp'}
     return render(request ,'donor/seecamp.html' , context)
+
+def SeeEventLocationMap(request, pk):
+    donor = DonorState(request)['donor']
+    event = None
+    try:
+        event = Event.objects.get(Event_id=pk)
+    except:
+        event = None
+    context={'event':event , 'donor':donor , 'active_page':'event'}
+    return render(request ,'donor/seeeventlocationmap.html' , context)
 
 
 

@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from datetime import date
 from django.shortcuts import redirect, render
 from Donor.models import Appointment, Donor
@@ -34,7 +34,7 @@ def BloodStock(request):
 def AddBlood(request , pk , pk2):
     donor = Donor.objects.get(Donor_id = pk)
     account = UserState(request)['account']
-    form = BloodCreationForm()
+    form = BloodCreationForm(initial={'BloodGroup': donor.Bloodgroup})
     if request.method == 'POST':
         form= BloodCreationForm(request.POST)
         if (form.is_valid()):
@@ -42,8 +42,7 @@ def AddBlood(request , pk , pk2):
                 blood = form.save(commit=False)
                 blood.Donor_id = donor
                 blood.save()
-                BloodHistory.objects.create(Blood_id=blood.Blood_id , Donor_id = donor.Donor_id ,BloodGroup = blood.BloodGroup , 
-                PackNo = blood.PackNo , RegDate = blood.RegDate , ExpDate = blood.ExpDate , QuantityOfBlood = blood.QuantityOfBlood , Action='Added'      ) 
+                BloodHistory.objects.create(Blood_id=blood ,Action='Added') 
                 appointment = Appointment.objects.get(App_id = pk2)
                 FininshedAppointment.objects.create(Appointment_id = appointment)
                 messages.success(request, 'Successfully added blood')
@@ -128,36 +127,80 @@ def DeleteBlood(request , pk):
     return render(request, 'labtechnician/bloods.html', context)
 
         
-def BloodsHistory(request , type):
+from datetime import datetime, timezone, timedelta
+from datetime import date
+
+def BloodsHistory(request, type):
     account = UserState(request)['account']
-    bloods = None
-    try:
-        if(type == 'all'):
-            bloods = BloodHistory.objects.all()[::-1]
-        elif(type=='notall'):
-            bloods = BloodHistory.objects.all()[0:5][::-1]
-        elif(type=='searched'):
-            print('in searched ')
-            if request.method == 'POST':
-                print('in post')
-                searchby = request.POST['searchby']
-                searched = request.POST['searched']
-                if(searchby == 'RegestrationDate'):
-                    date = parse_date(searched)
-                    bloods = BloodHistory.objects.filter(RegDate =  date)
-                elif(searchby == 'Expiration'):
-                    date = parse_date(searched)
-                    bloods = BloodHistory.objects.filter(ExpDate =  date)
-                elif(searchby == 'Volume'):
-                    bloods = BloodHistory.objects.filter(QuantityOfBlood =  searched)
-                elif(searchby == 'Action'):
-                    bloods = BloodHistory.objects.filter(Action =  searched)
-                elif(searchby == 'BloodGroup'):
-                    bloods = BloodHistory.objects.filter(BloodGroup =  searched)        
-    except:
-        bloods = None
-    context = {'account':account , 'bloods':bloods ,   'active_page':'blood',}
-    return render (request , 'bbmanager/seebloodhistory.html' , context)
+    
+    # Get queryset based on type, ordered by Blood registration date
+    if type == 'all':
+        blood_history_queryset = BloodHistory.objects.select_related('Blood_id').order_by('-Blood_id__RegDate')
+    elif type == 'notall':
+        blood_history_queryset = BloodHistory.objects.select_related('Blood_id').order_by('-Blood_id__RegDate')[:5]
+    elif type == 'searched' and request.method == 'POST':
+        searchby = request.POST.get('searchby', '')
+        searched = request.POST.get('searched', '')
+        
+        if searchby == 'BloodType':
+            blood_history_queryset = BloodHistory.objects.filter(
+                Blood_id__BloodGroup__icontains=searched
+            ).select_related('Blood_id').order_by('-Blood_id__RegDate')
+        elif searchby == 'Volume':
+            blood_history_queryset = BloodHistory.objects.filter(
+                Blood_id__QuantityOfBlood__icontains=searched
+            ).select_related('Blood_id').order_by('-Blood_id__RegDate')
+        elif searchby == 'ExpirationDate':
+            blood_history_queryset = BloodHistory.objects.filter(
+                Blood_id__ExpDate__icontains=searched
+            ).select_related('Blood_id').order_by('-Blood_id__RegDate')
+        elif searchby == 'RegistrationDate':
+            blood_history_queryset = BloodHistory.objects.filter(
+                Blood_id__RegDate__icontains=searched
+            ).select_related('Blood_id').order_by('-Blood_id__RegDate')
+        elif searchby == 'Action':
+            blood_history_queryset = BloodHistory.objects.filter(
+                Action__icontains=searched
+            ).select_related('Blood_id').order_by('-Blood_id__RegDate')
+        else:
+            blood_history_queryset = BloodHistory.objects.none()
+    else:
+        blood_history_queryset = BloodHistory.objects.none()
+    
+    # Add expiry status to each history item
+    today = date.today()
+    for history in blood_history_queryset:
+        if hasattr(history, 'Blood_id') and history.Blood_id:
+            exp_date = history.Blood_id.ExpDate
+            if isinstance(exp_date, str):
+                # Parse string date if needed
+                try:
+                    exp_date = datetime.strptime(exp_date, '%Y-%m-%d').date()
+                except ValueError:
+                    exp_date = None
+            
+            if exp_date:
+                days_until_expiry = (exp_date - today).days
+                
+                if days_until_expiry < 0:
+                    history.expiry_status = 'expired'  # Already expired
+                elif days_until_expiry <= 3:
+                    history.expiry_status = 'critical'  # Critical - expires soon
+                else:
+                    history.expiry_status = 'safe'  # Safe - not close to expiry
+    
+    # Prepare context
+    context = {
+        'account': account,
+        'bloods': blood_history_queryset,
+        'type': type,  # Pass the type to the template for button logic
+        'active_page': 'blood',
+    }
+    
+    return render(request, 'bbmanager/seebloodhistory.html', context)
+
+
+
 
 
 

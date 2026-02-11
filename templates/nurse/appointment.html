@@ -15,8 +15,7 @@
             <thead>
                 <tr>
                     <th scope="col">Appointment Request</th>
-                    <th scope="col"><a href="{% url 'checkappointment' 'all' %}" class="btn btn-primary btn-sm"
-                            style="background-color: red;">See All</a></th>
+                    <th scope="col"></th>
                 </tr>
                 <form method="post" action="{% url 'checkappointment' 'searched' %}">
                 <tr>
@@ -89,7 +88,13 @@
                 <tr>
                     {% if type == 'all' %}
                     <td><a href="{% url 'checkappointment' 'notall' %}" class="btn btn-primary btn-sm"
-                            style="background-color: red;">less</a></td>
+                            style="background-color: red;">Less</a></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    {% elif type == 'notall' %}
+                    <td><a href="{% url 'checkappointment' 'all' %}" class="btn btn-primary btn-sm"
+                            style="background-color: red;">More</a></td>
                     <td></td>
                     <td></td>
                     <td></td>
