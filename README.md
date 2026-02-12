@@ -1,5 +1,6 @@
-<img width="956" height="502" alt="lab tech bloods updated" src="https://github.com/user-attachments/assets/144f47f4-3725-4f9c-bc25-cb9389d6bdb3" /># 🩸 Blood Donation Management System (BDMS)
 
+# 🩸 Blood Donation Management System (BDMS)
+![Home Page](<screenshots//global%20home%20page.png>)
 A comprehensive, **Django-based web portal** designed to connect **donors, hospitals, blood bank staffs** to efficiently streamline the entire blood donation and distribution process.
 
 ---
