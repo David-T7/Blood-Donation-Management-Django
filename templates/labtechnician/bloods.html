@@ -70,11 +70,20 @@
           <td>
             {% now "Y-m-d" as todays_date %}
           {% if todays_date  >= blood.ExpDate|date:"Y-m-d" %}
-          <img src="{% static 'images/logo/expired.jpeg' %}" alt="error" width="100">          
+          <span class="badge bg-danger d-flex align-items-center">
+            <iconify-icon icon="bx:error-circle" width="20" height="20" class="me-1"></iconify-icon>
+            <span>Expired</span>
+          </span>
            {% elif threedaysafter >= blood.ExpDate|date:"Y-m-d"  %}
-           <img src="{% static 'images/logo/bloodexpirewarning.png' %}" alt="error" width="100">
-           {% else %} 
-           <img src="{% static 'images/logo/safeblood.jpg' %}" alt="error" width="100"> 
+           <span class="badge bg-warning text-dark d-flex align-items-center">
+            <iconify-icon icon="bx:alarm" width="20" height="20" class="me-1"></iconify-icon>
+            <span>Expires Soon</span>
+          </span>
+           {% else %}
+           <span class="badge bg-success d-flex align-items-center">
+            <iconify-icon icon="bx:check-circle" width="20" height="20" class="me-1"></iconify-icon>
+            <span>Safe</span>
+          </span>
           {% endif %}
           </td>
           <td><a href="{% url 'updateblood' blood.Blood_id  %}"><button type="button" class="btn btn-primary btn-sm" style= "background-color:red;">Update</button></a>
