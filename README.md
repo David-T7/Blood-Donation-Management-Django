@@ -1,4 +1,4 @@
-# 🩸 Blood Donation Management System (BDMS)
+<img width="956" height="502" alt="lab tech bloods updated" src="https://github.com/user-attachments/assets/144f47f4-3725-4f9c-bc25-cb9389d6bdb3" /># 🩸 Blood Donation Management System (BDMS)
 
 A comprehensive, **Django-based web portal** designed to connect **donors, hospitals, blood bank staffs** to efficiently streamline the entire blood donation and distribution process.
 
@@ -69,15 +69,15 @@ By default, Django is configured for SQLite (great for a quick start). To use My
 
 # Example MySQL Configuration (to be placed in settings.py):
 # DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'your_database_name',       # <-- Replace with your DB name
-#         'USER': 'your_mysql_username',      # <-- Replace with your MySQL username
-#         'PASSWORD': 'your_mysql_password',  # <-- Replace with your MySQL password
-#         'HOST': 'localhost',                # Or the IP address of your MySQL server
-#         'PORT': '3306',                     # Default MySQL port
-#     }
-# }
+     'default': {
+         'ENGINE': 'django.db.backends.mysql',
+         'NAME': 'your_database_name',       # <-- Replace with your DB name
+         'USER': 'your_mysql_username',      # <-- Replace with your MySQL username
+         'PASSWORD': 'your_mysql_password',  # <-- Replace with your MySQL password
+         'HOST': 'localhost',                # Or the IP address of your MySQL server
+         'PORT': '3306',                     # Default MySQL port
+     }
+ }
 
 # 4. Apply database migrations
 python manage.py makemigrations
@@ -102,12 +102,27 @@ All screenshots are stored in the `screenshots` folder at the root of this repos
 ![Donor Appointments Page](<screenshots//donor%20appointments%20page.png>)
 ![Donor Appointment Selection Page](<screenshots//donor%20appointment%20data%20selection.png>)
 ![Donor Donation Camps Page](<screenshots//donor%20camps%20page.png>)
-![Donor Donation Camp Map](<screenshots//donor%20seecamp%20map%20page.png>)
+![Donor Donation Camp Map page](<screenshots//donor%20seecamp%20map%20page.png>)
 ![Nurse Donation Requests Page](<screenshots//nurse%20requests%20page.png>)
 ![Nurse Donation Request Page1](<screenshots//nurse%20request%20check%20page%201.png>)
 ![Nurse Donation Request Page2](<screenshots//nurse%20request%20check%20page%202.png>)
 ![Nurse Add Health Questions Page 1](<screenshots//nurse%20add%20health%20questions%20page.png>)
 ![Nurse Add Health Questions Page 2](<screenshots//nurse%20add%20health%20questions%20page2.png>)
+![Nurse Add Health Questions Page 2](<screenshots//nurse%20add%20health%20questions%20page2.png>)
+![Nurse Donation Appointment Requests Page](<screenshots//nurse%20appointment%20requests%20page.png>)
+![Nurse Pre Donation Questions Page1](<screenshots//pre%20donation%20questions%20page%201.png>)
+![Nurse Pre Donation Questions Page1](<screenshots//pre%20donation%20questions%20page%201.png>)
+![Lab Technician Donation Result Page](<screenshots//labtech%20requests%20result%20page.png>)
+![Lab Technician Add Blood Page](<screenshots//lab%20tech%20add%20blood.png>)
+![Lab Technician Bloods Page](<screenshots//lab%20tech%20bloods%20updated.png>)
+![Hospital Representative Dashboard](<screenshots//hospitalrep%20dashboard.png>)
+![Hospital Representative Blood Requests Page](<screenshots//hospitalrep%20blood%20requests%20page.png>)
+![Hospital Representative Blood Request Page](<screenshots//hospitalrep%20blood%20request.png>)
+![Blood Manager Dashboard page](<screenshots//bbmanager%20dashboard.png>)
+![Blood Manager Bloods History Page ](<screenshots//bbmanager%20blood%20history%20page .png>)
+![Blood Manager Bloods Request Page ](<screenshots//bbmanager%20blood%20request%20page.png>)
+![Admin Page1](<screenshots//admin%20page%201.png>)
+![Admin Page2](<screenshots//admin%20page%202.png>)
 
 
 
